@@ -3,7 +3,7 @@
 <picture>
  <source media="(prefers-color-scheme: dark)" srcset="LinkedIn-Banner.png">
  <source media="(prefers-color-scheme: light)" srcset="LinkedIn-Banner.png">
- <img alt="YOUR-ALT-TEXT" src="LinkedIn-Banner.png">
+ <img alt="Data Center Rack with Forbes Council member logo." src="LinkedIn-Banner.png">
 </picture>
 
 <!--
