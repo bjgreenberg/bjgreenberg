@@ -1,4 +1,4 @@
-### Hi there 👋
+### Hi there, I'm Brian. 👋
 
 <picture>
  <source media="(prefers-color-scheme: dark)" srcset="LinkedIn-Banner.png">
