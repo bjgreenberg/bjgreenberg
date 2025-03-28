@@ -1,46 +1,59 @@
 # 👋 Hi, I'm Brian Greenberg
 
-🚀 CIO | 🎓 Adjunct Cybersecurity Professor at DePaul | ✍️ Tech Thought Leader  
+🚀 CIO | 🎓 Cybersecurity Adjunct Professor at DePaul | ✍️ Tech Thought Leader  
 I’m passionate about ethical technology, digital leadership, and helping others grow — whether through innovation, teaching, writing, or just meaningful conversation over coffee.
 
 ---
 
 ## 🌐 Connect with Me
 
-- 🌍 [Website](https://briangreenberg.net)
+- 🌍 [Personal Website](https://briangreenberg.net)
 - 🔗 [Linktree](https://linktr.ee/brian.greenberg)
+- 💬 [Blog](https://blog.briangreenberg.net)
+- 🗓️ [Calendly](https://calendly.com/bgreenberg-rhr)
+
+---
+
+## 💼 Social & Professional Networks
+
 - 💼 [LinkedIn](https://linkedin.com/in/bjgreenberg)
 - 📘 [Facebook](https://facebook.com/BrianGreenberg.Net)
+- 🐘 [Mastodon](https://infosec.exchange/@brian_greenberg)
 - 🧵 [Threads](https://www.threads.net/@bjgreenberg)
 - 📸 [Instagram](https://instagram.com/bjgreenberg)
-- 🐦 [Twitter](https://twitter.com/bjgreenberg)
-- 🐘 [Mastodon](https://infosec.exchange/@brian_greenberg)
+- 🔦 [Twitter](https://twitter.com/bjgreenberg)
 - 🔷 [Bluesky](https://bsky.app/profile/briangreenberg.net)
+- 🐙 [GitHub](https://github.com/bjgreenberg)
+- 📍 [Foursquare](https://foursquare.com/user/32900)
+- ✈️ [TripIt](https://tripit.com/people/bjgreenberg)
 
 ---
 
-## ✍️ Writing & Thought Leadership
+## ✍️ Thought Leadership & Content
 
-- 📰 [Forbes Profile](https://www.forbes.com/councils/forbestechcouncil/people/briangreenberg1)
-- ✒️ [Medium Blog](https://medium.com/@brian.greenberg)
-- 🧵 [Substack Newsletter](https://substack.com/@briangreenberg)
+- 📰 [Forbes Tech Council](https://www.forbes.com/councils/forbestechcouncil/people/briangreenberg1)
+- ✢️ [Medium Blog](https://medium.com/@brian.greenberg)
+- 🧵 [Substack](https://substack.com/@briangreenberg)
+- 📌 [Pinterest](https://www.pinterest.com/bjgreenberg/)
+- 📚 [Goodreads](https://goodreads.com/user/show/7110423-brian-greenberg)
 
 ---
 
-## 📚 Academic & Professional
+## 📚 Academic & Teaching
 
 - 🎓 [DePaul University Faculty Page](https://www.cdm.depaul.edu/Faculty-and-Staff/Pages/faculty-info.aspx?fid=1485)
-- 👨‍💻 [GitHub](https://github.com/bjgreenberg)
 
 ---
 
-## 🎧 Social + Creative
+## 🎧 Creative & Social Audio/Video
 
-- 📌 [Pinterest](https://www.pinterest.com/bjgreenberg/)
-- 🎶 [Apple Music](https://music.apple.com/profile/briangreenberg)
-- 🎧 [SoundCloud](https://soundcloud.com/briangreenberg)
 - 🎤 [Clubhouse](https://joinclubhouse.com/@briangreenberg)
-- 🎵 [TikTok](https://www.tiktok.com/@briangreenberg)
+- 🎶 [Apple Music](https://music.apple.com/profile/briangreenberg)
+- 🎵 [SoundCloud](https://soundcloud.com/briangreenberg)
+- 🎿 [TikTok](https://www.tiktok.com/@briangreenberg)
+- 📺 [YouTube](https://youtube.com/user/bjgreenberg)
+- 🎮 [Vimeo](https://vimeo.com/bjgreenberg)
+- 🎭 [Tumblr](https://bjgreenberg.tumblr.com)
 
 ---
 
