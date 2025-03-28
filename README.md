@@ -1,26 +1,47 @@
-### Hi there, I'm Brian. 👋
+# 👋 Hi, I'm Brian Greenberg
 
-<picture>
- <source media="(prefers-color-scheme: dark)" srcset="LinkedIn-Banner.png">
- <source media="(prefers-color-scheme: light)" srcset="LinkedIn-Banner.png">
- <img alt="Data Center Rack with Forbes Council member logo." src="LinkedIn-Banner.png">
-</picture>
+🚀 CIO | 🎓 Adjunct Cybersecurity Professor at DePaul | ✍️ Tech Thought Leader  
+I’m passionate about ethical technology, digital leadership, and helping others grow — whether through innovation, teaching, writing, or just meaningful conversation over coffee.
 
-</p> 
-Connect with me... </p>
+---
 
-[<img src='https://cdn.jsdelivr.net/npm/simple-icons@3.0.1/icons/github.svg' alt='github' height='40'>](https://github.com/bjgreenberg)  [<img src='https://cdn.jsdelivr.net/npm/simple-icons@3.0.1/icons/linkedin.svg' alt='linkedin' height='40'>](https://www.linkedin.com/in/bjgreenberg/)  [<img src='https://cdn.jsdelivr.net/npm/simple-icons@3.0.1/icons/instagram.svg' alt='instagram' height='40'>](https://www.instagram.com/bjgreenberg/)  [<img src='https://cdn.jsdelivr.net/npm/simple-icons@3.0.1/icons/twitter.svg' alt='twitter' height='40'>](https://twitter.com/bjgreenberg)  
-<!--
-**bjgreenberg/bjgreenberg** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
+## 🌐 Connect with Me
 
-Here are some ideas to get you started:
+- 🌍 [Website](https://briangreenberg.net)
+- 🔗 [Linktree](https://linktr.ee/brian.greenberg)
+- 💼 [LinkedIn](https://linkedin.com/in/bjgreenberg)
+- 📘 [Facebook](https://facebook.com/BrianGreenberg.Net)
+- 🧵 [Threads](https://www.threads.net/@bjgreenberg)
+- 📸 [Instagram](https://instagram.com/bjgreenberg)
+- 🐦 [Twitter](https://twitter.com/bjgreenberg)
+- 🐘 [Mastodon](https://infosec.exchange/@brian_greenberg)
+- 🔷 [Bluesky](https://bsky.app/profile/briangreenberg.net)
 
-- 🔭 I’m currently working on ...
-- 🌱 I’m currently learning ...
-- 👯 I’m looking to collaborate on ...
-- 🤔 I’m looking for help with ...
-- 💬 Ask me about ...
-- 📫 How to reach me: ...
-- 😄 Pronouns: ...
-- ⚡ Fun fact: ...
--->
+---
+
+## ✍️ Writing & Thought Leadership
+
+- 📰 [Forbes Profile](https://www.forbes.com/councils/forbestechcouncil/people/briangreenberg1)
+- ✒️ [Medium Blog](https://medium.com/@brian.greenberg)
+- 🧵 [Substack Newsletter](https://substack.com/@briangreenberg)
+
+---
+
+## 📚 Academic & Professional
+
+- 🎓 [DePaul University Faculty Page](https://www.cdm.depaul.edu/Faculty-and-Staff/Pages/faculty-info.aspx?fid=1485)
+- 👨‍💻 [GitHub](https://github.com/bjgreenberg)
+
+---
+
+## 🎧 Social + Creative
+
+- 📌 [Pinterest](https://www.pinterest.com/bjgreenberg/)
+- 🎶 [Apple Music](https://music.apple.com/profile/briangreenberg)
+- 🎧 [SoundCloud](https://soundcloud.com/briangreenberg)
+- 🎤 [Clubhouse](https://joinclubhouse.com/@briangreenberg)
+- 🎵 [TikTok](https://www.tiktok.com/@briangreenberg)
+
+---
+
+> “Technology is only as powerful as the intentions of the people behind it.”
