@@ -1,6 +1,6 @@
 # 👋 Hi, I'm Brian Greenberg
 
-🚀 CIO | 🎓 Cybersecurity Adjunct Professor at DePaul | ✍️ Tech Thought Leader  
+🚀 CIO | 🎓 Cybersecurity Professor at DePaul University | ✍️ Tech Thought Leader  
 I’m passionate about ethical technology, digital leadership, and helping others grow — whether through innovation, teaching, writing, or just meaningful conversation over coffee.
 
 ---
@@ -9,8 +9,6 @@ I’m passionate about ethical technology, digital leadership, and helping other
 
 - 🌍 [Personal Website](https://briangreenberg.net)
 - 🔗 [Linktree](https://linktr.ee/brian.greenberg)
-- 💬 [Blog](https://blog.briangreenberg.net)
-- 🗓️ [Calendly](https://calendly.com/bgreenberg-rhr)
 
 ---
 
@@ -24,14 +22,12 @@ I’m passionate about ethical technology, digital leadership, and helping other
 - 🔦 [Twitter](https://twitter.com/bjgreenberg)
 - 🔷 [Bluesky](https://bsky.app/profile/briangreenberg.net)
 - 🐙 [GitHub](https://github.com/bjgreenberg)
-- 📍 [Foursquare](https://foursquare.com/user/32900)
-- ✈️ [TripIt](https://tripit.com/people/bjgreenberg)
 
 ---
 
 ## ✍️ Thought Leadership & Content
 
-- 📰 [Forbes Tech Council](https://www.forbes.com/councils/forbestechcouncil/people/briangreenberg1)
+- 📰 [Forbes Technology Council](https://www.forbes.com/councils/forbestechcouncil/people/briangreenberg1)
 - ✢️ [Medium Blog](https://medium.com/@brian.greenberg)
 - 🧵 [Substack](https://substack.com/@briangreenberg)
 - 📌 [Pinterest](https://www.pinterest.com/bjgreenberg/)
@@ -51,9 +47,7 @@ I’m passionate about ethical technology, digital leadership, and helping other
 - 🎶 [Apple Music](https://music.apple.com/profile/briangreenberg)
 - 🎵 [SoundCloud](https://soundcloud.com/briangreenberg)
 - 🎿 [TikTok](https://www.tiktok.com/@briangreenberg)
-- 📺 [YouTube](https://youtube.com/user/bjgreenberg)
-- 🎮 [Vimeo](https://vimeo.com/bjgreenberg)
-- 🎭 [Tumblr](https://bjgreenberg.tumblr.com)
+
 
 ---
 
