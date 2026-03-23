@@ -1,6 +1,10 @@
 # 👋 Hi, I'm Brian Greenberg
 
-🚀 Chief Information Officer @ RHR International | 🎓 Cybersecurity Professor at DePaul University | ✍️ Tech Thought Leader  
+🚀 Chief Information Officer @ RHR International 
+🎓 Cybersecurity Professor at DePaul University 
+✍️ Contributor on the Forbes Technology Council
+💭 Tech Thought Leader  
+
 I’m passionate about ethical technology, digital leadership, and helping others grow — whether through innovation, teaching, writing, or just meaningful conversation over coffee.
 
 ---
