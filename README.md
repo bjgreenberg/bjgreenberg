@@ -13,7 +13,7 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 - 🌍 [Personal Website](https://briangreenberg.net)
 - 🔗 [Linktree](https://linktr.ee/brian.greenberg)
-- 📫 [brian@briangreenberg.net](mailto:brian@briangreenberg.net)
+- 📫 [Contact Me](https://briangreenberg.net/contact/)
 
 ---
 
