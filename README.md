@@ -3,9 +3,9 @@
 - 🚀 Chief Information Officer @ RHR International
 - 🎓 Cybersecurity Professor at DePaul University
 - ✍️ Contributor on the Forbes Technology Council
-- 💭 Tech Thought Leader
+- 🤖 Building AI-native workflows for the modern enterprise
 
-I'm passionate about ethical technology, digital leadership, and helping others grow — whether through innovation, teaching, writing, or just meaningful conversation over coffee.
+I build AI-native systems for the modern enterprise, teach the next generation of cybersecurity professionals, and write about the intersection of technology, leadership, and ethics.
 
 ---
 
@@ -13,6 +13,17 @@ I'm passionate about ethical technology, digital leadership, and helping others 
 
 - 🌍 [Personal Website](https://briangreenberg.net)
 - 🔗 [Linktree](https://linktr.ee/brian.greenberg)
+- 📫 [brian@briangreenberg.net](mailto:brian@briangreenberg.net)
+
+---
+
+## ✍️ Thought Leadership & Content
+
+- 📰 [Forbes Technology Council](https://www.forbes.com/councils/forbestechcouncil/people/briangreenberg1)
+- 📝 [Medium Blog](https://medium.com/@brian.greenberg)
+- 📬 [Substack](https://substack.com/@briangreenberg)
+- 📌 [Pinterest](https://www.pinterest.com/bjgreenberg/)
+- 📚 [Goodreads](https://goodreads.com/user/show/7110423-brian-greenberg)
 
 ---
 
@@ -25,16 +36,6 @@ I'm passionate about ethical technology, digital leadership, and helping others 
 - 📸 [Instagram](https://instagram.com/bjgreenberg)
 - 🐦 [X (Twitter)](https://x.com/bjgreenberg)
 - 🔷 [Bluesky](https://bsky.app/profile/briangreenberg.net)
-
----
-
-## ✍️ Thought Leadership & Content
-
-- 📰 [Forbes Technology Council](https://www.forbes.com/councils/forbestechcouncil/people/briangreenberg1)
-- 📝 [Medium Blog](https://medium.com/@brian.greenberg)
-- 📬 [Substack](https://substack.com/@briangreenberg)
-- 📌 [Pinterest](https://www.pinterest.com/bjgreenberg/)
-- 📚 [Goodreads](https://goodreads.com/user/show/7110423-brian-greenberg)
 
 ---
 
