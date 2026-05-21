@@ -52,10 +52,4 @@ I'm passionate about ethical technology, digital leadership, and helping others 
 
 ---
 
-## 📊 GitHub Activity
-
-![Brian's GitHub stats](https://github-readme-stats.vercel.app/api?username=bjgreenberg&show_icons=true&hide_border=true&theme=default)
-
----
-
 > "Technology is only as powerful as the intentions of the people behind it."
