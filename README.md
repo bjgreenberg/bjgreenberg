@@ -21,7 +21,8 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 ## <img src="https://briangreenberg.net/favicon.ico" width="16" height="16" alt=""> Latest from the Blog
 
-<!-- BLOG-POST-LIST:START -->- <a href='https://briangreenberg.net/2026/05/07/how-to-protect-yourself-from-identity-theft/' target='_blank' rel='noopener noreferrer'>How to Protect Yourself from Identity Theft</a>- <a href='https://briangreenberg.net/2026/05/07/micro-transformations-ais-real-path-to-roi/' target='_blank' rel='noopener noreferrer'>Micro-Transformations: AI’s Real Path to ROI</a>- <a href='https://briangreenberg.net/2025/10/05/deepfakes-and-social-engineering-a-growing-threat-to-everyone-%f0%9f%92%80/' target='_blank' rel='noopener noreferrer'>Deepfakes And Social Engineering: A Growing Threat To Everyone</a>- <a href='https://briangreenberg.net/2024/12/08/the-case-for-federal-regulations-in-cybersecurity-requiring-passwords-and-multifactor-authentication-mfa/' target='_blank' rel='noopener noreferrer'>The Case For Federal Regulations In Cybersecurity: Requiring Passwords And Multifactor Authentication &lpar;MFA&rpar;</a>- <a href='https://briangreenberg.net/2024/11/07/how-to-incorporate-ai-into-your-company-without-feeding-the-beast/' target='_blank' rel='noopener noreferrer'>How To Incorporate AI Into Your Company Without Feeding The Beast</a><!-- BLOG-POST-LIST:END -->
+<!-- BLOG-POST-LIST:START -->
+<!-- BLOG-POST-LIST:END -->
 
 <sub>↑ Auto-updated daily from <a href="https://briangreenberg.net" target="_blank" rel="noopener noreferrer">briangreenberg.net</a> <img src="https://briangreenberg.net/favicon.ico" width="12" height="12" alt=""></sub>
 
@@ -29,12 +30,8 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 ## <img src="https://icons.duckduckgo.com/ip3/infosec.exchange.ico" width="16" height="16" alt=""> Latest from Mastodon
 
-<!-- MASTODON-POST-LIST:START -->- <a href='https://infosec.exchange/@brian_greenberg/116615900422307505' target='_blank' rel='noopener noreferrer'>
-_sanitized_description</a>- <a href='https://infosec.exchange/@brian_greenberg/116602203946934078' target='_blank' rel='noopener noreferrer'>
-_sanitized_description</a>- <a href='https://infosec.exchange/@brian_greenberg/116575937505532113' target='_blank' rel='noopener noreferrer'>
-_sanitized_description</a>- <a href='https://infosec.exchange/@brian_greenberg/116574536019242951' target='_blank' rel='noopener noreferrer'>
-_sanitized_description</a>- <a href='https://infosec.exchange/@brian_greenberg/116573380394057067' target='_blank' rel='noopener noreferrer'>
-_sanitized_description</a><!-- MASTODON-POST-LIST:END -->
+<!-- MASTODON-POST-LIST:START -->
+<!-- MASTODON-POST-LIST:END -->
 
 <sub>↑ Auto-updated daily from <a href="https://infosec.exchange/@brian_greenberg" target="_blank" rel="noopener noreferrer">infosec.exchange/@brian_greenberg</a> <img src="https://icons.duckduckgo.com/ip3/infosec.exchange.ico" width="12" height="12" alt=""></sub>
 

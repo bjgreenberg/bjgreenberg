@@ -22,7 +22,8 @@ jobs:
           comment_tag_name: "BLOG-POST-LIST"
           gh_token: ${{ secrets.GITHUB_TOKEN }}
           commit_message: "chore: refresh latest blog post list"
-          template: "- <a href='$url' target='_blank' rel='noopener noreferrer'>$title</a>"
+          # title="$description" gives a hover excerpt tooltip; \n separates list items
+          template: "- <a href=\"$url\" target=\"_blank\" rel=\"noopener noreferrer\" title=\"$description\">$title</a>\n"
 
       - name: Fetch latest Mastodon posts
         uses: gautamkrishnar/blog-post-workflow@v1
@@ -32,6 +33,6 @@ jobs:
           comment_tag_name: "MASTODON-POST-LIST"
           gh_token: ${{ secrets.GITHUB_TOKEN }}
           commit_message: "chore: refresh latest Mastodon posts"
-          # Mastodon RSS has no <title> — use the toot text instead, open in new tab
-          template: "- <a href='$url' target='_blank' rel='noopener noreferrer'>$newline_sanitized_description</a>"
+          # Mastodon RSS has no <title>; $description holds the toot text
+          template: "- <a href=\"$url\" target=\"_blank\" rel=\"noopener noreferrer\">$description</a>\n"
           description_max_length: "140"
