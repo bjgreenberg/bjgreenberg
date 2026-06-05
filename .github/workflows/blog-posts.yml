@@ -8,6 +8,9 @@ on:
 permissions:
   contents: write
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   update-readme:
     runs-on: ubuntu-latest
@@ -21,6 +24,10 @@ jobs:
           import urllib.request
           import xml.etree.ElementTree as ET
 
+          CONTENT_NS   = '{http://purl.org/rss/1.0/modules/content/}'
+          MEDIA_NS     = '{http://search.yahoo.com/mrss/}'
+          MASTO_AVATAR = 'https://media.infosec.exchange/infosec.exchange/accounts/avatars/114/224/012/052/749/216/original/1e11732d1ff94efc.jpeg'
+
           def fetch_rss(url):
               req = urllib.request.Request(url, headers={"User-Agent": "github-readme-bot/1.0"})
               with urllib.request.urlopen(req, timeout=15) as r:
@@ -29,56 +36,103 @@ jobs:
           def strip_tags(text):
               return re.sub(r"<[^>]+>", "", html.unescape(text or "")).strip()
 
-          def update_section(readme_text, tag, lines):
-              block = "\n".join(lines) + "\n"
+          def clean_ws(text):
+              return re.sub(r'\s+', ' ', text).strip()
+
+          def make_excerpt(text, max_len=150):
+              text = clean_ws(text)
+              if len(text) <= max_len:
+                  return text
+              cut = text[:max_len].rfind(' ')
+              return (text[:cut] if cut > 0 else text[:max_len]) + '...'
+
+          def is_bare_url(text):
+              return bool(re.match(r'^https?://\S+$', text.strip()))
+
+          def make_blog_card(url, title, img_url, blurb):
+              img = (
+                  f'<a href="{url}" target="_blank" rel="noopener noreferrer">'
+                  f'<img src="{img_url}" width="240" alt=""/></a><br/>\n'
+              ) if img_url else ''
+              return (
+                  f'<td width="33%" align="center" valign="top">\n'
+                  f'{img}'
+                  f'<a href="{url}" target="_blank" rel="noopener noreferrer">'
+                  f'<b>{html.escape(title)}</b></a><br/>\n'
+                  f'<sub>{html.escape(blurb)}</sub>\n'
+                  f'</td>'
+              )
+
+          def make_masto_card(url, img_url, text):
+              return (
+                  f'<td width="33%" align="center" valign="top">\n'
+                  f'<a href="{url}" target="_blank" rel="noopener noreferrer">'
+                  f'<img src="{img_url}" width="240" alt=""/></a><br/>\n'
+                  f'<a href="{url}" target="_blank" rel="noopener noreferrer">'
+                  f'<sub>{html.escape(text)}</sub></a>\n'
+                  f'</td>'
+              )
+
+          def build_table(cards):
+              return '<table>\n<tr>\n' + '\n'.join(cards) + '\n</tr>\n</table>'
+
+          def update_section(readme_text, tag, content):
               return re.sub(
-                  rf"<!-- {tag}:START -->.*?<!-- {tag}:END -->",
-                  f"<!-- {tag}:START -->\n{block}<!-- {tag}:END -->",
-                  readme_text,
-                  flags=re.DOTALL,
+                  rf'<!-- {tag}:START -->.*?<!-- {tag}:END -->',
+                  f'<!-- {tag}:START -->\n{content}\n<!-- {tag}:END -->',
+                  readme_text, flags=re.DOTALL,
               )
 
           readme = pathlib.Path("README.md").read_text()
 
-          # Blog posts
+          # ── Blog posts ──────────────────────────────────────────────────
           try:
               root = fetch_rss("https://briangreenberg.net/feed/")
-              lines = []
-              for item in root.findall(".//item")[:5]:
-                  title = html.escape(strip_tags(item.findtext("title") or ""))
+              cards = []
+              for item in root.findall(".//item"):
+                  if len(cards) >= 3:
+                      break
+                  title = clean_ws(strip_tags(item.findtext("title") or ""))
                   url   = (item.findtext("link") or "").strip()
                   desc  = strip_tags(item.findtext("description") or "")
-                  tip   = html.escape(desc[:200], quote=True)
-                  if title and url:
-                      lines.append(
-                          f'- <a href="{url}" target="_blank" rel="noopener noreferrer"'
-                          f' title="{tip}">{title}</a>'
-                      )
-              if lines:
-                  readme = update_section(readme, "BLOG-POST-LIST", lines)
-                  print(f"Blog: wrote {len(lines)} posts")
-          except Exception as e:
-              print(f"Blog feed error: {e}", file=sys.stderr)
+                  # Strip WordPress "appeared first on" boilerplate
+                  desc  = re.split(r'\s+The post\s+', desc)[0].strip()
 
-          # Mastodon posts
+                  # First image from full post content
+                  encoded = item.findtext(f'{CONTENT_NS}encoded') or ''
+                  m = re.search(r'<img[^>]+src=["\']([^"\']+)["\']', encoded)
+                  img_url = m.group(1) if m else None
+
+                  if title and url:
+                      cards.append(make_blog_card(url, title, img_url, make_excerpt(desc)))
+              if cards:
+                  readme = update_section(readme, "BLOG-POST-LIST", build_table(cards))
+                  print(f"Blog: {len(cards)} cards")
+          except Exception as e:
+              print(f"Blog error: {e}", file=sys.stderr)
+
+          # ── Mastodon posts ──────────────────────────────────────────────
           try:
               root = fetch_rss("https://infosec.exchange/@brian_greenberg.rss")
-              lines = []
-              for item in root.findall(".//item")[:5]:
+              cards = []
+              for item in root.findall(".//item"):
+                  if len(cards) >= 3:
+                      break
                   url  = (item.findtext("link") or "").strip()
-                  desc = strip_tags(item.findtext("description") or "")
-                  if len(desc) > 140:
-                      desc = desc[:137] + "..."
-                  if url and desc:
-                      lines.append(
-                          f'- <a href="{url}" target="_blank" rel="noopener noreferrer">'
-                          f"{html.escape(desc)}</a>"
-                      )
-              if lines:
-                  readme = update_section(readme, "MASTODON-POST-LIST", lines)
-                  print(f"Mastodon: wrote {len(lines)} posts")
+                  desc = clean_ws(strip_tags(item.findtext("description") or ""))
+
+                  if not url or not desc or is_bare_url(desc):
+                      continue
+
+                  mc      = item.find(f'{MEDIA_NS}content')
+                  img_url = mc.get('url') if mc is not None else MASTO_AVATAR
+
+                  cards.append(make_masto_card(url, img_url, make_excerpt(desc)))
+              if cards:
+                  readme = update_section(readme, "MASTODON-POST-LIST", build_table(cards))
+                  print(f"Mastodon: {len(cards)} cards")
           except Exception as e:
-              print(f"Mastodon feed error: {e}", file=sys.stderr)
+              print(f"Mastodon error: {e}", file=sys.stderr)
 
           pathlib.Path("README.md").write_text(readme)
           PYEOF
