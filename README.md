@@ -24,6 +24,11 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 ## 📰 Latest from the Blog
 
 <!-- BLOG-POST-LIST:START -->
+- [How to Protect Yourself from Identity Theft](https://briangreenberg.net/2026/05/07/how-to-protect-yourself-from-identity-theft/)
+- [Micro-Transformations: AI’s Real Path to ROI](https://briangreenberg.net/2026/05/07/micro-transformations-ais-real-path-to-roi/)
+- [Deepfakes And Social Engineering: A Growing Threat To Everyone](https://briangreenberg.net/2025/10/05/deepfakes-and-social-engineering-a-growing-threat-to-everyone-%f0%9f%92%80/)
+- [The Case For Federal Regulations In Cybersecurity: Requiring Passwords And Multifactor Authentication &lpar;MFA&rpar;](https://briangreenberg.net/2024/12/08/the-case-for-federal-regulations-in-cybersecurity-requiring-passwords-and-multifactor-authentication-mfa/)
+- [How To Incorporate AI Into Your Company Without Feeding The Beast](https://briangreenberg.net/2024/11/07/how-to-incorporate-ai-into-your-company-without-feeding-the-beast/)
 <!-- BLOG-POST-LIST:END -->
 
 <sub>↑ Auto-updated daily from <a href="https://briangreenberg.net">briangreenberg.net</a></sub>
