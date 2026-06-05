@@ -12,9 +12,10 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## 2026-06-05
 
 ### Added
-- GitHub Activity section: stats card, top languages card (github-readme-stats/tokyonight theme), and streak card (streak-stats.demolab.com)
-- Latest from the Blog section with `BLOG-POST-LIST` markers, populated automatically by GitHub Actions
-- `.github/workflows/blog-posts.yml`: daily cron (08:00 UTC) + manual dispatch; pulls up to 5 posts from `https://briangreenberg.net/feed/` via `gautamkrishnar/blog-post-workflow@v1`
+- GitHub Activity section: stats card (github-readme-stats, tokyonight theme, private contributions counted) and streak card (streak-stats.demolab.com); top-langs card omitted as public repos have no detected language
+- Latest from the Blog section with `BLOG-POST-LIST` markers, auto-updated daily from `briangreenberg.net/feed/`
+- Latest from Mastodon section with `MASTODON-POST-LIST` markers, auto-updated daily from `infosec.exchange/@brian_greenberg.rss`
+- `.github/workflows/blog-posts.yml`: daily cron (08:00 UTC) + manual dispatch; two steps — blog feed and Mastodon feed — via `gautamkrishnar/blog-post-workflow@v1`
 
 ---
 
