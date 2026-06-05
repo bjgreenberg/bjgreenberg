@@ -31,3 +31,6 @@ jobs:
           comment_tag_name: "MASTODON-POST-LIST"
           gh_token: ${{ secrets.GITHUB_TOKEN }}
           commit_message: "chore: refresh latest Mastodon posts"
+          # Mastodon RSS has no <title> — use the toot text instead
+          template: "[$newline_sanitized_description]($url)"
+          description_max_length: "140"

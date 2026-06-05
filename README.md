@@ -12,10 +12,6 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 ## 📊 GitHub Activity
 
 <p align="center">
-  <img src="https://github-readme-stats.vercel.app/api?username=bjgreenberg&show_icons=true&theme=tokyonight&hide_border=true&count_private=true&rank_icon=github" alt="GitHub Stats" />
-</p>
-
-<p align="center">
   <img src="https://streak-stats.demolab.com?user=bjgreenberg&theme=tokyonight&hide_border=true" alt="GitHub Streak" />
 </p>
 

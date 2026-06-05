@@ -11,8 +11,12 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## 2026-06-05
 
+### Fixed
+- Removed github-readme-stats card (shared Vercel instance rate-limits; same issue as prior removal 2026-05-21)
+- Mastodon posts showed "[No Title] - [ID]" because Mastodon RSS has no `<title>` field; fixed by switching workflow template to `$newline_sanitized_description` capped at 140 chars
+
 ### Added
-- GitHub Activity section: stats card (github-readme-stats, tokyonight theme, private contributions counted) and streak card (streak-stats.demolab.com); top-langs card omitted as public repos have no detected language
+- GitHub Activity section: streak card only (streak-stats.demolab.com, tokyonight theme); top-langs and stats cards omitted — no public code and shared stats service is unreliable
 - Latest from the Blog section with `BLOG-POST-LIST` markers, auto-updated daily from `briangreenberg.net/feed/`
 - Latest from Mastodon section with `MASTODON-POST-LIST` markers, auto-updated daily from `infosec.exchange/@brian_greenberg.rss`
 - `.github/workflows/blog-posts.yml`: daily cron (08:00 UTC) + manual dispatch; two steps — blog feed and Mastodon feed — via `gautamkrishnar/blog-post-workflow@v1`
