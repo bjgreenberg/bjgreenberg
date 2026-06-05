@@ -46,6 +46,19 @@ jobs:
               cut = text[:max_len].rfind(' ')
               return (text[:cut] if cut > 0 else text[:max_len]) + '...'
 
+          def og_image(url):
+              """Scrape the post page for og:image when RSS has no inline image."""
+              try:
+                  req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+                  with urllib.request.urlopen(req, timeout=10) as r:
+                      chunk = r.read(8000).decode('utf-8', errors='replace')
+                  m = re.search(r'<meta[^>]+property=["\']og:image["\'][^>]+content=["\']([^"\']+)["\']', chunk)
+                  if not m:
+                      m = re.search(r'<meta[^>]+content=["\']([^"\']+)["\'][^>]+property=["\']og:image["\']', chunk)
+                  return m.group(1) if m else None
+              except Exception:
+                  return None
+
           def is_bare_url(text):
               return bool(re.match(r'^https?://\S+$', text.strip()))
 
@@ -98,10 +111,10 @@ jobs:
                   # Strip WordPress "appeared first on" boilerplate
                   desc  = re.split(r'\s+The post\s+', desc)[0].strip()
 
-                  # First image from full post content
+                  # First image from full post content; fall back to og:image
                   encoded = item.findtext(f'{CONTENT_NS}encoded') or ''
                   m = re.search(r'<img[^>]+src=["\']([^"\']+)["\']', encoded)
-                  img_url = m.group(1) if m else None
+                  img_url = m.group(1) if m else og_image(url)
 
                   if title and url:
                       cards.append(make_blog_card(url, title, img_url, make_excerpt(desc)))

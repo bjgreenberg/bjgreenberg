@@ -35,6 +35,7 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 <sub>Reading the headlines, it seems as though AI is already reshaping every enterprise. Boards are approving eight-figure AI programs, executives are...</sub>
 </td>
 <td width="33%" align="center" valign="top">
+<a href="https://briangreenberg.net/2025/10/05/deepfakes-and-social-engineering-a-growing-threat-to-everyone-%f0%9f%92%80/" target="_blank" rel="noopener noreferrer"><img src="https://briangreenberg.net/wp-content/uploads/2025/10/assets_task_01k6v7442repa8p35rjh86et7y_1759702650_img_2.webp" width="240" alt=""/></a><br/>
 <a href="https://briangreenberg.net/2025/10/05/deepfakes-and-social-engineering-a-growing-threat-to-everyone-%f0%9f%92%80/" target="_blank" rel="noopener noreferrer"><b>Deepfakes And Social Engineering: A Growing Threat To Everyone</b></a><br/>
 <sub>Deepfakes—AI‑generated video or audio—are used by attackers to impersonate executives, family members and government officials, convincing victims to...</sub>
 </td>
