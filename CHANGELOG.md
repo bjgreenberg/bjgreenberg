@@ -9,6 +9,13 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## 2026-06-05 (patch 7)
+
+### Added
+- Restored LinkedIn and Forbes badge icons via embedded base64 SVG `logo=data:image/svg+xml;base64,…`. shields.io refuses to serve `logo=linkedin` (its own trademark policy) and Forbes isn't in simple-icons at all; embedding white-filled glyphs sidesteps both. Base64 is percent-encoded (`+`→`%2B`, `/`→`%2F`, `=`→`%3D`) so shields' query parser doesn't corrupt it. LinkedIn glyph is the canonical simple-icons path; Forbes "F" emblem sourced from vectorlogo.zone
+
+---
+
 ## 2026-06-05 (patch 6)
 
 ### Changed
