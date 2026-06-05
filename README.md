@@ -12,9 +12,7 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 ## 📊 GitHub Activity
 
 <p align="center">
-  <a href="https://github.com/bjgreenberg" target="_blank" rel="noopener noreferrer">
-    <img src="https://streak-stats.demolab.com?user=bjgreenberg&theme=tokyonight&hide_border=true" alt="GitHub Streak" />
-  </a>
+  <img src="https://streak-stats.demolab.com?user=bjgreenberg&theme=tokyonight&hide_border=true" alt="GitHub Streak" />
 </p>
 
 ---

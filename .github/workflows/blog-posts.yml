@@ -3,7 +3,7 @@ name: Update README — latest posts
 on:
   schedule:
     - cron: '0 8 * * *'  # 08:00 UTC daily
-  workflow_dispatch:       # allow manual trigger from Actions tab
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -14,25 +14,77 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Fetch latest blog posts from briangreenberg.net
-        uses: gautamkrishnar/blog-post-workflow@v1
-        with:
-          feed_list: "https://briangreenberg.net/feed/"
-          max_post_count: 5
-          comment_tag_name: "BLOG-POST-LIST"
-          gh_token: ${{ secrets.GITHUB_TOKEN }}
-          commit_message: "chore: refresh latest blog post list"
-          # title="$description" gives a hover excerpt tooltip; \n separates list items
-          template: "- <a href=\"$url\" target=\"_blank\" rel=\"noopener noreferrer\" title=\"$description\">$title</a>\n"
+      - name: Refresh feed sections
+        run: |
+          python3 - << 'PYEOF'
+          import sys, re, html, pathlib
+          import urllib.request
+          import xml.etree.ElementTree as ET
 
-      - name: Fetch latest Mastodon posts
-        uses: gautamkrishnar/blog-post-workflow@v1
-        with:
-          feed_list: "https://infosec.exchange/@brian_greenberg.rss"
-          max_post_count: 5
-          comment_tag_name: "MASTODON-POST-LIST"
-          gh_token: ${{ secrets.GITHUB_TOKEN }}
-          commit_message: "chore: refresh latest Mastodon posts"
-          # Mastodon RSS has no <title>; $description holds the toot text
-          template: "- <a href=\"$url\" target=\"_blank\" rel=\"noopener noreferrer\">$description</a>\n"
-          description_max_length: "140"
+          def fetch_rss(url):
+              req = urllib.request.Request(url, headers={"User-Agent": "github-readme-bot/1.0"})
+              with urllib.request.urlopen(req, timeout=15) as r:
+                  return ET.fromstring(r.read())
+
+          def strip_tags(text):
+              return re.sub(r"<[^>]+>", "", html.unescape(text or "")).strip()
+
+          def update_section(readme_text, tag, lines):
+              block = "\n".join(lines) + "\n"
+              return re.sub(
+                  rf"<!-- {tag}:START -->.*?<!-- {tag}:END -->",
+                  f"<!-- {tag}:START -->\n{block}<!-- {tag}:END -->",
+                  readme_text,
+                  flags=re.DOTALL,
+              )
+
+          readme = pathlib.Path("README.md").read_text()
+
+          # Blog posts
+          try:
+              root = fetch_rss("https://briangreenberg.net/feed/")
+              lines = []
+              for item in root.findall(".//item")[:5]:
+                  title = html.escape(strip_tags(item.findtext("title") or ""))
+                  url   = (item.findtext("link") or "").strip()
+                  desc  = strip_tags(item.findtext("description") or "")
+                  tip   = html.escape(desc[:200], quote=True)
+                  if title and url:
+                      lines.append(
+                          f'- <a href="{url}" target="_blank" rel="noopener noreferrer"'
+                          f' title="{tip}">{title}</a>'
+                      )
+              if lines:
+                  readme = update_section(readme, "BLOG-POST-LIST", lines)
+                  print(f"Blog: wrote {len(lines)} posts")
+          except Exception as e:
+              print(f"Blog feed error: {e}", file=sys.stderr)
+
+          # Mastodon posts
+          try:
+              root = fetch_rss("https://infosec.exchange/@brian_greenberg.rss")
+              lines = []
+              for item in root.findall(".//item")[:5]:
+                  url  = (item.findtext("link") or "").strip()
+                  desc = strip_tags(item.findtext("description") or "")
+                  if len(desc) > 140:
+                      desc = desc[:137] + "..."
+                  if url and desc:
+                      lines.append(
+                          f'- <a href="{url}" target="_blank" rel="noopener noreferrer">'
+                          f"{html.escape(desc)}</a>"
+                      )
+              if lines:
+                  readme = update_section(readme, "MASTODON-POST-LIST", lines)
+                  print(f"Mastodon: wrote {len(lines)} posts")
+          except Exception as e:
+              print(f"Mastodon feed error: {e}", file=sys.stderr)
+
+          pathlib.Path("README.md").write_text(readme)
+          PYEOF
+
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git diff --quiet README.md || git commit -am "chore: refresh latest posts"
