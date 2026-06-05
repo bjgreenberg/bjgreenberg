@@ -9,6 +9,25 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## 2026-06-05 (patch 3)
+
+### Added
+- `scripts/generate_cards.py` — Pillow-based generator that renders each blog/Mastodon post to a self-contained PNG card (hero image + baked title/blurb) under `assets/`, then rewrites the README sections as a borderless `<p>` of per-card image links
+- `scripts/requirements.txt` (Pillow 12.2.0, defusedxml 0.7.1, both pinned)
+- `scripts/README.md` — full documentation: rationale, usage, data sources, function table, troubleshooting, known limitations
+- `scripts/test_generate_cards.py` — 18 pytest cases covering the pure text/HTML helpers (all passing)
+
+### Changed
+- Replaced the bordered HTML `<table>` card layout with rendered PNG cards. GitHub strips `border`/`style` from tables and applies its own cell borders, making a borderless grid impossible with live HTML; baking cards to images sidesteps this while keeping each card independently clickable
+- Workflow now installs Python deps and runs `generate_cards.py` instead of inline Python; commits changed PNGs + README
+
+### Security
+- XML parsing hardened with `defusedxml` (guards against billion-laughs / XXE)
+- `fetch_url` validates the URL scheme is http/https before opening
+- bandit scan: 0 issues (Low/Medium/High all zero)
+
+---
+
 ## 2026-06-05 (patch 2)
 
 ### Changed

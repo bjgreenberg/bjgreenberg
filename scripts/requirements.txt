@@ -1,0 +1,4 @@
+# Dependencies for scripts/generate_cards.py
+# Install: pip3 install -r scripts/requirements.txt
+Pillow==12.2.0
+defusedxml==0.7.1

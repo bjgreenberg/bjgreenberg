@@ -17,141 +17,23 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Refresh feed sections
-        run: |
-          python3 - << 'PYEOF'
-          import sys, re, html, pathlib
-          import urllib.request
-          import xml.etree.ElementTree as ET
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
 
-          CONTENT_NS   = '{http://purl.org/rss/1.0/modules/content/}'
-          MEDIA_NS     = '{http://search.yahoo.com/mrss/}'
-          MASTO_AVATAR = 'https://media.infosec.exchange/infosec.exchange/accounts/avatars/114/224/012/052/749/216/original/1e11732d1ff94efc.jpeg'
+      - name: Install dependencies
+        run: pip install -r scripts/requirements.txt
 
-          def fetch_rss(url):
-              req = urllib.request.Request(url, headers={"User-Agent": "github-readme-bot/1.0"})
-              with urllib.request.urlopen(req, timeout=15) as r:
-                  return ET.fromstring(r.read())
-
-          def strip_tags(text):
-              return re.sub(r"<[^>]+>", "", html.unescape(text or "")).strip()
-
-          def clean_ws(text):
-              return re.sub(r'\s+', ' ', text).strip()
-
-          def make_excerpt(text, max_len=150):
-              text = clean_ws(text)
-              if len(text) <= max_len:
-                  return text
-              cut = text[:max_len].rfind(' ')
-              return (text[:cut] if cut > 0 else text[:max_len]) + '...'
-
-          def og_image(url):
-              """Scrape the post page for og:image when RSS has no inline image."""
-              try:
-                  req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
-                  with urllib.request.urlopen(req, timeout=10) as r:
-                      chunk = r.read(8000).decode('utf-8', errors='replace')
-                  m = re.search(r'<meta[^>]+property=["\']og:image["\'][^>]+content=["\']([^"\']+)["\']', chunk)
-                  if not m:
-                      m = re.search(r'<meta[^>]+content=["\']([^"\']+)["\'][^>]+property=["\']og:image["\']', chunk)
-                  return m.group(1) if m else None
-              except Exception:
-                  return None
-
-          def is_bare_url(text):
-              return bool(re.match(r'^https?://\S+$', text.strip()))
-
-          def make_blog_card(url, title, img_url, blurb):
-              img = (
-                  f'<a href="{url}" target="_blank" rel="noopener noreferrer">'
-                  f'<img src="{img_url}" width="240" alt=""/></a><br/>\n'
-              ) if img_url else ''
-              return (
-                  f'<td width="33%" align="center" valign="top">\n'
-                  f'{img}'
-                  f'<a href="{url}" target="_blank" rel="noopener noreferrer">'
-                  f'<b>{html.escape(title)}</b></a><br/>\n'
-                  f'<sub>{html.escape(blurb)}</sub>\n'
-                  f'</td>'
-              )
-
-          def make_masto_card(url, img_url, text):
-              return (
-                  f'<td width="33%" align="center" valign="top">\n'
-                  f'<a href="{url}" target="_blank" rel="noopener noreferrer">'
-                  f'<img src="{img_url}" width="240" alt=""/></a><br/>\n'
-                  f'<a href="{url}" target="_blank" rel="noopener noreferrer">'
-                  f'<sub>{html.escape(text)}</sub></a>\n'
-                  f'</td>'
-              )
-
-          def build_table(cards):
-              return '<table border="0">\n<tr>\n' + '\n'.join(cards) + '\n</tr>\n</table>'
-
-          def update_section(readme_text, tag, content):
-              return re.sub(
-                  rf'<!-- {tag}:START -->.*?<!-- {tag}:END -->',
-                  f'<!-- {tag}:START -->\n{content}\n<!-- {tag}:END -->',
-                  readme_text, flags=re.DOTALL,
-              )
-
-          readme = pathlib.Path("README.md").read_text()
-
-          # ── Blog posts ──────────────────────────────────────────────────
-          try:
-              root = fetch_rss("https://briangreenberg.net/feed/")
-              cards = []
-              for item in root.findall(".//item"):
-                  if len(cards) >= 3:
-                      break
-                  title = clean_ws(strip_tags(item.findtext("title") or ""))
-                  url   = (item.findtext("link") or "").strip()
-                  desc  = strip_tags(item.findtext("description") or "")
-                  # Strip WordPress "appeared first on" boilerplate
-                  desc  = re.split(r'\s+The post\s+', desc)[0].strip()
-
-                  # First image from full post content; fall back to og:image
-                  encoded = item.findtext(f'{CONTENT_NS}encoded') or ''
-                  m = re.search(r'<img[^>]+src=["\']([^"\']+)["\']', encoded)
-                  img_url = m.group(1) if m else og_image(url)
-
-                  if title and url:
-                      cards.append(make_blog_card(url, title, img_url, make_excerpt(desc)))
-              if cards:
-                  readme = update_section(readme, "BLOG-POST-LIST", build_table(cards))
-                  print(f"Blog: {len(cards)} cards")
-          except Exception as e:
-              print(f"Blog error: {e}", file=sys.stderr)
-
-          # ── Mastodon posts ──────────────────────────────────────────────
-          try:
-              root = fetch_rss("https://infosec.exchange/@brian_greenberg.rss")
-              cards = []
-              for item in root.findall(".//item"):
-                  if len(cards) >= 3:
-                      break
-                  url  = (item.findtext("link") or "").strip()
-                  desc = clean_ws(strip_tags(item.findtext("description") or ""))
-
-                  if not url or not desc or is_bare_url(desc):
-                      continue
-
-                  mc      = item.find(f'{MEDIA_NS}content')
-                  img_url = mc.get('url') if mc is not None else MASTO_AVATAR
-
-                  cards.append(make_masto_card(url, img_url, make_excerpt(desc)))
-              if cards:
-                  readme = update_section(readme, "MASTODON-POST-LIST", build_table(cards))
-                  print(f"Mastodon: {len(cards)} cards")
-          except Exception as e:
-              print(f"Mastodon error: {e}", file=sys.stderr)
-
-          pathlib.Path("README.md").write_text(readme)
-          PYEOF
+      - name: Generate post cards and refresh README
+        run: python3 scripts/generate_cards.py
 
       - name: Commit if changed
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git diff --quiet README.md || git commit -am "chore: refresh latest posts"
+          if [[ -n "$(git status --porcelain README.md assets)" ]]; then
+            git add README.md assets
+            git commit -m "chore: refresh latest post cards"
+          else
+            echo "No changes."
+          fi

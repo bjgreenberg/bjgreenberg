@@ -1,0 +1,12 @@
+# macOS
+.DS_Store
+
+# Stray nested clone (not part of this repo)
+/bjgreenberg/
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+venv/
+.venv/
