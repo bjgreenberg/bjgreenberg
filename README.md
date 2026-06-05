@@ -33,13 +33,12 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 ## 🐘 Latest from Mastodon
 
-<!-- MASTODON-POST-LIST:START -->
-- [[No Title] - 116615900422307505](https://infosec.exchange/@brian_greenberg/116615900422307505)
-- [[No Title] - 116602203946934078](https://infosec.exchange/@brian_greenberg/116602203946934078)
-- [[No Title] - 116575937505532113](https://infosec.exchange/@brian_greenberg/116575937505532113)
-- [[No Title] - 116574536019242951](https://infosec.exchange/@brian_greenberg/116574536019242951)
-- [[No Title] - 116573380394057067](https://infosec.exchange/@brian_greenberg/116573380394057067)
-<!-- MASTODON-POST-LIST:END -->
+<!-- MASTODON-POST-LIST:START -->[
+_sanitized_description](https://infosec.exchange/@brian_greenberg/116615900422307505)[
+_sanitized_description](https://infosec.exchange/@brian_greenberg/116602203946934078)[
+_sanitized_description](https://infosec.exchange/@brian_greenberg/116575937505532113)[
+_sanitized_description](https://infosec.exchange/@brian_greenberg/116574536019242951)[
+_sanitized_description](https://infosec.exchange/@brian_greenberg/116573380394057067)<!-- MASTODON-POST-LIST:END -->
 
 <sub>↑ Auto-updated daily from <a href="https://infosec.exchange/@brian_greenberg">infosec.exchange/@brian_greenberg</a></sub>
 
