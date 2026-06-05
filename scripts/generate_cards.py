@@ -40,7 +40,7 @@ from pathlib import Path
 from typing import TypedDict
 
 from defusedxml.ElementTree import fromstring as safe_xml_fromstring
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFont, ImageOps
 
 # ── Configuration ───────────────────────────────────────────────────────────
 
@@ -225,11 +225,17 @@ def _fonts() -> tuple[ImageFont.FreeTypeFont, ImageFont.FreeTypeFont]:
 
 
 def fetch_photo(url: str, width: int, height: int) -> Image.Image:
-    """Fetch and resize a post image, or return a neutral placeholder on failure."""
+    """Fetch a post image cropped-to-fill the target box, or a placeholder.
+
+    Uses ``ImageOps.fit`` (center crop + resize) so source images of any
+    aspect ratio fill the card's hero band without distortion — the previous
+    plain ``resize`` stretched non-matching images.
+    """
     try:
         raw = fetch_url(url)
         img = Image.open(io.BytesIO(raw)).convert("RGB")
-        return img.resize((width, height), Image.LANCZOS)
+        return ImageOps.fit(img, (width, height), method=Image.LANCZOS,
+                            centering=(0.5, 0.5))
     except Exception as exc:  # noqa: BLE001 — any decode/network error → placeholder
         log.warning("Photo fetch failed for %s: %s", url, exc)
         return Image.new("RGB", (width, height), PLACEHOLDER_BG)

@@ -9,6 +9,16 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## 2026-06-05 (patch 4)
+
+### Fixed
+- Hero images were distorted: `resize()` stretched every source image into the card box regardless of aspect ratio. Switched to `ImageOps.fit` (center crop + resize) so images fill the band without skew
+
+### Documentation
+- Corrected the new-tab claim: GitHub strips `target="_blank"` from README anchors, so links open in the same tab on github.com (platform limitation, no workaround). Documented in scripts/README.md
+
+---
+
 ## 2026-06-05 (patch 3)
 
 ### Added

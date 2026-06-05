@@ -16,8 +16,13 @@ maps.
 The workaround: render each post to a **self-contained PNG** (featured image +
 title/blurb baked in) and place three per row inside a `<p align="center">`. No
 `<table>`, so **no borders**. Each card is wrapped in its own
-`<a href="post-url">`, so every card is **independently clickable** and opens the
-post in a new tab.
+`<a href="post-url">`, so every card is **independently clickable**.
+
+> **New-tab note:** GitHub's sanitizer strips `target="_blank"` from anchors in
+> README content, so links open in the **same tab** on github.com. The
+> attributes are kept in our generated HTML (correct, and honored if the README
+> is viewed elsewhere), but github.com ignores them. This is a platform
+> limitation with no reliable workaround.
 
 ### Trade-off
 
@@ -126,5 +131,9 @@ post URL, alt text).
   rounded corners.
 - Three 260px cards (~810px total) fit GitHub's README content width. If a row
   wraps, reduce `DISPLAY_W` in `generate_cards.py`.
+- Links open in the **same tab** on github.com — GitHub strips `target="_blank"`
+  from README anchors (see the New-tab note above).
+- Hero images are center-cropped to fill the card (`ImageOps.fit`); the edges of
+  very wide or very tall source images are trimmed rather than letterboxed.
 - Daily runs commit ~6 small PNGs; filenames are reused so the working tree
   stays flat, but git history does accrue blobs over time.
