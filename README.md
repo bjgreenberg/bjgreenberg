@@ -21,13 +21,7 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 ## <img src="https://briangreenberg.net/favicon.ico" width="16" height="16" alt=""> Latest from the Blog
 
-<!-- BLOG-POST-LIST:START -->
-- <a href="https://briangreenberg.net/2026/05/07/how-to-protect-yourself-from-identity-theft/" target="_blank" rel="noopener noreferrer">How to Protect Yourself from Identity Theft</a>
-- <a href="https://briangreenberg.net/2026/05/07/micro-transformations-ais-real-path-to-roi/" target="_blank" rel="noopener noreferrer">Micro-Transformations: AI&#39;s Real Path to ROI</a>
-- <a href="https://briangreenberg.net/2025/10/05/deepfakes-and-social-engineering-a-growing-threat-to-everyone-%f0%9f%92%80/" target="_blank" rel="noopener noreferrer">Deepfakes And Social Engineering: A Growing Threat To Everyone</a>
-- <a href="https://briangreenberg.net/2024/12/08/the-case-for-federal-regulations-in-cybersecurity-requiring-passwords-and-multifactor-authentication-mfa/" target="_blank" rel="noopener noreferrer">The Case For Federal Regulations In Cybersecurity: Requiring Passwords And Multifactor Authentication (MFA)</a>
-- <a href="https://briangreenberg.net/2024/11/07/how-to-incorporate-ai-into-your-company-without-feeding-the-beast/" target="_blank" rel="noopener noreferrer">How To Incorporate AI Into Your Company Without Feeding The Beast</a>
-<!-- BLOG-POST-LIST:END -->
+<!-- BLOG-POST-LIST:START -->- <a href='https://briangreenberg.net/2026/05/07/how-to-protect-yourself-from-identity-theft/' target='_blank' rel='noopener noreferrer'>How to Protect Yourself from Identity Theft</a>- <a href='https://briangreenberg.net/2026/05/07/micro-transformations-ais-real-path-to-roi/' target='_blank' rel='noopener noreferrer'>Micro-Transformations: AI’s Real Path to ROI</a>- <a href='https://briangreenberg.net/2025/10/05/deepfakes-and-social-engineering-a-growing-threat-to-everyone-%f0%9f%92%80/' target='_blank' rel='noopener noreferrer'>Deepfakes And Social Engineering: A Growing Threat To Everyone</a>- <a href='https://briangreenberg.net/2024/12/08/the-case-for-federal-regulations-in-cybersecurity-requiring-passwords-and-multifactor-authentication-mfa/' target='_blank' rel='noopener noreferrer'>The Case For Federal Regulations In Cybersecurity: Requiring Passwords And Multifactor Authentication &lpar;MFA&rpar;</a>- <a href='https://briangreenberg.net/2024/11/07/how-to-incorporate-ai-into-your-company-without-feeding-the-beast/' target='_blank' rel='noopener noreferrer'>How To Incorporate AI Into Your Company Without Feeding The Beast</a><!-- BLOG-POST-LIST:END -->
 
 <sub>↑ Auto-updated daily from <a href="https://briangreenberg.net" target="_blank" rel="noopener noreferrer">briangreenberg.net</a> <img src="https://briangreenberg.net/favicon.ico" width="12" height="12" alt=""></sub>
 
