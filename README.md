@@ -9,6 +9,29 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 ---
 
+## 📊 GitHub Activity
+
+<p align="center">
+  <img src="https://github-readme-stats.vercel.app/api?username=bjgreenberg&show_icons=true&theme=tokyonight&hide_border=true&count_private=true&rank_icon=github" alt="GitHub Stats" height="160" />
+  &nbsp;&nbsp;
+  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=bjgreenberg&layout=compact&theme=tokyonight&hide_border=true&langs_count=6" alt="Top Languages" height="160" />
+</p>
+
+<p align="center">
+  <img src="https://streak-stats.demolab.com?user=bjgreenberg&theme=tokyonight&hide_border=true" alt="GitHub Streak" />
+</p>
+
+---
+
+## 📰 Latest from the Blog
+
+<!-- BLOG-POST-LIST:START -->
+<!-- BLOG-POST-LIST:END -->
+
+<sub>↑ Auto-updated daily from <a href="https://briangreenberg.net">briangreenberg.net</a></sub>
+
+---
+
 ## 🌐 Connect with Me
 
 - 🌍 [Personal Website](https://briangreenberg.net)

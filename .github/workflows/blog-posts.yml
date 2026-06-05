@@ -1,0 +1,23 @@
+name: Update README — latest blog posts
+
+on:
+  schedule:
+    - cron: '0 8 * * *'  # 08:00 UTC daily
+  workflow_dispatch:       # allow manual trigger from Actions tab
+
+permissions:
+  contents: write
+
+jobs:
+  update-readme:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch latest blog posts from briangreenberg.net
+        uses: gautamkrishnar/blog-post-workflow@v1
+        with:
+          feed_list: "https://briangreenberg.net/feed/"
+          max_post_count: 5
+          gh_token: ${{ secrets.GITHUB_TOKEN }}
+          commit_message: "chore: refresh latest blog post list"
