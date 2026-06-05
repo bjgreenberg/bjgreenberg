@@ -41,36 +41,46 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 ## 🌐 Connect with Me
 
-- 🌍 <a href="https://briangreenberg.net" target="_blank" rel="noopener noreferrer">Personal Website</a>
-- 🔗 <a href="https://linktr.ee/brian.greenberg" target="_blank" rel="noopener noreferrer">Linktree</a>
-- 📫 <a href="https://briangreenberg.net/contact/" target="_blank" rel="noopener noreferrer">Contact Me</a>
+<p>
+  <a href="https://briangreenberg.net" target="_blank" rel="noopener noreferrer"><img alt="Website" src="https://img.shields.io/badge/Website-1A73E8?style=for-the-badge&logo=googlechrome&logoColor=white"></a>
+  <a href="https://linktr.ee/brian.greenberg" target="_blank" rel="noopener noreferrer"><img alt="Linktree" src="https://img.shields.io/badge/Linktree-43E55E?style=for-the-badge&logo=linktree&logoColor=white"></a>
+  <a href="https://briangreenberg.net/contact/" target="_blank" rel="noopener noreferrer"><img alt="Contact" src="https://img.shields.io/badge/Contact-EA4335?style=for-the-badge&logo=gmail&logoColor=white"></a>
+</p>
 
 ## ✍️ Thought Leadership & Content
 
-- 📰 <a href="https://www.forbes.com/councils/forbestechcouncil/people/briangreenberg1" target="_blank" rel="noopener noreferrer">Forbes Technology Council</a>
-- 📝 <a href="https://medium.com/@brian.greenberg" target="_blank" rel="noopener noreferrer">Medium Blog</a>
-- 📬 <a href="https://substack.com/@briangreenberg" target="_blank" rel="noopener noreferrer">Substack</a>
-- 📌 <a href="https://www.pinterest.com/bjgreenberg/" target="_blank" rel="noopener noreferrer">Pinterest</a>
-- 📚 <a href="https://goodreads.com/user/show/7110423-brian-greenberg" target="_blank" rel="noopener noreferrer">Goodreads</a>
+<p>
+  <a href="https://www.forbes.com/councils/forbestechcouncil/people/briangreenberg1" target="_blank" rel="noopener noreferrer"><img alt="Forbes Technology Council" src="https://img.shields.io/badge/Forbes_Tech_Council-000000?style=for-the-badge&logoColor=white"></a>
+  <a href="https://medium.com/@brian.greenberg" target="_blank" rel="noopener noreferrer"><img alt="Medium" src="https://img.shields.io/badge/Medium-000000?style=for-the-badge&logo=medium&logoColor=white"></a>
+  <a href="https://substack.com/@briangreenberg" target="_blank" rel="noopener noreferrer"><img alt="Substack" src="https://img.shields.io/badge/Substack-FF6719?style=for-the-badge&logo=substack&logoColor=white"></a>
+  <a href="https://www.pinterest.com/bjgreenberg/" target="_blank" rel="noopener noreferrer"><img alt="Pinterest" src="https://img.shields.io/badge/Pinterest-BD081C?style=for-the-badge&logo=pinterest&logoColor=white"></a>
+  <a href="https://goodreads.com/user/show/7110423-brian-greenberg" target="_blank" rel="noopener noreferrer"><img alt="Goodreads" src="https://img.shields.io/badge/Goodreads-372213?style=for-the-badge&logo=goodreads&logoColor=white"></a>
+</p>
 
 ## 💼 Social & Professional Networks
 
-- 💼 <a href="https://linkedin.com/in/bjgreenberg" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-- 📘 <a href="https://facebook.com/BrianGreenberg.Net" target="_blank" rel="noopener noreferrer">Facebook</a>
-- 🐘 <a href="https://infosec.exchange/@brian_greenberg" target="_blank" rel="noopener noreferrer">Mastodon</a>
-- 🧵 <a href="https://www.threads.net/@bjgreenberg" target="_blank" rel="noopener noreferrer">Threads</a>
-- 📸 <a href="https://instagram.com/bjgreenberg" target="_blank" rel="noopener noreferrer">Instagram</a>
-- 🐦 <a href="https://x.com/bjgreenberg" target="_blank" rel="noopener noreferrer">X (Twitter)</a>
-- 🔷 <a href="https://bsky.app/profile/briangreenberg.net" target="_blank" rel="noopener noreferrer">Bluesky</a>
+<p>
+  <a href="https://linkedin.com/in/bjgreenberg" target="_blank" rel="noopener noreferrer"><img alt="LinkedIn" src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logoColor=white"></a>
+  <a href="https://infosec.exchange/@brian_greenberg" target="_blank" rel="noopener noreferrer"><img alt="Mastodon" src="https://img.shields.io/badge/Mastodon-6364FF?style=for-the-badge&logo=mastodon&logoColor=white"></a>
+  <a href="https://bsky.app/profile/briangreenberg.net" target="_blank" rel="noopener noreferrer"><img alt="Bluesky" src="https://img.shields.io/badge/Bluesky-0285FF?style=for-the-badge&logo=bluesky&logoColor=white"></a>
+  <a href="https://x.com/bjgreenberg" target="_blank" rel="noopener noreferrer"><img alt="X" src="https://img.shields.io/badge/X-000000?style=for-the-badge&logo=x&logoColor=white"></a>
+  <a href="https://www.threads.net/@bjgreenberg" target="_blank" rel="noopener noreferrer"><img alt="Threads" src="https://img.shields.io/badge/Threads-000000?style=for-the-badge&logo=threads&logoColor=white"></a>
+  <a href="https://instagram.com/bjgreenberg" target="_blank" rel="noopener noreferrer"><img alt="Instagram" src="https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white"></a>
+  <a href="https://facebook.com/BrianGreenberg.Net" target="_blank" rel="noopener noreferrer"><img alt="Facebook" src="https://img.shields.io/badge/Facebook-1877F2?style=for-the-badge&logo=facebook&logoColor=white"></a>
+</p>
 
 ## 📚 Academic & Teaching
 
-- 🎓 <a href="https://www.cdm.depaul.edu/Faculty-and-Staff/Pages/faculty-info.aspx?fid=1485" target="_blank" rel="noopener noreferrer">DePaul University Faculty Page</a>
+<p>
+  <a href="https://www.cdm.depaul.edu/Faculty-and-Staff/Pages/faculty-info.aspx?fid=1485" target="_blank" rel="noopener noreferrer"><img alt="DePaul University Faculty Page" src="https://img.shields.io/badge/DePaul_University_Faculty-005EB8?style=for-the-badge&logoColor=white"></a>
+</p>
 
 ## 🎧 Creative & Social
 
-- 🎶 <a href="https://music.apple.com/profile/briangreenberg" target="_blank" rel="noopener noreferrer">Apple Music</a>
-- 🎵 <a href="https://soundcloud.com/briangreenberg" target="_blank" rel="noopener noreferrer">SoundCloud</a>
-- 🎬 <a href="https://www.tiktok.com/@briangreenberg" target="_blank" rel="noopener noreferrer">TikTok</a>
+<p>
+  <a href="https://music.apple.com/profile/briangreenberg" target="_blank" rel="noopener noreferrer"><img alt="Apple Music" src="https://img.shields.io/badge/Apple_Music-FA243C?style=for-the-badge&logo=applemusic&logoColor=white"></a>
+  <a href="https://soundcloud.com/briangreenberg" target="_blank" rel="noopener noreferrer"><img alt="SoundCloud" src="https://img.shields.io/badge/SoundCloud-FF5500?style=for-the-badge&logo=soundcloud&logoColor=white"></a>
+  <a href="https://www.tiktok.com/@briangreenberg" target="_blank" rel="noopener noreferrer"><img alt="TikTok" src="https://img.shields.io/badge/TikTok-000000?style=for-the-badge&logo=tiktok&logoColor=white"></a>
+</p>
 
 > "Technology is only as powerful as the intentions of the people behind it."

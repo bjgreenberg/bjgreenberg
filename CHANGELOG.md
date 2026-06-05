@@ -9,6 +9,17 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## 2026-06-05 (patch 6)
+
+### Changed
+- Replaced the five bullet-list link sections (Connect, Thought Leadership, Social, Academic, Creative) with compact shields.io `for-the-badge` badge rows in brand colors
+- Reordered Social row to lead with the highest-signal platforms (LinkedIn, Mastodon, Bluesky, X) for this audience
+
+### Notes
+- LinkedIn and Forbes badges are intentionally icon-less: simple-icons (shields' logo source) removed those logos over trademark concerns. The brand-colored text pills remain clearly recognizable; verified every other logo slug renders.
+
+---
+
 ## 2026-06-05 (patch 5)
 
 ### Changed
