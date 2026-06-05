@@ -29,13 +29,12 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 ## <img src="https://icons.duckduckgo.com/ip3/infosec.exchange.ico" width="16" height="16" alt=""> Latest from Mastodon
 
-<!-- MASTODON-POST-LIST:START -->
-- <a href="https://infosec.exchange/@brian_greenberg/116615900422307505" target="_blank" rel="noopener noreferrer">[No Title] - 116615900422307505</a>
-- <a href="https://infosec.exchange/@brian_greenberg/116602203946934078" target="_blank" rel="noopener noreferrer">[No Title] - 116602203946934078</a>
-- <a href="https://infosec.exchange/@brian_greenberg/116575937505532113" target="_blank" rel="noopener noreferrer">[No Title] - 116575937505532113</a>
-- <a href="https://infosec.exchange/@brian_greenberg/116574536019242951" target="_blank" rel="noopener noreferrer">[No Title] - 116574536019242951</a>
-- <a href="https://infosec.exchange/@brian_greenberg/116573380394057067" target="_blank" rel="noopener noreferrer">[No Title] - 116573380394057067</a>
-<!-- MASTODON-POST-LIST:END -->
+<!-- MASTODON-POST-LIST:START -->- <a href='https://infosec.exchange/@brian_greenberg/116615900422307505' target='_blank' rel='noopener noreferrer'>
+_sanitized_description</a>- <a href='https://infosec.exchange/@brian_greenberg/116602203946934078' target='_blank' rel='noopener noreferrer'>
+_sanitized_description</a>- <a href='https://infosec.exchange/@brian_greenberg/116575937505532113' target='_blank' rel='noopener noreferrer'>
+_sanitized_description</a>- <a href='https://infosec.exchange/@brian_greenberg/116574536019242951' target='_blank' rel='noopener noreferrer'>
+_sanitized_description</a>- <a href='https://infosec.exchange/@brian_greenberg/116573380394057067' target='_blank' rel='noopener noreferrer'>
+_sanitized_description</a><!-- MASTODON-POST-LIST:END -->
 
 <sub>↑ Auto-updated daily from <a href="https://infosec.exchange/@brian_greenberg" target="_blank" rel="noopener noreferrer">infosec.exchange/@brian_greenberg</a> <img src="https://icons.duckduckgo.com/ip3/infosec.exchange.ico" width="12" height="12" alt=""></sub>
 
