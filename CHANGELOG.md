@@ -9,6 +9,18 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## 2026-06-05 (patch 2)
+
+### Changed
+- All static links converted from markdown syntax to `<a target="_blank" rel="noopener noreferrer">` so they open in a new tab
+- Streak card image wrapped in anchor to github.com/bjgreenberg (clicking it now navigates instead of opening raw image)
+- Blog and Mastodon section headers: emoji replaced with 16×16 favicon `<img>` (briangreenberg.net/favicon.ico and icons.duckduckgo.com proxy for infosec.exchange)
+- "Auto-updated daily" captions: favicon appended as 12×12 inline icon after each source link
+- Workflow blog template updated to emit `<a target="_blank">` so auto-generated post links also open in new tab
+- Workflow Mastodon template updated the same way
+
+---
+
 ## 2026-06-05
 
 ### Fixed
