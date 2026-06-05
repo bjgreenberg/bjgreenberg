@@ -22,7 +22,7 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 ## <img src="assets/gsd-favicon.png" width="16" height="16" alt=""> Latest from the Blog
 
 <!-- BLOG-POST-LIST:START -->
-<table>
+<table border="0">
 <tr>
 <td width="33%" align="center" valign="top">
 <a href="https://briangreenberg.net/2026/05/07/how-to-protect-yourself-from-identity-theft/" target="_blank" rel="noopener noreferrer"><img src="https://i0.wp.com/briangreenberg.net/wp-content/uploads/2026/05/Personal-Data-Breach-Risk-Mitigation-A-Practical-Guide.jpg?resize=1024%2C341&#038;ssl=1" width="240" alt=""/></a><br/>
@@ -50,7 +50,7 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 ## <img src="https://icons.duckduckgo.com/ip3/infosec.exchange.ico" width="16" height="16" alt=""> Latest from Mastodon
 
 <!-- MASTODON-POST-LIST:START -->
-<table>
+<table border="0">
 <tr>
 <td width="33%" align="center" valign="top">
 <a href="https://infosec.exchange/@brian_greenberg/116602203946934078" target="_blank" rel="noopener noreferrer"><img src="https://media.infosec.exchange/infosec.exchange/media_attachments/files/116/602/208/512/768/251/original/ca6c7ea039b012ba.png" width="240" alt=""/></a><br/>

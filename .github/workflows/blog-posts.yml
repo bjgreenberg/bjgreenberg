@@ -87,7 +87,7 @@ jobs:
               )
 
           def build_table(cards):
-              return '<table>\n<tr>\n' + '\n'.join(cards) + '\n</tr>\n</table>'
+              return '<table border="0">\n<tr>\n' + '\n'.join(cards) + '\n</tr>\n</table>'
 
           def update_section(readme_text, tag, content):
               return re.sub(
