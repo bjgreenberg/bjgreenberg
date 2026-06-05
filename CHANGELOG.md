@@ -9,6 +9,14 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## 2026-06-05 (patch 5)
+
+### Changed
+- Removed all `---` horizontal rules between sections; GitHub already renders an underline beneath each `##` heading, so the explicit rules were redundant double lines
+- Removed the redundant nested `bjgreenberg/` clone (an old local clone of the same remote, no unpushed work) and the now-unneeded `.gitignore` entry for it
+
+---
+
 ## 2026-06-05 (patch 4)
 
 ### Fixed
