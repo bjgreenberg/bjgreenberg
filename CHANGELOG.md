@@ -9,6 +9,14 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## 2026-06-08
+
+### Added
+- Hero banner (`assets/GitHub2025.png`, 1584×396) at the top of the README, wrapped in a centered responsive `<p>` with alt text
+- `assets/GitHub2026.png` kept in the repo for the upcoming 2026 rebrand; a `HERO BANNER` comment marks where to swap it in
+
+---
+
 ## 2026-06-05 (patch 7)
 
 ### Added
