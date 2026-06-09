@@ -16,7 +16,10 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - `assets/GitHub2026.png` kept in the repo for the upcoming 2026 rebrand; a `HERO BANNER` comment marks where to swap it in
 
 ### Changed
-- DePaul University Faculty badge now carries the DePaul crest as its icon. Cropped the crest emblem out of the full `DePaul Logo Transparent.png` wordmark (the white "DEPAUL UNIVERSITY" lettering is illegible at a 14px badge logo size, so only the crest is used), downscaled to 38×40, and embedded as a percent-encoded `logo=data:image/png;base64,…` on the existing DePaul-blue (`#005EB8`) badge — same technique as the LinkedIn/Forbes badges. White-on-transparent crest stays visible in both light and dark GitHub themes because it sits on the blue badge fill rather than the page background. Source crest saved as `assets/depaul-crest.png` (149×155) for future regeneration
+- DePaul University Faculty badge now carries the DePaul crest as its icon. Cropped the crest emblem out of the full `DePaul Logo Transparent.png` wordmark (the white "DEPAUL UNIVERSITY" lettering is illegible at a 14px badge logo size, so only the crest is used) and embedded it as a percent-encoded `logo=data:image/png;base64,…` on the existing DePaul-blue (`#005EB8`) badge — same technique as the LinkedIn/Forbes badges. White-on-transparent crest stays visible in both light and dark GitHub themes because it sits on the blue badge fill rather than the page background. Source crest saved as `assets/depaul-crest.png` (149×155) for future regeneration
+
+### Fixed
+- DePaul badge rendered as a broken image on the live profile: the first attempt embedded the crest as an optimized RGBA PNG, producing a 4,193-char badge URL. shields.io serves it fine directly, but GitHub's camo image proxy will not proxy URLs that long (the working LinkedIn/Forbes badges are ~1,100–1,500 chars). Fixed by encoding the 38×40 crest as a 16-color paletted PNG instead of RGBA, which dropped the badge URL to 1,545 chars with no visible quality loss — back in camo's working range
 
 ---
 
