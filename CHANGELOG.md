@@ -15,6 +15,9 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Hero banner (`assets/GitHub2025.png`, 1584×396) at the top of the README, wrapped in a centered responsive `<p>` with alt text
 - `assets/GitHub2026.png` kept in the repo for the upcoming 2026 rebrand; a `HERO BANNER` comment marks where to swap it in
 
+### Changed
+- DePaul University Faculty badge now carries the DePaul crest as its icon. Cropped the crest emblem out of the full `DePaul Logo Transparent.png` wordmark (the white "DEPAUL UNIVERSITY" lettering is illegible at a 14px badge logo size, so only the crest is used), downscaled to 38×40, and embedded as a percent-encoded `logo=data:image/png;base64,…` on the existing DePaul-blue (`#005EB8`) badge — same technique as the LinkedIn/Forbes badges. White-on-transparent crest stays visible in both light and dark GitHub themes because it sits on the blue badge fill rather than the page background. Source crest saved as `assets/depaul-crest.png` (149×155) for future regeneration
+
 ---
 
 ## 2026-06-05 (patch 7)
