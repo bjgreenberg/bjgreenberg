@@ -1,3 +1,4 @@
+<img src="assets/GitHub2025.png">
 # 👋 Hi, I'm Brian Greenberg
 
 - 🚀 Chief Information Officer @ RHR International
