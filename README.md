@@ -1,3 +1,9 @@
+<!--
+  Branch-protection exemption (senior-engineering-partner v2.9): this repo is
+  structurally single-writer — the daily blog-posts.yml GitHub Action
+  auto-commits README/card refreshes directly to main. Requiring PRs would
+  break the bot, so main is intentionally unprotected.
+-->
 <!-- HERO BANNER — swap to assets/GitHub2026.png when the 2026 rebrand goes live -->
 <p align="center">
   <img src="assets/GitHub2025.png" width="100%" alt="Brian Greenberg — CIO, RHR International · Forbes Technology Council · DePaul University" />
