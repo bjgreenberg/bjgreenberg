@@ -7,6 +7,11 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## 2026-06-10
+
+### Added
+- `ci`: GitHub Actions CI workflow (`test` job) — pytest + bandit on every PR and push to `main` (including daily bot commits), Python 3.12 to match the bot runtime. Non-gating safety net; rationale in `scripts/README.md`.
+
 ---
 
 ## 2026-06-08

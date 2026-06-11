@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+# Non-gating safety net: main has no branch protection (the daily
+# blog-posts.yml bot commits directly — documented exemption). This can't
+# block a bad commit, but it emails within minutes if generate_cards.py
+# breaks, instead of the README silently going stale.
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          # 3.12 to match the runtime blog-posts.yml actually runs the bot
+          # with — CI should test the production interpreter, not a newer one.
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: scripts/requirements.txt
+
+      - name: Install dependencies
+        run: pip install -r scripts/requirements.txt pytest bandit
+
+      - name: Run tests
+        run: pytest -q scripts
+
+      - name: Bandit security scan
+        run: bandit -q -ll scripts/generate_cards.py

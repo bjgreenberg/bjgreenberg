@@ -137,3 +137,12 @@ post URL, alt text).
   very wide or very tall source images are trimmed rather than letterboxed.
 - Daily runs commit ~6 small PNGs; filenames are reused so the working tree
   stays flat, but git history does accrue blobs over time.
+
+## CI
+
+Every push to `main` (including the daily bot commit) runs the `test` job of
+the CI workflow (`.github/workflows/ci.yml`): pytest (18 tests) + bandit on
+`generate_cards.py`, on Python 3.12 to match the bot's production runtime.
+Non-gating by design — `main` has no branch protection (the daily bot commits
+directly; documented exemption) — so a red run is an email alarm, not a merge
+gate.
