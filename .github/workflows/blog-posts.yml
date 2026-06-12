@@ -34,6 +34,7 @@ jobs:
           if [[ -n "$(git status --porcelain README.md assets)" ]]; then
             git add README.md assets
             git commit -m "chore: refresh latest post cards"
+            git push
           else
             echo "No changes."
           fi

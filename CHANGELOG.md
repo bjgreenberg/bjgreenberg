@@ -7,6 +7,13 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## 2026-06-12
+
+### Fixed
+- `blog-posts.yml`: the daily "Update README — latest posts" job committed the refreshed post cards on the runner but never pushed — `git push` was absent from every version of the workflow since the custom-Python rewrite (`c8e1b25`), so each day's commit died with the ephemeral runner and the run still reported success. The README's Mastodon/blog cards had been frozen at the last manually-committed state (~2026-06-09). Added `git push` after the commit; a push failure now fails the step instead of vanishing silently.
+
+---
+
 ## 2026-06-10
 
 ### Added
