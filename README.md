@@ -30,9 +30,9 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 <!-- BLOG-POST-LIST:START -->
 <p align="center">
-  <a href="https://briangreenberg.net/2026/05/07/how-to-protect-yourself-from-identity-theft/" target="_blank" rel="noopener noreferrer"><img src="assets/blog_card_1.png" width="260" alt="How to Protect Yourself from Identity Theft"/></a>
-  <a href="https://briangreenberg.net/2026/05/07/micro-transformations-ais-real-path-to-roi/" target="_blank" rel="noopener noreferrer"><img src="assets/blog_card_2.png" width="260" alt="Micro-Transformations: AI’s Real Path to ROI"/></a>
-  <a href="https://briangreenberg.net/2025/10/05/deepfakes-and-social-engineering-a-growing-threat-to-everyone-%f0%9f%92%80/" target="_blank" rel="noopener noreferrer"><img src="assets/blog_card_3.png" width="260" alt="Deepfakes And Social Engineering: A Growing Threat To Everyone"/></a>
+  <a href="https://briangreenberg.net/2026/05/07/how-to-protect-yourself-from-identity-theft/" target="_blank" rel="noopener noreferrer"><img src="assets/blog_card_1.png?v=3c900d78" width="260" alt="How to Protect Yourself from Identity Theft"/></a>
+  <a href="https://briangreenberg.net/2026/05/07/micro-transformations-ais-real-path-to-roi/" target="_blank" rel="noopener noreferrer"><img src="assets/blog_card_2.png?v=6f88fd3f" width="260" alt="Micro-Transformations: AI’s Real Path to ROI"/></a>
+  <a href="https://briangreenberg.net/2025/10/05/deepfakes-and-social-engineering-a-growing-threat-to-everyone-%f0%9f%92%80/" target="_blank" rel="noopener noreferrer"><img src="assets/blog_card_3.png?v=7cf84a48" width="260" alt="Deepfakes And Social Engineering: A Growing Threat To Everyone"/></a>
 </p>
 <!-- BLOG-POST-LIST:END -->
 
@@ -42,9 +42,9 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 <!-- MASTODON-POST-LIST:START -->
 <p align="center">
-  <a href="https://infosec.exchange/@brian_greenberg/116727048119928473" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_1.png" width="260" alt="✨ A sparkle icon appears in an app that no one in IT approved. The help desk can&#x27;t explain it, and…"/></a>
-  <a href="https://infosec.exchange/@brian_greenberg/116602203946934078" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_2.png" width="260" alt="🥶 A contractor for CISA posted AWS GovCloud admin keys to a public GitHub repo! The repo was named…"/></a>
-  <a href="https://infosec.exchange/@brian_greenberg/116575937505532113" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_3.png" width="260" alt="I attended the AITP Chicago Security SIG tonight at RSM and left with one clear takeaway: a $200…"/></a>
+  <a href="https://infosec.exchange/@brian_greenberg/116727048119928473" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_1.png?v=bc25d97e" width="260" alt="✨ A sparkle icon appears in an app that no one in IT approved. The help desk can&#x27;t explain it, and…"/></a>
+  <a href="https://infosec.exchange/@brian_greenberg/116602203946934078" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_2.png?v=ab8ead7d" width="260" alt="🥶 A contractor for CISA posted AWS GovCloud admin keys to a public GitHub repo! The repo was named…"/></a>
+  <a href="https://infosec.exchange/@brian_greenberg/116575937505532113" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_3.png?v=91348c18" width="260" alt="I attended the AITP Chicago Security SIG tonight at RSM and left with one clear takeaway: a $200…"/></a>
 </p>
 <!-- MASTODON-POST-LIST:END -->
 
