@@ -94,6 +94,31 @@ class TestStripPhoton:
         assert gc.strip_photon("") == ""
 
 
+class TestAssetVersion:
+    def test_returns_8_hex_chars(self, tmp_path):
+        f = tmp_path / "card.png"
+        f.write_bytes(b"image-bytes")
+        v = gc.asset_version(f)
+        assert len(v) == 8
+        assert all(c in "0123456789abcdef" for c in v)
+
+    def test_same_content_same_version(self, tmp_path):
+        # Deterministic: unchanged bytes must produce an unchanged URL, so
+        # a no-op regeneration doesn't churn the README.
+        a, b = tmp_path / "a.png", tmp_path / "b.png"
+        a.write_bytes(b"same")
+        b.write_bytes(b"same")
+        assert gc.asset_version(a) == gc.asset_version(b)
+
+    def test_changed_content_changes_version(self, tmp_path):
+        # The whole point: new bytes → new URL → every cache layer misses.
+        f = tmp_path / "card.png"
+        f.write_bytes(b"old card")
+        old = gc.asset_version(f)
+        f.write_bytes(b"new card")
+        assert gc.asset_version(f) != old
+
+
 class TestIsBareUrl:
     def test_true_for_lone_url(self):
         assert gc.is_bare_url("https://example.com/page?x=1") is True

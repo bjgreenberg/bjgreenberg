@@ -28,6 +28,7 @@ See scripts/README.md for full documentation.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import html
 import io
 import logging
@@ -186,6 +187,18 @@ def strip_photon(url: str) -> str:
     """
     m = re.match(r"^https?://i\d\.wp\.com/([^?#]+)", url)
     return f"https://{m.group(1)}" if m else url
+
+
+def asset_version(path: Path) -> str:
+    """Short content hash of ``path``, used to cache-bust README image URLs.
+
+    The card filenames are stable (``blog_card_1.png`` …), so without a
+    version param the GitHub raw CDN, camo proxy, corporate web filters,
+    and browsers all keep serving yesterday's bytes after a refresh. A
+    content-hash query string gives every regenerated card a never-seen
+    URL, making updates visible immediately.
+    """
+    return hashlib.sha256(path.read_bytes()).hexdigest()[:8]
 
 
 def og_image(url: str) -> str | None:
@@ -383,7 +396,7 @@ def build_blog_cards() -> list[Card]:
             secondary_max_lines=BLOG_BLURB_LINES,
         )
         card_img.save(path)
-        cards.append(Card(asset_path=path, rel_src=f"assets/{path.name}",
+        cards.append(Card(asset_path=path, rel_src=f"assets/{path.name}?v={asset_version(path)}",
                           url=url, alt=title))
         log.info("Blog card %d: %s", idx, title[:60])
     return cards
@@ -414,7 +427,7 @@ def build_masto_cards() -> list[Card]:
             primary_max_lines=MASTO_TEXT_LINES,
         )
         card_img.save(path)
-        cards.append(Card(asset_path=path, rel_src=f"assets/{path.name}",
+        cards.append(Card(asset_path=path, rel_src=f"assets/{path.name}?v={asset_version(path)}",
                           url=url, alt=make_excerpt(text, 100)))
         log.info("Masto card %d: %s", idx, baked[:60])
     return cards

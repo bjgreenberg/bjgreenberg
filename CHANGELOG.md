@@ -9,6 +9,9 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## 2026-06-12
 
+### Added
+- `generate_cards.py`: `asset_version()` — card `<img src>` URLs now carry a content-hash query param (`assets/blog_card_1.png?v=<sha256[:8]>`). The filenames are stable, so previously every cache layer (GitHub raw CDN `max-age=300`, camo, corporate web filters, browsers) kept serving stale cards after a refresh — observed when the 2026-06-12 Photon fix landed but the profile still showed gray placeholders through a hard refresh. New bytes now always get a never-before-seen URL; unchanged bytes keep the same URL so a no-op regeneration doesn't churn the README. 3 new pytest cases
+
 ### Fixed
 - `generate_cards.py`: the first two blog cards rendered with the gray placeholder because their hero images are served through Jetpack's Photon CDN (`i0.wp.com`), whose edge nodes fronting GitHub's runner region return persistent 404s for those URLs (cached origin errors) — the same URLs return 200 from everywhere else, and the origin images were never missing. Added `strip_photon()` (applied in `fetch_photo`, the single chokepoint for all card images): Photon URLs are rewritten to their origin form with the `?resize=…&ssl=1` params dropped — we download the full image and do our own Pillow crop anyway. Non-Photon hosts pass through unchanged. Covered by 7 new pytest cases (positive, negative, and lookalike-host)
 - `blog-posts.yml`: the daily "Update README — latest posts" job committed the refreshed post cards on the runner but never pushed — `git push` was absent from every version of the workflow since the custom-Python rewrite (`c8e1b25`), so each day's commit died with the ephemeral runner and the run still reported success. The README's Mastodon/blog cards had been frozen at the last manually-committed state (~2026-06-09). Added `git push` after the commit; a push failure now fails the step instead of vanishing silently.
