@@ -42,9 +42,9 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 <!-- MASTODON-POST-LIST:START -->
 <p align="center">
-  <a href="https://infosec.exchange/@brian_greenberg/116602203946934078" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_1.png" width="260" alt="🥶 A contractor for CISA posted AWS GovCloud admin keys to a public GitHub repo! The repo was named…"/></a>
-  <a href="https://infosec.exchange/@brian_greenberg/116575937505532113" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_2.png" width="260" alt="I attended the AITP Chicago Security SIG tonight at RSM and left with one clear takeaway: a $200…"/></a>
-  <a href="https://infosec.exchange/@brian_greenberg/116574536019242951" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_3.png" width="260" alt="The big security conferences have their place. You get the keynotes, the vendor expo, and the…"/></a>
+  <a href="https://infosec.exchange/@brian_greenberg/116727048119928473" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_1.png" width="260" alt="✨ A sparkle icon appears in an app that no one in IT approved. The help desk can&#x27;t explain it, and…"/></a>
+  <a href="https://infosec.exchange/@brian_greenberg/116602203946934078" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_2.png" width="260" alt="🥶 A contractor for CISA posted AWS GovCloud admin keys to a public GitHub repo! The repo was named…"/></a>
+  <a href="https://infosec.exchange/@brian_greenberg/116575937505532113" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_3.png" width="260" alt="I attended the AITP Chicago Security SIG tonight at RSM and left with one clear takeaway: a $200…"/></a>
 </p>
 <!-- MASTODON-POST-LIST:END -->
 
