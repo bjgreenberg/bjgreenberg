@@ -97,6 +97,7 @@ glyphs (the link still points at the full original post).
 | `strip_emoji` | Drop glyphs the fonts can't render (emoji/symbols) |
 | `make_excerpt` | Word-boundary truncate with an ellipsis |
 | `is_bare_url` | Detect caption-less Mastodon link shares (skipped) |
+| `strip_photon` | Rewrite Jetpack Photon CDN URLs (`iN.wp.com`) to their origin |
 | `og_image` | Scrape a post page's `og:image` when RSS has no inline image |
 | `_find_font` / `_fonts` | Cross-platform (Ubuntu/macOS) TrueType font loading |
 | `fetch_photo` | Download + resize a hero image, or a neutral placeholder on failure |

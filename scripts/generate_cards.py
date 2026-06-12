@@ -171,6 +171,23 @@ def is_bare_url(text: str) -> bool:
     return bool(re.match(r"^https?://\S+$", text.strip()))
 
 
+def strip_photon(url: str) -> str:
+    """Rewrite a Jetpack Photon CDN URL to its origin URL.
+
+    Photon (``i0.wp.com``/``i1.wp.com``/…) edge nodes serving GitHub's
+    runner region have returned persistent 404s for valid images (cached
+    origin errors), while the origin itself serves them fine. We download
+    the full image and do our own crop/resize anyway, so Photon's
+    ``?resize=`` params buy nothing — fetch the origin directly.
+
+    ``https://i0.wp.com/example.net/img.jpg?resize=1024%2C341&ssl=1``
+    becomes ``https://example.net/img.jpg``. Non-Photon URLs pass through
+    unchanged.
+    """
+    m = re.match(r"^https?://i\d\.wp\.com/([^?#]+)", url)
+    return f"https://{m.group(1)}" if m else url
+
+
 def og_image(url: str) -> str | None:
     """Scrape a post page's ``og:image`` when the RSS body has no inline image."""
     try:
@@ -232,7 +249,7 @@ def fetch_photo(url: str, width: int, height: int) -> Image.Image:
     plain ``resize`` stretched non-matching images.
     """
     try:
-        raw = fetch_url(url)
+        raw = fetch_url(strip_photon(url))
         img = Image.open(io.BytesIO(raw)).convert("RGB")
         return ImageOps.fit(img, (width, height), method=Image.LANCZOS,
                             centering=(0.5, 0.5))

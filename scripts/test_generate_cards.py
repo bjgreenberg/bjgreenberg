@@ -55,6 +55,45 @@ class TestMakeExcerpt:
         assert result == "abcdefgh…"
 
 
+class TestStripPhoton:
+    def test_rewrites_photon_url_to_origin_and_drops_query(self):
+        url = ("https://i0.wp.com/briangreenberg.net/wp-content/uploads/"
+               "2026/05/AI-Micro-Transformations.jpg?resize=1024%2C572&ssl=1")
+        assert gc.strip_photon(url) == (
+            "https://briangreenberg.net/wp-content/uploads/"
+            "2026/05/AI-Micro-Transformations.jpg")
+
+    def test_rewrites_any_photon_shard_number(self):
+        # Photon shards across i0/i1/i2; match any single digit.
+        assert gc.strip_photon("https://i2.wp.com/example.net/a.png") == \
+            "https://example.net/a.png"
+
+    def test_drops_unescaped_entity_ampersand_query(self):
+        # WP feeds embed &#038; (HTML entity for &) inside src attributes;
+        # the query is dropped wholesale so the entity never reaches urllib.
+        url = "https://i0.wp.com/example.net/img.jpg?resize=1%2C2&#038;ssl=1"
+        assert gc.strip_photon(url) == "https://example.net/img.jpg"
+
+    def test_leaves_origin_url_unchanged(self):
+        url = "https://briangreenberg.net/wp-content/uploads/banner.jpeg"
+        assert gc.strip_photon(url) == url
+
+    def test_leaves_non_photon_cdn_unchanged(self):
+        url = "https://media.infosec.exchange/accounts/avatars/avatar.png"
+        assert gc.strip_photon(url) == url
+
+    def test_does_not_match_photon_lookalike_hosts(self):
+        # Host must be exactly iN.wp.com — a subdomain prefix or a longer
+        # registrable domain must not be rewritten.
+        for url in ("https://noti0.wp.com/example.net/a.png",
+                    "https://i0.wp.com.evil.net/example.net/a.png"):
+            assert gc.strip_photon(url) == url
+
+    def test_leaves_empty_string_unchanged(self):
+        # Blog posts with no image pass "" through to the placeholder path.
+        assert gc.strip_photon("") == ""
+
+
 class TestIsBareUrl:
     def test_true_for_lone_url(self):
         assert gc.is_bare_url("https://example.com/page?x=1") is True
