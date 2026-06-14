@@ -6,7 +6,7 @@
 -->
 <!-- HERO BANNER — swap to assets/GitHub2026.png when the 2026 rebrand goes live -->
 <p align="center">
-  <img src="assets/GitHub2025.png" width="100%" alt="Brian Greenberg — CIO, RHR International · Forbes Technology Council · DePaul University" />
+  <img src="assets/GitHub2026.png" width="100%" alt="Brian Greenberg — CIO, RHR International · Forbes Technology Council · DePaul University" />
 </p>
 
 # 👋 Hi, I'm Brian Greenberg
