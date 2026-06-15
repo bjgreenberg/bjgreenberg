@@ -7,6 +7,11 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## 2026-06-15 (2)
+
+### Fixed
+- `generate_cards.py`: Mastodon **link** posts now pull their hero from the instance's cached preview card (`masto_card_image` reads `card.image` from `/api/v1/statuses/{id}`) instead of scraping the linked news site directly. After the earlier same-day fix went live, a Gizmodo-linked card resolved to the article image **locally** but fell back to the avatar **on the CI runner** — news sites routinely block or rate-limit GitHub Actions' datacenter IPs. The preview-card image is rehosted on `media.infosec.exchange` (the same CDN the avatar loads from), so it's reliably reachable from CI. Direct `og:image` article scraping is kept only as a fallback when the instance has no card. 6 new pytest cases (56 total); bandit clean
+
 ## 2026-06-15
 
 ### Fixed

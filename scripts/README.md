@@ -77,15 +77,20 @@ No cost: the profile repo is public, and GitHub Actions is free for public repos
 | Section | Feed | Image source |
 |---|---|---|
 | Blog | `https://briangreenberg.net/feed/` | First `<img>` in `<content:encoded>`; falls back to the post page's `og:image` meta tag |
-| Mastodon | `https://infosec.exchange/@brian_greenberg.rss` | First **image** `<media:content>` attachment → for a **video** attachment, the post's `og:image` poster frame → for a **link** post, the linked article's `og:image` → account avatar |
+| Mastodon | `https://infosec.exchange/@brian_greenberg.rss` | First **image** `<media:content>` attachment → for a **video** attachment, the post's `og:image` poster frame → for a **link** post, the instance's cached preview card (`/api/v1/statuses/{id}` → `card.image`), then the linked article's `og:image` → account avatar |
 
 The Mastodon hero is chosen by priority (`masto_hero_url`): a `<media:content>`
 attachment is only used when its `medium`/`type` is an **image** — a `video/mp4`
 attachment is *not* an image, so the code instead scrapes the post's `og:image`
-(Mastodon's video poster frame). A post that just links an article uses that
-article's `og:image`. A flat single-color poster (Mastodon emits a blank
-`#f2f2f2` square when a video has no real thumbnail) is rejected by
-`usable_image` so the card falls through rather than rendering blank.
+(Mastodon's video poster frame). For a **link** post, the hero comes from the
+instance's own cached preview card (`masto_card_image` reads `card.image` from
+the status API) — that image is rehosted on `media.infosec.exchange`, the same
+CDN the avatar loads from, so it's reliably reachable from CI. Scraping the
+linked article's `og:image` directly is kept only as a fallback: news sites
+frequently block GitHub Actions' datacenter IPs (a Gizmodo link resolved fine
+locally but fell back to the avatar on the runner). A flat single-color poster
+(Mastodon emits a blank `#f2f2f2` square when a video has no real thumbnail) is
+rejected by `usable_image` so the card falls through rather than rendering blank.
 
 Mastodon link-share posts (a bare URL with no caption) are skipped. Emoji are
 stripped from the baked card text because the bundled fonts have no color-emoji
@@ -110,6 +115,7 @@ glyphs (the link still points at the full original post).
 | `og_image` | Scrape a page's `og:image` (post permalink or linked article); HTML-unescapes the result |
 | `media_kind` | Classify a `<media:content>` as `image`/`video`/`audio` (by `medium`, then MIME `type`) |
 | `first_article_link` | First outbound article URL in a toot body, skipping mention/hashtag anchors |
+| `masto_card_image` | Instance-cached link-preview image via `/api/v1/statuses/{id}` (`card.image`) — CDN-hosted, CI-reliable |
 | `usable_image` | Reject a flat single-color hero (e.g. a blank video poster) so selection falls through |
 | `masto_hero_url` | Priority hero selection for a Mastodon card (image → video poster → article → avatar) |
 | `_find_font` / `_fonts` | Cross-platform (Ubuntu/macOS) TrueType font loading |
@@ -133,7 +139,8 @@ post URL, alt text).
 | Card text renders as boxes (tofu) | Font not found on the runner. Confirm `fonts-dejavu-core` is present; `_find_font` logs a warning when it falls back to the bitmap default. |
 | A card shows a gray placeholder | The chosen hero URL failed to download (`fetch_photo` fell back to `PLACEHOLDER_BG`). Check the post's `og:image` / `<media:content>` / article URL is reachable. |
 | A Mastodon **video** post showed a blank/empty hero | The video had no real poster frame — Mastodon served a flat `#f2f2f2` square. `usable_image` now rejects this and falls through to the article link, then the avatar. If you still see blank, the post had no image, no usable poster, and no article link. |
-| A Mastodon card showed the same avatar as another | Old behavior: posts with no media all fell back to the single account avatar. Fixed — link posts now use the linked article's `og:image`. The avatar is only the last resort for a genuinely image-less, link-less post. |
+| A Mastodon card showed the same avatar as another | Old behavior: posts with no media all fell back to the single account avatar. Fixed — link posts now use the instance's cached preview card (`card.image`). The avatar is only the last resort for a genuinely image-less, link-less post. |
+| A Mastodon **link** post showed the avatar on CI but the article image locally | The news site blocked/rate-limited the GitHub Actions datacenter IP during the direct `og:image` scrape. `masto_card_image` now pulls the preview from the instance CDN (`media.infosec.exchange`) instead, which the runner reaches reliably; the direct scrape is only a fallback. |
 | Blog card has no image | The post had no inline image **and** no `og:image`. Add a featured image to the post. |
 | Cards in a row have uneven heights | Should not happen — height is fixed per section via the `*_LINES` constants. If you change those, both cards in a section must use the same values. |
 | `pip install` fails on the runner | The pinned Pillow version may lack a wheel for the runner's Python. Bump `Pillow==` in `requirements.txt` to a version with a `cp312` wheel. |
@@ -157,7 +164,7 @@ post URL, alt text).
 ## CI
 
 Every push to `main` (including the daily bot commit) runs the `test` job of
-the CI workflow (`.github/workflows/ci.yml`): pytest (50 tests) + bandit on
+the CI workflow (`.github/workflows/ci.yml`): pytest (56 tests) + bandit on
 `generate_cards.py`, on Python 3.12 to match the bot's production runtime.
 Non-gating by design — `main` has no branch protection (the daily bot commits
 directly; documented exemption) — so a red run is an email alarm, not a merge
