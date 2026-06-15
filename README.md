@@ -42,9 +42,9 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 <!-- MASTODON-POST-LIST:START -->
 <p align="center">
-  <a href="https://infosec.exchange/@brian_greenberg/116727048119928473" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_1.png?v=bc25d97e" width="260" alt="✨ A sparkle icon appears in an app that no one in IT approved. The help desk can&#x27;t explain it, and…"/></a>
-  <a href="https://infosec.exchange/@brian_greenberg/116602203946934078" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_2.png?v=ab8ead7d" width="260" alt="🥶 A contractor for CISA posted AWS GovCloud admin keys to a public GitHub repo! The repo was named…"/></a>
-  <a href="https://infosec.exchange/@brian_greenberg/116575937505532113" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_3.png?v=91348c18" width="260" alt="I attended the AITP Chicago Security SIG tonight at RSM and left with one clear takeaway: a $200…"/></a>
+  <a href="https://infosec.exchange/@brian_greenberg/116754407124700483" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_1.png?v=44d07fd9" width="260" alt="Loving our new brand... Shifting workplace expectations, geopolitical tensions, technology…"/></a>
+  <a href="https://infosec.exchange/@brian_greenberg/116749138541577580" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_2.png?v=5ce1e812" width="260" alt="This project really made me smile. Andrew Warkentin has created a virtual museum with over 600…"/></a>
+  <a href="https://infosec.exchange/@brian_greenberg/116749028717068067" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_3.png?v=1df05692" width="260" alt=" This new agentic AI demo from Apple&#x27;s WWDC was so cool. Apple Intelligence can now log into your…"/></a>
 </p>
 <!-- MASTODON-POST-LIST:END -->
 
