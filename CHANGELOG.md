@@ -7,6 +7,14 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## 2026-06-15
+
+### Fixed
+- `generate_cards.py`: Mastodon cards picked the wrong hero image, so on the profile they showed up wrong — a video post rendered a **blank gray box** and several text/link posts all showed the **same account avatar**. Root cause: `build_masto_cards` blindly took the first `<media:content>` URL and ignored its `medium`/`type`. A `video/mp4` attachment was fed to the image decoder (→ placeholder), and any post without a media attachment fell straight back to the single hardcoded avatar (→ identical, off-topic heroes). Replaced the one-liner with `masto_hero_url`, which selects by priority: a native **image** attachment → for a **video**, the post's `og:image` poster frame (a README `<img>` can't play video) → for a **link** post, the **linked article's** `og:image` → account avatar as last resort. New helpers `media_kind` (classify `image`/`video`/`audio`) and `first_article_link` (first outbound article URL, skipping Mastodon mention/hashtag anchors)
+- `generate_cards.py`: `usable_image` rejects a flat single-color hero so a card never renders blank. Mastodon serves a blank `#f2f2f2` poster for a video with no real thumbnail; that case now falls through to the article link, then the avatar
+- `generate_cards.py`: `og_image` now HTML-unescapes the scraped URL (news-site og:images carry `&amp;` in the query string, which would otherwise reach GitHub's camo proxy literally and fetch the wrong/no image) and reads up to 40 KB of `<head>` (was 8 KB — too small for heavy news-site markup where the `og:image` meta sits past the cutoff)
+- 20 new pytest cases (50 total) covering `media_kind`, `first_article_link`, `usable_image`, and the full `masto_hero_url` priority chain; bandit clean
+
 ## 2026-06-12
 
 ### Added

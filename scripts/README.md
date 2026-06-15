@@ -77,7 +77,15 @@ No cost: the profile repo is public, and GitHub Actions is free for public repos
 | Section | Feed | Image source |
 |---|---|---|
 | Blog | `https://briangreenberg.net/feed/` | First `<img>` in `<content:encoded>`; falls back to the post page's `og:image` meta tag |
-| Mastodon | `https://infosec.exchange/@brian_greenberg.rss` | `<media:content>` attachment; falls back to the account avatar |
+| Mastodon | `https://infosec.exchange/@brian_greenberg.rss` | First **image** `<media:content>` attachment → for a **video** attachment, the post's `og:image` poster frame → for a **link** post, the linked article's `og:image` → account avatar |
+
+The Mastodon hero is chosen by priority (`masto_hero_url`): a `<media:content>`
+attachment is only used when its `medium`/`type` is an **image** — a `video/mp4`
+attachment is *not* an image, so the code instead scrapes the post's `og:image`
+(Mastodon's video poster frame). A post that just links an article uses that
+article's `og:image`. A flat single-color poster (Mastodon emits a blank
+`#f2f2f2` square when a video has no real thumbnail) is rejected by
+`usable_image` so the card falls through rather than rendering blank.
 
 Mastodon link-share posts (a bare URL with no caption) are skipped. Emoji are
 stripped from the baked card text because the bundled fonts have no color-emoji
@@ -99,7 +107,11 @@ glyphs (the link still points at the full original post).
 | `is_bare_url` | Detect caption-less Mastodon link shares (skipped) |
 | `strip_photon` | Rewrite Jetpack Photon CDN URLs (`iN.wp.com`) to their origin |
 | `asset_version` | Content hash appended as `?v=` to card URLs (cache busting) |
-| `og_image` | Scrape a post page's `og:image` when RSS has no inline image |
+| `og_image` | Scrape a page's `og:image` (post permalink or linked article); HTML-unescapes the result |
+| `media_kind` | Classify a `<media:content>` as `image`/`video`/`audio` (by `medium`, then MIME `type`) |
+| `first_article_link` | First outbound article URL in a toot body, skipping mention/hashtag anchors |
+| `usable_image` | Reject a flat single-color hero (e.g. a blank video poster) so selection falls through |
+| `masto_hero_url` | Priority hero selection for a Mastodon card (image → video poster → article → avatar) |
 | `_find_font` / `_fonts` | Cross-platform (Ubuntu/macOS) TrueType font loading |
 | `fetch_photo` | Download + resize a hero image, or a neutral placeholder on failure |
 | `_wrap` | Greedy pixel-width word wrap |
@@ -119,7 +131,9 @@ post URL, alt text).
 | Symptom | Cause / fix |
 |---|---|
 | Card text renders as boxes (tofu) | Font not found on the runner. Confirm `fonts-dejavu-core` is present; `_find_font` logs a warning when it falls back to the bitmap default. |
-| A card shows a gray placeholder | The hero image URL failed to download. Check the post's `og:image` / `<media:content>` URL is reachable. |
+| A card shows a gray placeholder | The chosen hero URL failed to download (`fetch_photo` fell back to `PLACEHOLDER_BG`). Check the post's `og:image` / `<media:content>` / article URL is reachable. |
+| A Mastodon **video** post showed a blank/empty hero | The video had no real poster frame — Mastodon served a flat `#f2f2f2` square. `usable_image` now rejects this and falls through to the article link, then the avatar. If you still see blank, the post had no image, no usable poster, and no article link. |
+| A Mastodon card showed the same avatar as another | Old behavior: posts with no media all fell back to the single account avatar. Fixed — link posts now use the linked article's `og:image`. The avatar is only the last resort for a genuinely image-less, link-less post. |
 | Blog card has no image | The post had no inline image **and** no `og:image`. Add a featured image to the post. |
 | Cards in a row have uneven heights | Should not happen — height is fixed per section via the `*_LINES` constants. If you change those, both cards in a section must use the same values. |
 | `pip install` fails on the runner | The pinned Pillow version may lack a wheel for the runner's Python. Bump `Pillow==` in `requirements.txt` to a version with a `cp312` wheel. |
@@ -143,7 +157,7 @@ post URL, alt text).
 ## CI
 
 Every push to `main` (including the daily bot commit) runs the `test` job of
-the CI workflow (`.github/workflows/ci.yml`): pytest (18 tests) + bandit on
+the CI workflow (`.github/workflows/ci.yml`): pytest (50 tests) + bandit on
 `generate_cards.py`, on Python 3.12 to match the bot's production runtime.
 Non-gating by design — `main` has no branch protection (the daily bot commits
 directly; documented exemption) — so a red run is an email alarm, not a merge
