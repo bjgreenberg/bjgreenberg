@@ -62,6 +62,11 @@ CARDS_PER_SECTION = 3
 HTTP_TIMEOUT = 15
 USER_AGENT = "bjgreenberg-readme-bot/1.0"
 
+# Bytes to read when scraping a page's <head> for og:image. News sites
+# (The Verge, Gizmodo, …) carry heavy <head> markup, so the 8 KB used for
+# lightweight WP scraping is too small — the og:image meta sits past it.
+OG_SCRAPE_BYTES = 40000
+
 # RSS namespaces.
 NS_CONTENT = "{http://purl.org/rss/1.0/modules/content/}"
 NS_MEDIA = "{http://search.yahoo.com/mrss/}"
@@ -202,10 +207,16 @@ def asset_version(path: Path) -> str:
 
 
 def og_image(url: str) -> str | None:
-    """Scrape a post page's ``og:image`` when the RSS body has no inline image."""
+    """Scrape a page's ``og:image`` (post permalink or linked article).
+
+    The returned URL is HTML-unescaped: pages emit ``&amp;`` inside the
+    ``content`` attribute, and an un-decoded ``?a=1&amp;b=2`` would reach
+    GitHub's camo proxy with literal ``&amp;`` and fetch the wrong (or no)
+    image.
+    """
     try:
-        head = fetch_url(url, max_bytes=8000).decode("utf-8", errors="replace")
-    except OSError as exc:
+        head = fetch_url(url, max_bytes=OG_SCRAPE_BYTES).decode("utf-8", errors="replace")
+    except (OSError, ValueError) as exc:
         log.warning("og:image fetch failed for %s: %s", url, exc)
         return None
     for pattern in (
@@ -214,8 +225,96 @@ def og_image(url: str) -> str | None:
     ):
         m = re.search(pattern, head)
         if m:
-            return m.group(1)
+            return html.unescape(m.group(1))
     return None
+
+
+def media_kind(media: ET.Element) -> str:
+    """Classify a ``media:content`` element as ``image``/``video``/``audio``.
+
+    Mastodon tags every attachment with a ``medium`` attribute (and a MIME
+    ``type``). The previous code ignored both and fed whatever URL it found
+    to the image decoder — so a ``video/mp4`` attachment raised and the card
+    fell back to a blank gray placeholder. Returns ``""`` for anything
+    unrecognized.
+    """
+    medium = (media.get("medium") or "").lower()
+    if medium in ("image", "video", "audio"):
+        return medium
+    mtype = (media.get("type") or "").lower()
+    for kind in ("image", "video", "audio"):
+        if mtype.startswith(f"{kind}/"):
+            return kind
+    return ""
+
+
+def first_article_link(body_html: str) -> str | None:
+    """Return the first outbound article URL in a toot's HTML body.
+
+    Mastodon renders hashtags as ``class="mention hashtag"`` and @-mentions
+    as ``class="u-url mention"`` — both contain ``mention``. A shared article
+    link carries no such class. We therefore skip any anchor whose attributes
+    mention ``mention`` and return the first remaining http(s) link, used to
+    scrape the linked article's ``og:image`` as the card hero.
+    """
+    for m in re.finditer(r'<a\b([^>]*?)href=["\']([^"\']+)["\']([^>]*)>', body_html):
+        attrs = (m.group(1) + m.group(3)).lower()
+        if "mention" in attrs:
+            continue
+        href = html.unescape(m.group(2))
+        if href.startswith(("http://", "https://")):
+            return href
+    return None
+
+
+def usable_image(url: str) -> bool:
+    """True if ``url`` decodes to an image with real visual content.
+
+    A Mastodon video with no generated thumbnail yields a flat, single-color
+    poster (observed: a 640×640 ``#f2f2f2`` square). Such a "poster" carries
+    no information and renders as a blank card, so we treat it as unusable and
+    let ``masto_hero_url`` fall through to the next candidate. Returns False on
+    any fetch/decode error too — an unfetchable hero is no better than a blank.
+    """
+    try:
+        img = Image.open(io.BytesIO(fetch_url(strip_photon(url)))).convert("RGB")
+    except Exception as exc:  # noqa: BLE001 — any fetch/decode error → unusable
+        log.warning("Hero probe failed for %s: %s", url, exc)
+        return False
+    # Largest per-channel min→max spread; a near-flat image has almost none.
+    spread = max(hi - lo for lo, hi in img.getextrema())
+    return spread > 12
+
+
+def masto_hero_url(item: ET.Element, post_url: str, body_html: str) -> str:
+    """Choose the best hero image URL for a Mastodon card.
+
+    Priority, highest first:
+        1. A native **image** attachment on the post.
+        2. For a **video** attachment, Mastodon's own poster frame — exposed
+           as the post permalink's ``og:image`` (a README ``<img>`` cannot
+           play video, so the still is the right representation).
+        3. For a **link** post, the linked article's ``og:image``.
+        4. Last resort (a rare pure-text post): the account avatar.
+    """
+    media_elems = item.findall(f"{NS_MEDIA}content")
+
+    for media in media_elems:
+        if media_kind(media) == "image" and media.get("url"):
+            return media.get("url")
+
+    if any(media_kind(media) == "video" for media in media_elems):
+        poster = og_image(post_url)
+        if poster and usable_image(poster):
+            return poster
+
+    link = first_article_link(body_html)
+    if link:
+        article_img = og_image(link)
+        if article_img:
+            return article_img
+
+    return MASTO_AVATAR
 
 
 # ── Image rendering ─────────────────────────────────────────────────────────
@@ -410,12 +509,12 @@ def build_masto_cards() -> list[Card]:
         if len(cards) >= CARDS_PER_SECTION:
             break
         url = (item.findtext("link") or "").strip()
-        text = collapse_ws(strip_tags(item.findtext("description")))
+        raw_desc = item.findtext("description") or ""
+        text = collapse_ws(strip_tags(raw_desc))
         if not url or not text or is_bare_url(text):
             continue
 
-        media = item.find(f"{NS_MEDIA}content")
-        img_url = media.get("url") if media is not None else MASTO_AVATAR
+        img_url = masto_hero_url(item, url, raw_desc)
 
         baked = make_excerpt(strip_emoji(text)) or "View post"
         idx = len(cards) + 1

@@ -4,7 +4,26 @@ Network, image rendering, and file I/O are not covered here — these tests
 target the deterministic text/HTML helpers. Run: pytest scripts/
 """
 
+import xml.etree.ElementTree as ET
+
 import generate_cards as gc
+
+MEDIA = gc.NS_MEDIA  # "{http://search.yahoo.com/mrss/}"
+
+
+def _item(*, media: str = "", body: str = "", link: str = "https://infosec.exchange/p/1") -> ET.Element:
+    """Build a minimal RSS <item> element for hero-selection tests.
+
+    ``media`` is raw ``<media:content .../>`` markup (zero or more elements).
+    """
+    xml = (
+        '<item xmlns:media="http://search.yahoo.com/mrss/">'
+        f"<link>{link}</link>"
+        f"<description>{body}</description>"
+        f"{media}"
+        "</item>"
+    )
+    return ET.fromstring(xml)
 
 
 class TestStripTags:
@@ -143,6 +162,150 @@ class TestUpdateSection:
         once = gc.update_section(readme, "X", "B")
         twice = gc.update_section(once, "X", "B")
         assert once == twice
+
+
+class TestMediaKind:
+    def test_classifies_by_medium_attribute(self):
+        m = ET.fromstring('<content xmlns="x" medium="video"/>')
+        assert gc.media_kind(m) == "video"
+
+    def test_falls_back_to_mime_type_prefix(self):
+        # Some feeds omit `medium` but always carry a MIME `type`.
+        m = ET.fromstring('<content xmlns="x" type="image/jpeg"/>')
+        assert gc.media_kind(m) == "image"
+
+    def test_medium_takes_precedence_and_is_case_insensitive(self):
+        m = ET.fromstring('<content xmlns="x" medium="VIDEO" type="image/png"/>')
+        assert gc.media_kind(m) == "video"
+
+    def test_unknown_attachment_returns_empty_string(self):
+        m = ET.fromstring('<content xmlns="x" type="application/pdf"/>')
+        assert gc.media_kind(m) == ""
+
+    def test_no_attributes_returns_empty_string(self):
+        m = ET.fromstring('<content xmlns="x"/>')
+        assert gc.media_kind(m) == ""
+
+
+class TestFirstArticleLink:
+    def test_returns_external_article_link(self):
+        body = ('<p>Great read <a href="https://www.theverge.com/x" '
+                'target="_blank" rel="nofollow noopener">theverge.com</a></p>')
+        assert gc.first_article_link(body) == "https://www.theverge.com/x"
+
+    def test_skips_hashtag_anchors(self):
+        # Mastodon hashtags carry class="mention hashtag".
+        body = ('<a href="https://infosec.exchange/tags/InfoSec" '
+                'class="mention hashtag" rel="tag">#InfoSec</a>')
+        assert gc.first_article_link(body) is None
+
+    def test_skips_user_mention_anchors(self):
+        # @-mentions carry class="u-url mention" — even cross-instance ones.
+        body = ('<a href="https://mastodon.social/@someone" '
+                'class="u-url mention">@someone</a>')
+        assert gc.first_article_link(body) is None
+
+    def test_picks_article_over_trailing_hashtags(self):
+        body = (
+            '<p>News <a href="https://gizmodo.com/story" target="_blank" '
+            'rel="nofollow noopener">gizmodo.com</a></p>'
+            '<a href="https://infosec.exchange/tags/AI" class="mention hashtag" rel="tag">#AI</a>'
+        )
+        assert gc.first_article_link(body) == "https://gizmodo.com/story"
+
+    def test_unescapes_entities_in_href(self):
+        body = '<a href="https://ex.com/a?x=1&amp;y=2" target="_blank">link</a>'
+        assert gc.first_article_link(body) == "https://ex.com/a?x=1&y=2"
+
+    def test_returns_none_for_plain_text(self):
+        assert gc.first_article_link("<p>just words, no links</p>") is None
+
+
+class TestMastoHeroUrl:
+    def test_prefers_native_image_attachment(self, monkeypatch):
+        # og_image must NOT be consulted when a real image attachment exists.
+        monkeypatch.setattr(gc, "og_image", lambda url: "should-not-be-used")
+        item = _item(media='<media:content url="https://cdn/x.jpg" medium="image" type="image/jpeg"/>')
+        assert gc.masto_hero_url(item, "https://post", "") == "https://cdn/x.jpg"
+
+    def test_video_attachment_uses_post_og_image_poster_frame(self, monkeypatch):
+        # The .mp4 URL must never be returned; the post's og:image poster is.
+        monkeypatch.setattr(gc, "og_image",
+                            lambda url: "https://cdn/poster.png" if url == "https://post" else None)
+        monkeypatch.setattr(gc, "usable_image", lambda url: True)
+        item = _item(media='<media:content url="https://cdn/v.mp4" medium="video" type="video/mp4"/>')
+        assert gc.masto_hero_url(item, "https://post", "") == "https://cdn/poster.png"
+
+    def test_blank_video_poster_falls_through_to_avatar(self, monkeypatch):
+        # Observed real case: Mastodon returns a flat #f2f2f2 poster for a
+        # video with no thumbnail. usable_image rejects it; with no article
+        # link, the card falls back to the avatar rather than a blank box.
+        monkeypatch.setattr(gc, "og_image", lambda url: "https://cdn/blank.png")
+        monkeypatch.setattr(gc, "usable_image", lambda url: False)
+        item = _item(media='<media:content url="https://cdn/v.mp4" medium="video"/>')
+        assert gc.masto_hero_url(item, "https://post", "") == gc.MASTO_AVATAR
+
+    def test_blank_video_poster_falls_through_to_article_link(self, monkeypatch):
+        # Blank poster but the post also links an article → use the article.
+        monkeypatch.setattr(gc, "usable_image", lambda url: False)
+        monkeypatch.setattr(gc, "og_image",
+                            lambda url: "https://verge/hero.png" if "theverge" in url else "https://cdn/blank.png")
+        body = '<p>watch <a href="https://www.theverge.com/x" target="_blank">vg</a></p>'
+        item = _item(media='<media:content url="https://cdn/v.mp4" medium="video"/>', body=body)
+        assert gc.masto_hero_url(item, "https://post", body) == "https://verge/hero.png"
+
+    def test_link_post_uses_article_og_image(self, monkeypatch):
+        monkeypatch.setattr(gc, "og_image",
+                            lambda url: "https://verge/hero.png" if "theverge" in url else None)
+        body = '<p>read <a href="https://www.theverge.com/x" target="_blank">vg</a></p>'
+        assert gc.masto_hero_url(_item(body=body), "https://post", body) == "https://verge/hero.png"
+
+    def test_image_attachment_wins_over_video_when_both_present(self, monkeypatch):
+        monkeypatch.setattr(gc, "og_image", lambda url: "poster")
+        item = _item(
+            media='<media:content url="https://cdn/v.mp4" medium="video"/>'
+                  '<media:content url="https://cdn/x.jpg" medium="image"/>'
+        )
+        assert gc.masto_hero_url(item, "https://post", "") == "https://cdn/x.jpg"
+
+    def test_falls_back_to_avatar_for_pure_text_post(self, monkeypatch):
+        # No media, no link, and og_image yields nothing → account avatar.
+        monkeypatch.setattr(gc, "og_image", lambda url: None)
+        item = _item(body="<p>just a thought, no link</p>")
+        assert gc.masto_hero_url(item, "https://post", "<p>just a thought</p>") == gc.MASTO_AVATAR
+
+    def test_falls_back_to_avatar_when_video_poster_scrape_fails(self, monkeypatch):
+        # Video present but og:image scrape returns None and there's no link.
+        monkeypatch.setattr(gc, "og_image", lambda url: None)
+        item = _item(media='<media:content url="https://cdn/v.mp4" medium="video"/>')
+        assert gc.masto_hero_url(item, "https://post", "") == gc.MASTO_AVATAR
+
+
+class TestUsableImage:
+    @staticmethod
+    def _png_bytes(img):
+        import io
+        buf = io.BytesIO()
+        img.save(buf, format="PNG")
+        return buf.getvalue()
+
+    def test_rejects_flat_single_color_poster(self, monkeypatch):
+        from PIL import Image
+        flat = Image.new("RGB", (64, 64), (242, 242, 242))  # the observed blank poster
+        monkeypatch.setattr(gc, "fetch_url", lambda url, **kw: self._png_bytes(flat))
+        assert gc.usable_image("https://cdn/blank.png") is False
+
+    def test_accepts_image_with_real_content(self, monkeypatch):
+        from PIL import Image
+        grad = Image.linear_gradient("L").convert("RGB")  # 0→255 spread
+        monkeypatch.setattr(gc, "fetch_url", lambda url, **kw: self._png_bytes(grad))
+        assert gc.usable_image("https://cdn/photo.png") is True
+
+    def test_returns_false_on_fetch_error(self, monkeypatch):
+        def boom(url, **kw):
+            raise OSError("network down")
+        monkeypatch.setattr(gc, "fetch_url", boom)
+        assert gc.usable_image("https://cdn/x.png") is False
 
 
 class TestCardsToHtml:
