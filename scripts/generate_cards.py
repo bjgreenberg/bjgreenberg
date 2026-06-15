@@ -31,6 +31,7 @@ import argparse
 import hashlib
 import html
 import io
+import json
 import logging
 import re
 import sys
@@ -286,6 +287,37 @@ def usable_image(url: str) -> bool:
     return spread > 12
 
 
+def masto_card_image(post_url: str) -> str | None:
+    """Return the link-preview image the instance cached for a post, if any.
+
+    When a toot shares a link, the Mastodon instance fetches the target
+    server-side and caches a preview card whose image is rehosted on the
+    instance's OWN media CDN (``media.<instance>``). We read it via the public
+    ``/api/v1/statuses/{id}`` endpoint.
+
+    This is far more reliable than scraping the linked news site directly from
+    CI: news sites frequently block or rate-limit GitHub Actions' datacenter
+    IPs (observed: a Gizmodo link resolved to its og:image locally but fell
+    back to the avatar on the runner), whereas the instance CDN is the same
+    host the avatar is already fetched from. The status id is the trailing
+    numeric path segment of the permalink.
+    """
+    parts = urllib.parse.urlparse(post_url)
+    m = re.search(r"/(\d+)/?$", parts.path)
+    if not (m and parts.scheme in ("http", "https") and parts.netloc):
+        return None
+    api_url = f"{parts.scheme}://{parts.netloc}/api/v1/statuses/{m.group(1)}"
+    try:
+        status = json.loads(fetch_url(api_url))
+    except (OSError, ValueError) as exc:
+        log.warning("Mastodon card lookup failed for %s: %s", post_url, exc)
+        return None
+    card = status.get("card") if isinstance(status, dict) else None
+    if isinstance(card, dict) and card.get("image"):
+        return card["image"]
+    return None
+
+
 def masto_hero_url(item: ET.Element, post_url: str, body_html: str) -> str:
     """Choose the best hero image URL for a Mastodon card.
 
@@ -307,6 +339,13 @@ def masto_hero_url(item: ET.Element, post_url: str, body_html: str) -> str:
         poster = og_image(post_url)
         if poster and usable_image(poster):
             return poster
+
+    # Link post: prefer the instance's own cached preview card (served from its
+    # CDN, reliably reachable from CI). Fall back to scraping the linked
+    # article's og:image only if the instance has no card for it.
+    preview = masto_card_image(post_url)
+    if preview:
+        return preview
 
     link = first_article_link(body_html)
     if link:

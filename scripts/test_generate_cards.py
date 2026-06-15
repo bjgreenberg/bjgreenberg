@@ -246,19 +246,30 @@ class TestMastoHeroUrl:
         assert gc.masto_hero_url(item, "https://post", "") == gc.MASTO_AVATAR
 
     def test_blank_video_poster_falls_through_to_article_link(self, monkeypatch):
-        # Blank poster but the post also links an article → use the article.
+        # Blank poster, no instance card, but the post links an article → use it.
         monkeypatch.setattr(gc, "usable_image", lambda url: False)
+        monkeypatch.setattr(gc, "masto_card_image", lambda url: None)
         monkeypatch.setattr(gc, "og_image",
                             lambda url: "https://verge/hero.png" if "theverge" in url else "https://cdn/blank.png")
         body = '<p>watch <a href="https://www.theverge.com/x" target="_blank">vg</a></p>'
         item = _item(media='<media:content url="https://cdn/v.mp4" medium="video"/>', body=body)
         assert gc.masto_hero_url(item, "https://post", body) == "https://verge/hero.png"
 
-    def test_link_post_uses_article_og_image(self, monkeypatch):
+    def test_link_post_prefers_mastodon_preview_card(self, monkeypatch):
+        # The instance's cached preview (on its CDN) wins over scraping the
+        # news site, which is unreliable from CI.
+        monkeypatch.setattr(gc, "masto_card_image", lambda url: "https://cdn.instance/preview.png")
+        monkeypatch.setattr(gc, "og_image", lambda url: "should-not-be-used")
+        body = '<p>read <a href="https://www.theverge.com/x" target="_blank">vg</a></p>'
+        assert gc.masto_hero_url(_item(body=body), "https://post/1", body) == "https://cdn.instance/preview.png"
+
+    def test_link_post_falls_back_to_article_scrape_without_preview_card(self, monkeypatch):
+        # No instance card → scrape the linked article's og:image.
+        monkeypatch.setattr(gc, "masto_card_image", lambda url: None)
         monkeypatch.setattr(gc, "og_image",
                             lambda url: "https://verge/hero.png" if "theverge" in url else None)
         body = '<p>read <a href="https://www.theverge.com/x" target="_blank">vg</a></p>'
-        assert gc.masto_hero_url(_item(body=body), "https://post", body) == "https://verge/hero.png"
+        assert gc.masto_hero_url(_item(body=body), "https://post/1", body) == "https://verge/hero.png"
 
     def test_image_attachment_wins_over_video_when_both_present(self, monkeypatch):
         monkeypatch.setattr(gc, "og_image", lambda url: "poster")
@@ -269,16 +280,55 @@ class TestMastoHeroUrl:
         assert gc.masto_hero_url(item, "https://post", "") == "https://cdn/x.jpg"
 
     def test_falls_back_to_avatar_for_pure_text_post(self, monkeypatch):
-        # No media, no link, and og_image yields nothing → account avatar.
+        # No media, no instance card, no link, no og:image → account avatar.
         monkeypatch.setattr(gc, "og_image", lambda url: None)
+        monkeypatch.setattr(gc, "masto_card_image", lambda url: None)
         item = _item(body="<p>just a thought, no link</p>")
         assert gc.masto_hero_url(item, "https://post", "<p>just a thought</p>") == gc.MASTO_AVATAR
 
     def test_falls_back_to_avatar_when_video_poster_scrape_fails(self, monkeypatch):
         # Video present but og:image scrape returns None and there's no link.
         monkeypatch.setattr(gc, "og_image", lambda url: None)
+        monkeypatch.setattr(gc, "masto_card_image", lambda url: None)
         item = _item(media='<media:content url="https://cdn/v.mp4" medium="video"/>')
         assert gc.masto_hero_url(item, "https://post", "") == gc.MASTO_AVATAR
+
+
+class TestMastoCardImage:
+    def test_returns_card_image_from_status_api(self, monkeypatch):
+        payload = b'{"card": {"type": "link", "image": "https://cdn.instance/p.png"}}'
+        captured = {}
+
+        def fake_fetch(url, **kw):
+            captured["url"] = url
+            return payload
+        monkeypatch.setattr(gc, "fetch_url", fake_fetch)
+        out = gc.masto_card_image("https://infosec.exchange/@brian/116749028717068067")
+        assert out == "https://cdn.instance/p.png"
+        # The status id is the trailing numeric path segment.
+        assert captured["url"] == "https://infosec.exchange/api/v1/statuses/116749028717068067"
+
+    def test_returns_none_when_status_has_no_card(self, monkeypatch):
+        # Video/media posts carry card=null.
+        monkeypatch.setattr(gc, "fetch_url", lambda url, **kw: b'{"card": null}')
+        assert gc.masto_card_image("https://infosec.exchange/@brian/123") is None
+
+    def test_returns_none_when_card_has_no_image(self, monkeypatch):
+        monkeypatch.setattr(gc, "fetch_url", lambda url, **kw: b'{"card": {"type": "link"}}')
+        assert gc.masto_card_image("https://infosec.exchange/@brian/123") is None
+
+    def test_returns_none_without_network_when_no_status_id(self, monkeypatch):
+        # A permalink with no trailing numeric id must not trigger a fetch.
+        def boom(url, **kw):
+            raise AssertionError("fetch_url must not be called")
+        monkeypatch.setattr(gc, "fetch_url", boom)
+        assert gc.masto_card_image("https://infosec.exchange/@brian_greenberg") is None
+
+    def test_returns_none_on_fetch_or_json_error(self, monkeypatch):
+        def boom(url, **kw):
+            raise OSError("api down")
+        monkeypatch.setattr(gc, "fetch_url", boom)
+        assert gc.masto_card_image("https://infosec.exchange/@brian/123") is None
 
 
 class TestUsableImage:
