@@ -44,6 +44,10 @@ attribute for basic screen-reader accessibility.
   GitHub Activity card's contribution-calendar GraphQL query. In CI the workflow
   passes the auto-injected `GITHUB_TOKEN`; locally, `GH_TOKEN=$(gh auth token)`
   works. With no token the activity card is skipped (the rest still runs).
+- **ffmpeg** on `PATH`, used **only** to extract a hero frame from Mastodon video
+  attachments. Preinstalled on GitHub's `ubuntu-latest` runners; install locally
+  with `brew install ffmpeg`. If absent, video posts fall back to the poster/avatar
+  (the card still renders) — it is not required for blog/activity cards.
 
 ## Setup
 
@@ -85,20 +89,22 @@ No cost: the profile repo is public, and GitHub Actions is free for public repos
 |---|---|---|
 | GitHub Activity | GitHub GraphQL `contributionsCollection` | Computed metrics rendered to `activity_card.png` (no external image — total, current streak, longest streak) |
 | Blog | `https://briangreenberg.net/feed/` | First `<img>` in `<content:encoded>`; falls back to the post page's `og:image` meta tag |
-| Mastodon | `https://infosec.exchange/@brian_greenberg.rss` | First **image** `<media:content>` attachment → for a **video** attachment, the post's `og:image` poster frame → for a **link** post, the instance's cached preview card (`/api/v1/statuses/{id}` → `card.image`), then the linked article's `og:image` → account avatar |
+| Mastodon | `https://infosec.exchange/@brian_greenberg.rss` | First **image** `<media:content>` attachment → for a **video**, a frame extracted with **ffmpeg** (then the instance poster if it isn't blank) → for a **link** post, the instance's cached preview card (`/api/v1/statuses/{id}` → `card.image`), then the linked article's `og:image` → account avatar |
 
-The Mastodon hero is chosen by priority (`masto_hero_url`): a `<media:content>`
-attachment is only used when its `medium`/`type` is an **image** — a `video/mp4`
-attachment is *not* an image, so the code instead scrapes the post's `og:image`
-(Mastodon's video poster frame). For a **link** post, the hero comes from the
-instance's own cached preview card (`masto_card_image` reads `card.image` from
-the status API) — that image is rehosted on `media.infosec.exchange`, the same
-CDN the avatar loads from, so it's reliably reachable from CI. Scraping the
-linked article's `og:image` directly is kept only as a fallback: news sites
-frequently block GitHub Actions' datacenter IPs (a Gizmodo link resolved fine
-locally but fell back to the avatar on the runner). A flat single-color poster
-(Mastodon emits a blank `#f2f2f2` square when a video has no real thumbnail) is
-rejected by `usable_image` so the card falls through rather than rendering blank.
+The Mastodon hero is chosen by priority (`masto_hero`, which returns either a
+URL to fetch or pre-decoded image **bytes**): a `<media:content>` attachment is
+used directly only when its `medium`/`type` is an **image**. For a **video**
+attachment, `extract_video_frame` downloads the clip and pulls a real frame with
+ffmpeg — Mastodon's own poster is frame 0, which is frequently a blank intro card
+(observed: a solid `#f2f2f2` square). We skip frame 0 and try a few seconds in
+(`VIDEO_FRAME_SECONDS`), returning the first frame with real content
+(`_image_has_content`). If ffmpeg is unavailable or every frame is blank, we fall
+back to the instance poster (when not blank). For a **link** post, the hero comes
+from the instance's own cached preview card (`masto_card_image` reads `card.image`
+from the status API) — rehosted on `media.infosec.exchange`, the same CDN the
+avatar loads from, so reliably reachable from CI. Direct article `og:image`
+scraping is only a fallback: news sites frequently block GitHub Actions' datacenter
+IPs (a Gizmodo link resolved locally but fell back to the avatar on the runner).
 
 Mastodon link-share posts (a bare URL with no caption) are skipped. Emoji are
 stripped from the baked card text because the bundled fonts have no color-emoji
@@ -124,17 +130,20 @@ glyphs (the link still points at the full original post).
 | `media_kind` | Classify a `<media:content>` as `image`/`video`/`audio` (by `medium`, then MIME `type`) |
 | `first_article_link` | First outbound article URL in a toot body, skipping mention/hashtag anchors |
 | `masto_card_image` | Instance-cached link-preview image via `/api/v1/statuses/{id}` (`card.image`) — CDN-hosted, CI-reliable |
-| `usable_image` | Reject a flat single-color hero (e.g. a blank video poster) so selection falls through |
-| `masto_hero_url` | Priority hero selection for a Mastodon card (image → video poster → article → avatar) |
+| `extract_video_frame` | ffmpeg frame grab from a video attachment (skips blank frame 0); returns PNG bytes or None |
+| `_image_has_content` | True if image bytes aren't a near-flat single color (shared blank-frame check) |
+| `usable_image` | `_image_has_content` over a downloaded URL — rejects a blank poster so selection falls through |
+| `masto_hero` | Priority hero for a Mastodon card → URL or frame bytes (image → ffmpeg frame/poster → preview/article → avatar) |
 | `_find_font` / `_fonts` | Cross-platform (Ubuntu/macOS) TrueType font loading |
-| `fetch_photo` | Download + resize a hero image, or a neutral placeholder on failure |
+| `fetch_photo` | Crop-to-fill a hero from a URL **or** pre-decoded bytes; neutral placeholder on failure |
 | `_wrap` | Greedy pixel-width word wrap |
 | `render_card` | Render one RGBA card (rounded corners, photo + text) |
 | `build_blog_cards` / `build_masto_cards` | Per-feed card builders → `list[Card]` |
 | `github_token` | Read `GH_TOKEN`/`GITHUB_TOKEN` from env (None → skip activity card) |
 | `fetch_contribution_days` | GraphQL contribution calendar, year-by-year, all-time |
 | `compute_activity_stats` | Total + current + longest streak (pure logic, future days dropped) |
-| `render_activity_card` | Render the 3-panel activity card (total / ring / longest) |
+| `render_activity_card` | Render the 3-panel activity card (total / ring / longest) + "Updated …" footer |
+| `_activity_stamp` | Format the footer timestamp in Chicago local time (CST/CDT), 12-hour |
 | `build_activity_card` | Orchestrate fetch→compute→render→`Card`; None on no-token/error |
 | `cards_to_html` / `activity_to_html` | Centered `<p>` of `<a><img></a>` link(s) |
 | `update_section` | Replace content between `<!-- TAG:START/END -->` markers |
@@ -151,7 +160,8 @@ post URL, alt text).
 |---|---|
 | Card text renders as boxes (tofu) | Font not found on the runner. Confirm `fonts-dejavu-core` is present; `_find_font` logs a warning when it falls back to the bitmap default. |
 | A card shows a gray placeholder | The chosen hero URL failed to download (`fetch_photo` fell back to `PLACEHOLDER_BG`). Check the post's `og:image` / `<media:content>` / article URL is reachable. |
-| A Mastodon **video** post showed a blank/empty hero | The video had no real poster frame — Mastodon served a flat `#f2f2f2` square. `usable_image` now rejects this and falls through to the article link, then the avatar. If you still see blank, the post had no image, no usable poster, and no article link. |
+| A Mastodon **video** post showed a blank/empty hero | Mastodon's poster is frame 0 (often a blank intro card). `extract_video_frame` now pulls a later frame with ffmpeg. If you still see blank: ffmpeg isn't on the runner's `PATH` (logs `ffmpeg not found`), the download failed, or every sampled frame was blank — it then falls back to the poster/avatar. |
+| `ffmpeg not found` in logs | ffmpeg isn't installed. It's preinstalled on `ubuntu-latest`; locally run `brew install ffmpeg`. Video posts degrade to the poster/avatar without it — not fatal. |
 | A Mastodon card showed the same avatar as another | Old behavior: posts with no media all fell back to the single account avatar. Fixed — link posts now use the instance's cached preview card (`card.image`). The avatar is only the last resort for a genuinely image-less, link-less post. |
 | A Mastodon **link** post showed the avatar on CI but the article image locally | The news site blocked/rate-limited the GitHub Actions datacenter IP during the direct `og:image` scrape. `masto_card_image` now pulls the preview from the instance CDN (`media.infosec.exchange`) instead, which the runner reaches reliably; the direct scrape is only a fallback. |
 | Blog card has no image | The post had no inline image **and** no `og:image`. Add a featured image to the post. |
@@ -180,7 +190,7 @@ post URL, alt text).
 ## CI
 
 Every push to `main` (including the daily bot commit) runs the `test` job of
-the CI workflow (`.github/workflows/ci.yml`): pytest (72 tests) + bandit on
+the CI workflow (`.github/workflows/ci.yml`): pytest (83 tests) + bandit on
 `generate_cards.py`, on Python 3.12 to match the bot's production runtime.
 Non-gating by design — `main` has no branch protection (the daily bot commits
 directly; documented exemption) — so a red run is an email alarm, not a merge

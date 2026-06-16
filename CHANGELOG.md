@@ -7,7 +7,14 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
-## 2026-06-15 (3)
+## 2026-06-15 (4)
+
+### Added
+- `generate_cards.py`: Mastodon **video** posts now get a real hero frame extracted with **ffmpeg** (`extract_video_frame`) instead of falling back to the avatar. Mastodon's poster is frame 0, which is frequently a blank intro card (the "A new brand" post served a solid `#f2f2f2` square); the extractor skips frame 0 and samples a few seconds in (`VIDEO_FRAME_SECONDS`), returning the first frame with real content. ffmpeg only touches local temp files we wrote (URL fetched via the scheme-validated `fetch_url`), invoked with a fixed arg list + absolute path, no shell. ffmpeg is preinstalled on `ubuntu-latest`; if absent, video posts degrade to the poster/avatar (not fatal). 11 new pytest cases (83 total); bandit clean
+
+### Changed
+- `generate_cards.py`: the activity card's "Updated …" stamp now shows **Chicago local time** (CST/CDT, 12-hour — e.g. `Updated Jun 15, 2026 · 8:42 PM CDT`) instead of UTC (`_activity_stamp`, via `zoneinfo`)
+- `masto_hero_url` → `masto_hero`, now returning a URL **or** pre-decoded image bytes (the ffmpeg frame); `fetch_photo`/`render_card` accept either. Flat-frame detection factored into `_image_has_content`, shared by `usable_image` and the video extractor
 
 ### Added
 - `generate_cards.py`: the **GitHub Activity** section is now a baked `activity_card.png` (total contributions, current streak, longest streak) rendered locally from the GitHub GraphQL contribution calendar — replacing the `streak-stats.demolab.com` image. New functions `github_token`, `fetch_contribution_days` (year-by-year, all-time), `compute_activity_stats` (pure streak logic), `render_activity_card` (3-panel card in the same GitHub-dark palette as the other cards, with a small "Updated … UTC" stamp along the bottom — the timestamp is passed in so rendering stays deterministic/testable), `build_activity_card`, and `activity_to_html`. Section is driven by `<!-- ACTIVITY-CARD:START/END -->` markers like the others. 16 new pytest cases (72 total); bandit clean

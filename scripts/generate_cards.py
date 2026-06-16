@@ -44,13 +44,17 @@ import json
 import logging
 import os
 import re
+import shutil
+import subprocess  # nosec B404 — used only with fixed args + absolute ffmpeg path, no shell
 import sys
+import tempfile
 import urllib.parse
 import urllib.request
 import xml.etree.ElementTree as ET  # nosec B405 — type hints only; parsing uses defusedxml
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import TypedDict
+from zoneinfo import ZoneInfo
 
 from defusedxml.ElementTree import fromstring as safe_xml_fromstring
 from PIL import Image, ImageDraw, ImageFont, ImageOps
@@ -68,6 +72,14 @@ MASTO_FEED = "https://infosec.exchange/@brian_greenberg.rss"
 GITHUB_LOGIN = "bjgreenberg"
 GITHUB_PROFILE_URL = "https://github.com/bjgreenberg"
 GITHUB_GRAPHQL = "https://api.github.com/graphql"
+
+# Timezone for the activity card's "Updated …" stamp (Brian is Chicago-based).
+DISPLAY_TZ = "America/Chicago"
+
+# Mastodon video posts: pull a real hero frame with ffmpeg instead of relying
+# on the instance poster (which is frame 0 — often a blank intro card).
+VIDEO_FRAME_SECONDS = (1, 2, 4)      # seek points to try, in order
+MAX_VIDEO_BYTES = 60_000_000         # safety cap on a downloaded attachment
 
 # Avatar used when a Mastodon post has no media attachment of its own.
 MASTO_AVATAR = (
@@ -312,23 +324,34 @@ def first_article_link(body_html: str) -> str | None:
     return None
 
 
-def usable_image(url: str) -> bool:
-    """True if ``url`` decodes to an image with real visual content.
+def _image_has_content(raw: bytes) -> bool:
+    """True if image ``raw`` is not a near-flat single color.
 
-    A Mastodon video with no generated thumbnail yields a flat, single-color
-    poster (observed: a 640×640 ``#f2f2f2`` square). Such a "poster" carries
-    no information and renders as a blank card, so we treat it as unusable and
-    let ``masto_hero_url`` fall through to the next candidate. Returns False on
-    any fetch/decode error too — an unfetchable hero is no better than a blank.
+    A blank poster / intro video frame is one flat color (e.g. ``#f2f2f2``)
+    and carries no information. We measure the largest per-channel min→max
+    spread; near-flat images have almost none. Returns False on decode error.
     """
     try:
-        img = Image.open(io.BytesIO(fetch_url(strip_photon(url)))).convert("RGB")
-    except Exception as exc:  # noqa: BLE001 — any fetch/decode error → unusable
+        img = Image.open(io.BytesIO(raw)).convert("RGB")
+    except Exception as exc:  # noqa: BLE001 — any decode error → unusable
+        log.warning("Image content probe failed: %s", exc)
+        return False
+    return max(hi - lo for lo, hi in img.getextrema()) > 12
+
+
+def usable_image(url: str) -> bool:
+    """True if ``url`` downloads to an image with real visual content.
+
+    A Mastodon video with no generated thumbnail yields a flat, single-color
+    poster (observed: a 640×640 ``#f2f2f2`` square) — unusable, so the caller
+    falls through to the next candidate. Returns False on any fetch error too.
+    """
+    try:
+        raw = fetch_url(strip_photon(url))
+    except (OSError, ValueError) as exc:
         log.warning("Hero probe failed for %s: %s", url, exc)
         return False
-    # Largest per-channel min→max spread; a near-flat image has almost none.
-    spread = max(hi - lo for lo, hi in img.getextrema())
-    return spread > 12
+    return _image_has_content(raw)
 
 
 def masto_card_image(post_url: str) -> str | None:
@@ -362,15 +385,68 @@ def masto_card_image(post_url: str) -> str | None:
     return None
 
 
-def masto_hero_url(item: ET.Element, post_url: str, body_html: str) -> str:
-    """Choose the best hero image URL for a Mastodon card.
+def extract_video_frame(video_url: str) -> bytes | None:
+    """Extract a representative frame from a video attachment with ffmpeg.
+
+    Mastodon's poster for a video is frame 0, which is frequently a blank
+    intro card (observed: a solid ``#f2f2f2`` square that rendered an empty
+    hero). We instead download the attachment and pull a frame a couple of
+    seconds in — trying ``VIDEO_FRAME_SECONDS`` in order and returning the
+    first one with real visual content.
+
+    Returns the frame as PNG ``bytes``, or None when ffmpeg is unavailable,
+    the download/decode fails, or every sampled frame is blank — in which case
+    the caller falls back to the poster/preview/avatar chain. ffmpeg only ever
+    touches local temp files we wrote (the URL is fetched via the scheme-
+    validated ``fetch_url``), and is invoked with a fixed argument list and an
+    absolute path — never a shell.
+    """
+    ffmpeg = shutil.which("ffmpeg")
+    if not ffmpeg:
+        log.warning("ffmpeg not found — skipping video frame extraction.")
+        return None
+    try:
+        raw = fetch_url(video_url, max_bytes=MAX_VIDEO_BYTES)
+    except (OSError, ValueError) as exc:
+        log.warning("Video download failed for %s: %s", video_url, exc)
+        return None
+
+    with tempfile.TemporaryDirectory() as tmp:
+        video_path = os.path.join(tmp, "video")
+        frame_path = os.path.join(tmp, "frame.png")
+        Path(video_path).write_bytes(raw)
+        for seconds in VIDEO_FRAME_SECONDS:
+            try:
+                subprocess.run(  # nosec B603 — fixed args, absolute path, no shell, local files only
+                    [ffmpeg, "-nostdin", "-loglevel", "error", "-y",
+                     "-ss", str(seconds), "-i", video_path,
+                     "-frames:v", "1", frame_path],
+                    timeout=HTTP_TIMEOUT, check=False,
+                    stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+                )
+            except (OSError, subprocess.SubprocessError) as exc:
+                log.warning("ffmpeg failed at %ss for %s: %s", seconds, video_url, exc)
+                continue
+            if not os.path.exists(frame_path):
+                continue
+            frame = Path(frame_path).read_bytes()
+            if _image_has_content(frame):
+                log.info("Extracted video frame at %ss for %s", seconds, video_url)
+                return frame
+    log.warning("No non-blank frame found for %s", video_url)
+    return None
+
+
+def masto_hero(item: ET.Element, post_url: str, body_html: str) -> str | bytes:
+    """Choose the best hero for a Mastodon card (URL to fetch, or frame bytes).
 
     Priority, highest first:
         1. A native **image** attachment on the post.
-        2. For a **video** attachment, Mastodon's own poster frame — exposed
-           as the post permalink's ``og:image`` (a README ``<img>`` cannot
-           play video, so the still is the right representation).
-        3. For a **link** post, the linked article's ``og:image``.
+        2. For a **video** attachment, a real frame extracted with ffmpeg
+           (returned as bytes); failing that, the instance poster if it isn't
+           blank (a README ``<img>`` cannot play video, so a still is right).
+        3. For a **link** post, the instance's cached preview card, then the
+           linked article's ``og:image``.
         4. Last resort (a rare pure-text post): the account avatar.
     """
     media_elems = item.findall(f"{NS_MEDIA}content")
@@ -379,7 +455,13 @@ def masto_hero_url(item: ET.Element, post_url: str, body_html: str) -> str:
         if media_kind(media) == "image" and media.get("url"):
             return media.get("url")
 
-    if any(media_kind(media) == "video" for media in media_elems):
+    video_urls = [m.get("url") for m in media_elems
+                  if media_kind(m) == "video" and m.get("url")]
+    if video_urls:
+        for vurl in video_urls:
+            frame = extract_video_frame(vurl)
+            if frame:
+                return frame
         poster = og_image(post_url)
         if poster and usable_image(poster):
             return poster
@@ -436,20 +518,22 @@ def _fonts() -> tuple[ImageFont.FreeTypeFont, ImageFont.FreeTypeFont]:
     return bold, regular
 
 
-def fetch_photo(url: str, width: int, height: int) -> Image.Image:
-    """Fetch a post image cropped-to-fill the target box, or a placeholder.
+def fetch_photo(src: str | bytes, width: int, height: int) -> Image.Image:
+    """Return a hero image cropped-to-fill the target box, or a placeholder.
 
-    Uses ``ImageOps.fit`` (center crop + resize) so source images of any
-    aspect ratio fill the card's hero band without distortion — the previous
-    plain ``resize`` stretched non-matching images.
+    ``src`` is either an image URL to download, or already-decoded image
+    ``bytes`` (e.g. an ffmpeg-extracted video frame). ``ImageOps.fit`` (center
+    crop + resize) fills the card's hero band without distorting any aspect
+    ratio.
     """
     try:
-        raw = fetch_url(strip_photon(url))
+        raw = src if isinstance(src, bytes) else fetch_url(strip_photon(src))
         img = Image.open(io.BytesIO(raw)).convert("RGB")
         return ImageOps.fit(img, (width, height), method=Image.LANCZOS,
                             centering=(0.5, 0.5))
     except Exception as exc:  # noqa: BLE001 — any decode/network error → placeholder
-        log.warning("Photo fetch failed for %s: %s", url, exc)
+        label = "<bytes>" if isinstance(src, bytes) else src
+        log.warning("Photo fetch failed for %s: %s", label, exc)
         return Image.new("RGB", (width, height), PLACEHOLDER_BG)
 
 
@@ -472,7 +556,7 @@ def _wrap(draw: ImageDraw.ImageDraw, text: str, font: ImageFont.FreeTypeFont,
 
 
 def render_card(
-    photo_url: str,
+    photo_src: str | bytes,
     primary: str,
     *,
     primary_color: tuple[int, int, int],
@@ -483,7 +567,7 @@ def render_card(
     """Render a single card to an RGBA image.
 
     Args:
-        photo_url: URL of the card's hero image.
+        photo_src: Hero image URL to download, or pre-decoded image bytes.
         primary: Main text (blog title or toot text).
         primary_color: RGB color for the primary text.
         primary_max_lines: Max wrapped lines for the primary text.
@@ -522,7 +606,7 @@ def render_card(
     draw.rounded_rectangle([0, 0, RENDER_W, card_h], radius=RADIUS, fill=CARD_BG)
 
     # Hero photo with rounded top corners (square bottom blends into the card).
-    photo = fetch_photo(photo_url, RENDER_W, PHOTO_H)
+    photo = fetch_photo(photo_src, RENDER_W, PHOTO_H)
     mask = Image.new("L", (RENDER_W, PHOTO_H), 0)
     ImageDraw.Draw(mask).rounded_rectangle(
         [0, 0, RENDER_W, PHOTO_H + RADIUS], radius=RADIUS, fill=255
@@ -597,13 +681,13 @@ def build_masto_cards() -> list[Card]:
         if not url or not text or is_bare_url(text):
             continue
 
-        img_url = masto_hero_url(item, url, raw_desc)
+        hero = masto_hero(item, url, raw_desc)
 
         baked = make_excerpt(strip_emoji(text)) or "View post"
         idx = len(cards) + 1
         path = ASSETS_DIR / f"masto_card_{idx}.png"
         card_img = render_card(
-            img_url,
+            hero,
             baked,
             primary_color=LINK_BLUE,
             primary_max_lines=MASTO_TEXT_LINES,
@@ -748,6 +832,25 @@ def _fmt_range(start: str, end: str, *, current: bool) -> str:
     return f"{left} – {right}"
 
 
+def _activity_stamp(generated_at: datetime) -> str:
+    """Format the "Updated …" footer in Chicago local time (CST/CDT).
+
+    ``generated_at`` is a UTC-aware datetime; it is converted to
+    ``DISPLAY_TZ`` and rendered 12-hour with the live zone abbreviation
+    (e.g. ``Updated Jun 15, 2026 · 8:32 PM CDT``). Falls back to the input's
+    own zone if the tz database is unavailable.
+    """
+    try:
+        local = generated_at.astimezone(ZoneInfo(DISPLAY_TZ))
+    except Exception as exc:  # noqa: BLE001 — missing tzdata → show source zone
+        log.warning("Timezone %s unavailable: %s", DISPLAY_TZ, exc)
+        local = generated_at
+    hour = local.strftime("%I").lstrip("0") or "12"
+    zone = local.strftime("%Z") or "UTC"
+    return (f"Updated {local.strftime('%b')} {local.day}, {local.year} · "
+            f"{hour}:{local.strftime('%M')} {local.strftime('%p')} {zone}")
+
+
 def _draw_centered(draw: ImageDraw.ImageDraw, cx: int, y: int, text: str,
                    font: ImageFont.FreeTypeFont, fill: tuple[int, int, int]) -> None:
     """Draw ``text`` horizontally centered on ``cx`` at baseline-top ``y``."""
@@ -813,10 +916,9 @@ def render_activity_card(stats: ActivityStats, generated_at: datetime) -> Image.
                    _fmt_range(stats["longest_start"], stats["longest_end"], current=False),
                    small, MUTED_GRAY)
 
-    # Footer: small "Updated …" stamp, centered along the bottom.
-    stamp = f"Updated {generated_at.strftime('%b')} {generated_at.day}, " \
-            f"{generated_at.year} · {generated_at:%H:%M} UTC"
-    _draw_centered(draw, w // 2, h - 38, stamp, footer_font, MUTED_GRAY)
+    # Footer: small "Updated …" stamp (Chicago local time), centered.
+    _draw_centered(draw, w // 2, h - 38, _activity_stamp(generated_at),
+                   footer_font, MUTED_GRAY)
     return card
 
 
