@@ -124,11 +124,17 @@ MASTO_TEXT_LINES = 6
 
 # ── Activity card geometry (rendered at 2× the display size) ─────────────────
 
-ACTIVITY_DISPLAY_W = 450             # px width of the activity card in the README
-ACTIVITY_RENDER_W = ACTIVITY_DISPLAY_W * SCALE   # 900
-ACTIVITY_RENDER_H = 332              # render px (display 166) — extra room for footer
-RING_RADIUS = 66                     # current-streak ring radius (render px)
-RING_WIDTH = 10                      # ring stroke width (render px)
+ACTIVITY_DISPLAY_W = 760             # px width in the README (≈ the 3-card row width)
+ACTIVITY_RENDER_W = ACTIVITY_DISPLAY_W * SCALE   # 1520
+# The card layout is designed against a 900px-wide reference and scaled to the
+# render width, so changing ACTIVITY_DISPLAY_W rescales type/ring/spacing
+# uniformly (no stretched-canvas look). All the literal geometry inside
+# render_activity_card is multiplied by ACTIVITY_SCALE.
+_ACTIVITY_BASE_W = 900
+ACTIVITY_SCALE = ACTIVITY_RENDER_W / _ACTIVITY_BASE_W
+ACTIVITY_RENDER_H = round(332 * ACTIVITY_SCALE)  # display height ÷2; room for footer
+RING_RADIUS = round(66 * ACTIVITY_SCALE)         # current-streak ring radius (render px)
+RING_WIDTH = round(10 * ACTIVITY_SCALE)          # ring stroke width (render px)
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 log = logging.getLogger("generate_cards")
@@ -866,58 +872,64 @@ def render_activity_card(stats: ActivityStats, generated_at: datetime) -> Image.
     "Updated …" stamp (``generated_at``, in UTC) is drawn along the bottom so
     viewers can see the card is live and how fresh it is.
     """
+    sc = ACTIVITY_SCALE
+
+    def s(v: float) -> int:
+        """Scale a base-design (900px-wide) measurement to the render width."""
+        return round(v * sc)
+
     big = _find_font(
         ["/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
-         "/System/Library/Fonts/Supplemental/Arial Bold.ttf"], 52)
+         "/System/Library/Fonts/Supplemental/Arial Bold.ttf"], s(52))
     label = _find_font(
         ["/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
-         "/System/Library/Fonts/Supplemental/Arial Bold.ttf"], 26)
+         "/System/Library/Fonts/Supplemental/Arial Bold.ttf"], s(26))
     small = _find_font(
         ["/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
-         "/System/Library/Fonts/Supplemental/Arial.ttf"], 20)
+         "/System/Library/Fonts/Supplemental/Arial.ttf"], s(20))
     footer_font = _find_font(
         ["/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
-         "/System/Library/Fonts/Supplemental/Arial.ttf"], 16)
+         "/System/Library/Fonts/Supplemental/Arial.ttf"], s(16))
 
     w, h = ACTIVITY_RENDER_W, ACTIVITY_RENDER_H
     card = Image.new("RGBA", (w, h), (0, 0, 0, 0))
     draw = ImageDraw.Draw(card)
-    draw.rounded_rectangle([0, 0, w, h], radius=RADIUS, fill=CARD_BG)
+    draw.rounded_rectangle([0, 0, w, h], radius=s(RADIUS), fill=CARD_BG)
 
     col = w // 3
     centers = (col // 2, w // 2, w - col // 2)
     # Column dividers (kept short; the footer sits below them).
     for x in (col, col * 2):
-        draw.line([(x, 50), (x, 250)], fill=MUTED_GRAY, width=1)
+        draw.line([(x, s(50)), (x, s(250))], fill=MUTED_GRAY, width=1)
 
     # Left: total contributions.
-    _draw_centered(draw, centers[0], 70, f"{stats['total']:,}", big, LINK_BLUE)
-    _draw_centered(draw, centers[0], 150, "Total Contributions", label, LINK_BLUE)
+    _draw_centered(draw, centers[0], s(70), f"{stats['total']:,}", big, LINK_BLUE)
+    _draw_centered(draw, centers[0], s(150), "Total Contributions", label, LINK_BLUE)
     since = f"Since {stats['since_year']}" if stats["since_year"] else "All time"
-    _draw_centered(draw, centers[0], 200, since, small, MUTED_GRAY)
+    _draw_centered(draw, centers[0], s(200), since, small, MUTED_GRAY)
 
     # Middle: current streak inside a ring.
-    cx, cy = centers[1], 110
+    cx, cy = centers[1], s(110)
     draw.ellipse([cx - RING_RADIUS, cy - RING_RADIUS, cx + RING_RADIUS, cy + RING_RADIUS],
                  outline=LINK_BLUE, width=RING_WIDTH)
     num = str(stats["current_streak"])
     nb = draw.textbbox((0, 0), num, font=big)
     draw.text((cx - (nb[2] - nb[0]) / 2, cy - (nb[3] - nb[1]) / 2 - nb[1]), num,
               font=big, fill=(230, 237, 243))
-    _draw_centered(draw, cx, cy + RING_RADIUS + 18, "Current Streak", label, LINK_BLUE)
-    _draw_centered(draw, cx, cy + RING_RADIUS + 56,
+    _draw_centered(draw, cx, cy + RING_RADIUS + s(18), "Current Streak", label, LINK_BLUE)
+    _draw_centered(draw, cx, cy + RING_RADIUS + s(56),
                    _fmt_range(stats["current_start"], stats["current_end"], current=True),
                    small, MUTED_GRAY)
 
     # Right: longest streak.
-    _draw_centered(draw, centers[2], 70, str(stats["longest_streak"]), big, LINK_BLUE)
-    _draw_centered(draw, centers[2], 150, "Longest Streak", label, LINK_BLUE)
-    _draw_centered(draw, centers[2], 200,
+    _draw_centered(draw, centers[2], s(70), str(stats["longest_streak"]), big, LINK_BLUE)
+    _draw_centered(draw, centers[2], s(150), "Longest Streak", label, LINK_BLUE)
+    _draw_centered(draw, centers[2], s(200),
                    _fmt_range(stats["longest_start"], stats["longest_end"], current=False),
                    small, MUTED_GRAY)
 
     # Footer: small "Updated …" stamp (Chicago local time), centered.
-    _draw_centered(draw, w // 2, h - 38, _activity_stamp(generated_at),
+    _draw_centered(draw, w // 2, h - s(38), _activity_stamp(generated_at),
                    footer_font, MUTED_GRAY)
     return card
 
