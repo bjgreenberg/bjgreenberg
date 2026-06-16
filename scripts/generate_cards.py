@@ -1,11 +1,20 @@
 #!/usr/bin/env python3
 """Generate composite post-card images for the GitHub profile README.
 
-This script powers the "Latest from the Blog" and "Latest from Mastodon"
-sections of the profile README. For each feed it builds up to three
-self-contained PNG "cards" (featured image + title/text baked in), saves
-them under ``assets/``, and rewrites the marked README sections with a
-borderless ``<p>`` of per-card links.
+This script powers the "GitHub Activity", "Latest from the Blog", and "Latest
+from Mastodon" sections of the profile README. For each feed it builds up to
+three self-contained PNG "cards" (featured image + title/text baked in), and it
+also renders a GitHub Activity card (total/current/longest contribution streaks
+computed from the GraphQL contribution calendar). All are saved under
+``assets/`` and the marked README sections are rewritten with a borderless
+``<p>`` of per-card links.
+
+Why a baked activity card instead of a third-party streak service:
+    The previous ``streak-stats.demolab.com`` image (and self-hosting it on
+    Vercel) proved unreliable — the shared demo host times out behind GitHub's
+    camo proxy, and the project no longer ships a one-click Vercel config.
+    Rendering the card here removes every external dependency: same approach,
+    same daily bot, no service to break.
 
 Why baked images instead of an HTML table:
     GitHub's markdown sanitizer strips ``border``/``style`` attributes from
@@ -33,11 +42,13 @@ import html
 import io
 import json
 import logging
+import os
 import re
 import sys
 import urllib.parse
 import urllib.request
 import xml.etree.ElementTree as ET  # nosec B405 — type hints only; parsing uses defusedxml
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import TypedDict
 
@@ -52,6 +63,11 @@ ASSETS_DIR = REPO_ROOT / "assets"
 
 BLOG_FEED = "https://briangreenberg.net/feed/"
 MASTO_FEED = "https://infosec.exchange/@brian_greenberg.rss"
+
+# GitHub contribution data for the baked "GitHub Activity" card.
+GITHUB_LOGIN = "bjgreenberg"
+GITHUB_PROFILE_URL = "https://github.com/bjgreenberg"
+GITHUB_GRAPHQL = "https://api.github.com/graphql"
 
 # Avatar used when a Mastodon post has no media attachment of its own.
 MASTO_AVATAR = (
@@ -94,6 +110,14 @@ BLOG_TITLE_LINES = 2
 BLOG_BLURB_LINES = 3
 MASTO_TEXT_LINES = 6
 
+# ── Activity card geometry (rendered at 2× the display size) ─────────────────
+
+ACTIVITY_DISPLAY_W = 450             # px width of the activity card in the README
+ACTIVITY_RENDER_W = ACTIVITY_DISPLAY_W * SCALE   # 900
+ACTIVITY_RENDER_H = 332              # render px (display 166) — extra room for footer
+RING_RADIUS = 66                     # current-streak ring radius (render px)
+RING_WIDTH = 10                      # ring stroke width (render px)
+
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 log = logging.getLogger("generate_cards")
 
@@ -107,6 +131,26 @@ class Card(TypedDict):
     rel_src: str       # repo-relative path used in the README <img src>
     url: str           # post permalink (the <a href>)
     alt: str           # accessibility text (the post title / toot summary)
+
+
+class ContribDay(TypedDict):
+    """One day of the GitHub contribution calendar."""
+
+    date: str          # ISO yyyy-mm-dd
+    count: int          # contributions that day
+
+
+class ActivityStats(TypedDict):
+    """Computed GitHub contribution metrics for the activity card."""
+
+    total: int                 # all-time total contributions
+    since_year: int            # year of the earliest day in the calendar (0 if none)
+    current_streak: int        # consecutive days up to today (grace for today)
+    current_start: str         # ISO start date of the current streak ("" if none)
+    current_end: str           # ISO end date of the current streak ("" if none)
+    longest_streak: int        # longest run of consecutive contribution days
+    longest_start: str         # ISO start date of the longest streak ("" if none)
+    longest_end: str           # ISO end date of the longest streak ("" if none)
 
 
 # ── Feed parsing helpers ────────────────────────────────────────────────────
@@ -571,6 +615,250 @@ def build_masto_cards() -> list[Card]:
     return cards
 
 
+# ── GitHub activity card ─────────────────────────────────────────────────────
+
+def github_token() -> str | None:
+    """Read a GitHub API token from the environment.
+
+    Prefers ``GH_TOKEN`` (an optional fine-grained PAT repo secret) and falls
+    back to ``GITHUB_TOKEN`` (the token Actions injects automatically). Returns
+    None when neither is set, so a local run without a token degrades to
+    "skip the activity card" rather than crashing.
+    """
+    return os.environ.get("GH_TOKEN") or os.environ.get("GITHUB_TOKEN") or None
+
+
+def fetch_contribution_days(login: str, token: str) -> list[ContribDay]:
+    """Fetch the full contribution calendar for ``login`` via the GraphQL API.
+
+    The ``contributionCalendar`` is capped at one year per query, so we read
+    the account's ``createdAt`` and then loop year-by-year to assemble the
+    complete day-by-day history (needed for an all-time longest streak). Days
+    are returned sorted ascending by date.
+    """
+    headers = {
+        "Authorization": f"bearer {token}",
+        "User-Agent": USER_AGENT,
+        "Content-Type": "application/json",
+    }
+
+    def graphql(query: str, variables: dict[str, str]) -> dict:
+        body = json.dumps({"query": query, "variables": variables}).encode()
+        req = urllib.request.Request(GITHUB_GRAPHQL, data=body, headers=headers)
+        with urllib.request.urlopen(req, timeout=HTTP_TIMEOUT) as resp:  # nosec B310 — constant HTTPS endpoint
+            payload = json.loads(resp.read())
+        if payload.get("errors"):
+            raise ValueError(f"GraphQL errors: {payload['errors']}")
+        return payload["data"]["user"]
+
+    created = graphql(
+        "query($login:String!){ user(login:$login){ createdAt } }",
+        {"login": login},
+    )["createdAt"]
+    start_year = int(created[:4])
+    end_year = datetime.now(timezone.utc).year
+
+    cal_query = (
+        "query($login:String!,$from:DateTime!,$to:DateTime!){"
+        " user(login:$login){ contributionsCollection(from:$from,to:$to){"
+        " contributionCalendar{ weeks{ contributionDays{ date contributionCount } } } } } }"
+    )
+    days: list[ContribDay] = []
+    for year in range(start_year, end_year + 1):
+        data = graphql(cal_query, {
+            "login": login,
+            "from": f"{year}-01-01T00:00:00Z",
+            "to": f"{year}-12-31T23:59:59Z",
+        })
+        weeks = data["contributionsCollection"]["contributionCalendar"]["weeks"]
+        for week in weeks:
+            for d in week["contributionDays"]:
+                days.append(ContribDay(date=d["date"], count=d["contributionCount"]))
+    days.sort(key=lambda d: d["date"])
+    return days
+
+
+def compute_activity_stats(days: list[ContribDay], today: date) -> ActivityStats:
+    """Compute total, current, and longest contribution streaks.
+
+    Streak rules mirror github-readme-streak-stats:
+      * A streak is a run of consecutive calendar days each with >0 contributions.
+      * The **current** streak ends today; if today has no contributions yet it
+        is not counted as broken (grace period) — the streak through yesterday
+        still stands. If the most recent contribution is older than yesterday,
+        the current streak is 0.
+    """
+    # The current-year calendar includes future days (count 0 through Dec 31).
+    # Drop anything after today so a trailing run of future zeros can't read as
+    # a broken streak. ISO date strings sort chronologically, so string
+    # comparison is safe here.
+    days = [d for d in days if d["date"] <= today.isoformat()]
+
+    stats = ActivityStats(
+        total=sum(d["count"] for d in days),
+        since_year=int(days[0]["date"][:4]) if days else 0,
+        current_streak=0, current_start="", current_end="",
+        longest_streak=0, longest_start="", longest_end="",
+    )
+    if not days:
+        return stats
+
+    # Longest streak: scan for the longest run of contribution days.
+    run = 0
+    run_start = ""
+    for d in days:
+        if d["count"] > 0:
+            run += 1
+            if run == 1:
+                run_start = d["date"]
+            if run > stats["longest_streak"]:
+                stats["longest_streak"] = run
+                stats["longest_start"] = run_start
+                stats["longest_end"] = d["date"]
+        else:
+            run = 0
+
+    # Current streak: walk backward from the last day. A trailing zero is only
+    # forgiven when it is *today* (the day isn't over yet).
+    i = len(days) - 1
+    if days[i]["count"] == 0 and days[i]["date"] == today.isoformat():
+        i -= 1
+    end = i
+    while i >= 0 and days[i]["count"] > 0:
+        i -= 1
+    if end >= 0 and i < end:
+        stats["current_streak"] = end - i
+        stats["current_start"] = days[i + 1]["date"]
+        stats["current_end"] = days[end]["date"]
+    return stats
+
+
+def _fmt_date(iso: str) -> str:
+    """Format an ISO date as e.g. ``Sep 23, 2010`` (no leading zero on day)."""
+    d = datetime.strptime(iso, "%Y-%m-%d")
+    return f"{d.strftime('%b')} {d.day}, {d.year}"
+
+
+def _fmt_range(start: str, end: str, *, current: bool) -> str:
+    """Human range for a streak; current streaks end in ``Present``."""
+    if not start:
+        return "—"
+    left = _fmt_date(start)
+    right = "Present" if current else _fmt_date(end)
+    return f"{left} – {right}"
+
+
+def _draw_centered(draw: ImageDraw.ImageDraw, cx: int, y: int, text: str,
+                   font: ImageFont.FreeTypeFont, fill: tuple[int, int, int]) -> None:
+    """Draw ``text`` horizontally centered on ``cx`` at baseline-top ``y``."""
+    w = draw.textlength(text, font=font)
+    draw.text((cx - w / 2, y), text, font=font, fill=fill)
+
+
+def render_activity_card(stats: ActivityStats, generated_at: datetime) -> Image.Image:
+    """Render the three-panel GitHub activity card (total / current / longest).
+
+    Uses the same GitHub-dark palette as the blog/Mastodon cards so the whole
+    README reads as one consistent set of dark cards on either theme. A small
+    "Updated …" stamp (``generated_at``, in UTC) is drawn along the bottom so
+    viewers can see the card is live and how fresh it is.
+    """
+    big = _find_font(
+        ["/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
+         "/System/Library/Fonts/Supplemental/Arial Bold.ttf"], 52)
+    label = _find_font(
+        ["/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
+         "/System/Library/Fonts/Supplemental/Arial Bold.ttf"], 26)
+    small = _find_font(
+        ["/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+         "/System/Library/Fonts/Supplemental/Arial.ttf"], 20)
+    footer_font = _find_font(
+        ["/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+         "/System/Library/Fonts/Supplemental/Arial.ttf"], 16)
+
+    w, h = ACTIVITY_RENDER_W, ACTIVITY_RENDER_H
+    card = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(card)
+    draw.rounded_rectangle([0, 0, w, h], radius=RADIUS, fill=CARD_BG)
+
+    col = w // 3
+    centers = (col // 2, w // 2, w - col // 2)
+    # Column dividers (kept short; the footer sits below them).
+    for x in (col, col * 2):
+        draw.line([(x, 50), (x, 250)], fill=MUTED_GRAY, width=1)
+
+    # Left: total contributions.
+    _draw_centered(draw, centers[0], 70, f"{stats['total']:,}", big, LINK_BLUE)
+    _draw_centered(draw, centers[0], 150, "Total Contributions", label, LINK_BLUE)
+    since = f"Since {stats['since_year']}" if stats["since_year"] else "All time"
+    _draw_centered(draw, centers[0], 200, since, small, MUTED_GRAY)
+
+    # Middle: current streak inside a ring.
+    cx, cy = centers[1], 110
+    draw.ellipse([cx - RING_RADIUS, cy - RING_RADIUS, cx + RING_RADIUS, cy + RING_RADIUS],
+                 outline=LINK_BLUE, width=RING_WIDTH)
+    num = str(stats["current_streak"])
+    nb = draw.textbbox((0, 0), num, font=big)
+    draw.text((cx - (nb[2] - nb[0]) / 2, cy - (nb[3] - nb[1]) / 2 - nb[1]), num,
+              font=big, fill=(230, 237, 243))
+    _draw_centered(draw, cx, cy + RING_RADIUS + 18, "Current Streak", label, LINK_BLUE)
+    _draw_centered(draw, cx, cy + RING_RADIUS + 56,
+                   _fmt_range(stats["current_start"], stats["current_end"], current=True),
+                   small, MUTED_GRAY)
+
+    # Right: longest streak.
+    _draw_centered(draw, centers[2], 70, str(stats["longest_streak"]), big, LINK_BLUE)
+    _draw_centered(draw, centers[2], 150, "Longest Streak", label, LINK_BLUE)
+    _draw_centered(draw, centers[2], 200,
+                   _fmt_range(stats["longest_start"], stats["longest_end"], current=False),
+                   small, MUTED_GRAY)
+
+    # Footer: small "Updated …" stamp, centered along the bottom.
+    stamp = f"Updated {generated_at.strftime('%b')} {generated_at.day}, " \
+            f"{generated_at.year} · {generated_at:%H:%M} UTC"
+    _draw_centered(draw, w // 2, h - 38, stamp, footer_font, MUTED_GRAY)
+    return card
+
+
+def build_activity_card() -> Card | None:
+    """Fetch contributions, render the activity card, return its Card or None.
+
+    Returns None (and logs) when no token is available or the API call fails,
+    so the README's activity section is simply left untouched that run.
+    """
+    token = github_token()
+    if not token:
+        log.warning("No GH_TOKEN/GITHUB_TOKEN set — skipping activity card.")
+        return None
+    try:
+        days = fetch_contribution_days(GITHUB_LOGIN, token)
+    except (OSError, ValueError, KeyError) as exc:
+        log.error("Activity fetch failed: %s", exc)
+        return None
+
+    now = datetime.now(timezone.utc)
+    stats = compute_activity_stats(days, now.date())
+    path = ASSETS_DIR / "activity_card.png"
+    render_activity_card(stats, now).save(path)
+    alt = (f"GitHub activity — {stats['total']:,} total contributions, "
+           f"{stats['current_streak']}-day current streak, "
+           f"{stats['longest_streak']}-day longest streak")
+    log.info("Activity card: %s", alt)
+    return Card(asset_path=path, rel_src=f"assets/{path.name}?v={asset_version(path)}",
+                url=GITHUB_PROFILE_URL, alt=alt)
+
+
+def activity_to_html(card: Card) -> str:
+    """Render the centered, clickable activity card image link."""
+    return (
+        '<p align="center">\n'
+        f'  <a href="{card["url"]}" target="_blank" rel="noopener noreferrer">'
+        f'<img src="{card["rel_src"]}" width="{ACTIVITY_DISPLAY_W}" '
+        f'alt="{html.escape(card["alt"], quote=True)}"/></a>\n'
+        '</p>'
+    )
+
+
 # ── README assembly ─────────────────────────────────────────────────────────
 
 def cards_to_html(cards: list[Card]) -> str:
@@ -618,6 +906,13 @@ def main() -> int:
             readme = update_section(readme, "MASTODON-POST-LIST", cards_to_html(masto))
     except Exception as exc:  # noqa: BLE001
         log.error("Mastodon section failed: %s", exc)
+
+    try:
+        activity = build_activity_card()
+        if activity:
+            readme = update_section(readme, "ACTIVITY-CARD", activity_to_html(activity))
+    except Exception as exc:  # noqa: BLE001
+        log.error("Activity section failed: %s", exc)
 
     if args.dry_run:
         log.info("Dry run — README not written.")
