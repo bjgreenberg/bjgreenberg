@@ -1,8 +1,8 @@
 # Profile README automation
 
-Generates the **Latest from the Blog** and **Latest from Mastodon** sections of
-the GitHub profile README (`../README.md`) as borderless, clickable image
-"cards", refreshed daily by GitHub Actions.
+Generates the **GitHub Activity**, **Latest from the Blog**, and **Latest from
+Mastodon** sections of the GitHub profile README (`../README.md`) as borderless,
+clickable image "cards", refreshed daily by GitHub Actions.
 
 ---
 
@@ -40,6 +40,10 @@ attribute for basic screen-reader accessibility.
   - **Ubuntu CI** — DejaVu (`fonts-dejavu-core`, preinstalled on `ubuntu-latest`)
   - **macOS (local)** — Arial (preinstalled)
   - Falls back to Pillow's bitmap font if neither is found (ugly but non-fatal)
+- A GitHub token in `GH_TOKEN` (preferred) or `GITHUB_TOKEN`, used **only** for the
+  GitHub Activity card's contribution-calendar GraphQL query. In CI the workflow
+  passes the auto-injected `GITHUB_TOKEN`; locally, `GH_TOKEN=$(gh auth token)`
+  works. With no token the activity card is skipped (the rest still runs).
 
 ## Setup
 
@@ -55,6 +59,9 @@ python3 scripts/generate_cards.py
 
 # Render cards but leave README.md untouched (inspect assets/ output)
 python3 scripts/generate_cards.py --dry-run
+
+# Include the GitHub Activity card locally (needs a token):
+GH_TOKEN="$(gh auth token)" python3 scripts/generate_cards.py
 ```
 
 Cards are written to `../assets/blog_card_{1..3}.png` and
@@ -76,6 +83,7 @@ No cost: the profile repo is public, and GitHub Actions is free for public repos
 
 | Section | Feed | Image source |
 |---|---|---|
+| GitHub Activity | GitHub GraphQL `contributionsCollection` | Computed metrics rendered to `activity_card.png` (no external image — total, current streak, longest streak) |
 | Blog | `https://briangreenberg.net/feed/` | First `<img>` in `<content:encoded>`; falls back to the post page's `og:image` meta tag |
 | Mastodon | `https://infosec.exchange/@brian_greenberg.rss` | First **image** `<media:content>` attachment → for a **video** attachment, the post's `og:image` poster frame → for a **link** post, the instance's cached preview card (`/api/v1/statuses/{id}` → `card.image`), then the linked article's `og:image` → account avatar |
 
@@ -123,7 +131,12 @@ glyphs (the link still points at the full original post).
 | `_wrap` | Greedy pixel-width word wrap |
 | `render_card` | Render one RGBA card (rounded corners, photo + text) |
 | `build_blog_cards` / `build_masto_cards` | Per-feed card builders → `list[Card]` |
-| `cards_to_html` | Borderless centered `<p>` of per-card `<a><img></a>` links |
+| `github_token` | Read `GH_TOKEN`/`GITHUB_TOKEN` from env (None → skip activity card) |
+| `fetch_contribution_days` | GraphQL contribution calendar, year-by-year, all-time |
+| `compute_activity_stats` | Total + current + longest streak (pure logic, future days dropped) |
+| `render_activity_card` | Render the 3-panel activity card (total / ring / longest) |
+| `build_activity_card` | Orchestrate fetch→compute→render→`Card`; None on no-token/error |
+| `cards_to_html` / `activity_to_html` | Centered `<p>` of `<a><img></a>` link(s) |
 | `update_section` | Replace content between `<!-- TAG:START/END -->` markers |
 | `main` | Orchestrate both feeds; `--dry-run` supported |
 
@@ -145,6 +158,9 @@ post URL, alt text).
 | Cards in a row have uneven heights | Should not happen — height is fixed per section via the `*_LINES` constants. If you change those, both cards in a section must use the same values. |
 | `pip install` fails on the runner | The pinned Pillow version may lack a wheel for the runner's Python. Bump `Pillow==` in `requirements.txt` to a version with a `cp312` wheel. |
 | Emoji missing from card text | Expected — emoji are stripped (no color-glyph support). The full post still has them. |
+| GitHub Activity card missing / not updating | No token available (`github_token()` logged a warning and the section was skipped), or the GraphQL call failed. Confirm the workflow passes `GITHUB_TOKEN`; locally run with `GH_TOKEN=$(gh auth token)`. |
+| Current streak shows 0 despite recent activity | The contribution calendar includes future days (count 0 through Dec 31); `compute_activity_stats` drops days after today so they can't read as a broken streak. If you still see 0, the most recent contribution is older than yesterday. |
+| Streak/total numbers look low | The streak metric favors daily public commits. These are computed from the real contribution calendar — they are accurate, not a bug. |
 
 ## Known limitations
 
@@ -164,7 +180,7 @@ post URL, alt text).
 ## CI
 
 Every push to `main` (including the daily bot commit) runs the `test` job of
-the CI workflow (`.github/workflows/ci.yml`): pytest (56 tests) + bandit on
+the CI workflow (`.github/workflows/ci.yml`): pytest (72 tests) + bandit on
 `generate_cards.py`, on Python 3.12 to match the bot's production runtime.
 Non-gating by design — `main` has no branch protection (the daily bot commits
 directly; documented exemption) — so a red run is an email alarm, not a merge

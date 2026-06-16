@@ -20,11 +20,11 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 ## 📊 GitHub Activity
 
+<!-- ACTIVITY-CARD:START -->
 <p align="center">
-  <a href="https://github.com/bjgreenberg" target="_blank" rel="noopener noreferrer">
-    <img src="https://streak-stats.demolab.com?user=bjgreenberg&theme=tokyonight&hide_border=true" alt="GitHub Streak" />
-  </a>
+  <a href="https://github.com/bjgreenberg" target="_blank" rel="noopener noreferrer"><img src="assets/activity_card.png" width="450" alt="GitHub activity"/></a>
 </p>
+<!-- ACTIVITY-CARD:END -->
 
 ## <img src="assets/gsd-favicon.png" width="16" height="16" alt=""> Latest from the Blog
 

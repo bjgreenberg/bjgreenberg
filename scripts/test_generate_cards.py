@@ -5,10 +5,19 @@ target the deterministic text/HTML helpers. Run: pytest scripts/
 """
 
 import xml.etree.ElementTree as ET
+from datetime import date
 
 import generate_cards as gc
 
 MEDIA = gc.NS_MEDIA  # "{http://search.yahoo.com/mrss/}"
+
+
+def _days(start_iso: str, counts: list[int]) -> list[gc.ContribDay]:
+    """Build a contiguous day-by-day calendar starting at start_iso."""
+    from datetime import datetime, timedelta
+    d0 = datetime.strptime(start_iso, "%Y-%m-%d").date()
+    return [gc.ContribDay(date=(d0 + timedelta(days=i)).isoformat(), count=c)
+            for i, c in enumerate(counts)]
 
 
 def _item(*, media: str = "", body: str = "", link: str = "https://infosec.exchange/p/1") -> ET.Element:
@@ -356,6 +365,109 @@ class TestUsableImage:
             raise OSError("network down")
         monkeypatch.setattr(gc, "fetch_url", boom)
         assert gc.usable_image("https://cdn/x.png") is False
+
+
+class TestComputeActivityStats:
+    TODAY = date(2026, 6, 15)
+
+    def test_empty_calendar_is_all_zero(self):
+        s = gc.compute_activity_stats([], self.TODAY)
+        assert s["total"] == 0 and s["current_streak"] == 0 and s["longest_streak"] == 0
+        assert s["since_year"] == 0
+
+    def test_total_and_since_year(self):
+        s = gc.compute_activity_stats(_days("2024-01-01", [1, 2, 0, 3]), self.TODAY)
+        assert s["total"] == 6
+        assert s["since_year"] == 2024
+
+    def test_current_streak_ending_today(self):
+        # 4 contiguous days ending exactly on TODAY.
+        s = gc.compute_activity_stats(_days("2026-06-12", [5, 5, 5, 5]), self.TODAY)
+        assert s["current_streak"] == 4
+        assert s["current_start"] == "2026-06-12"
+        assert s["current_end"] == "2026-06-15"
+
+    def test_today_with_no_contributions_yet_does_not_break_streak(self):
+        # Days through yesterday have activity; today (last day) is 0 → grace.
+        s = gc.compute_activity_stats(_days("2026-06-12", [5, 5, 5, 0]), self.TODAY)
+        assert s["current_streak"] == 3
+        assert s["current_end"] == "2026-06-14"  # yesterday
+
+    def test_streak_broken_when_latest_activity_older_than_yesterday(self):
+        # Last activity was 2026-06-12, then two zero days (13th, 14th) and today.
+        s = gc.compute_activity_stats(_days("2026-06-10", [5, 5, 5, 0, 0, 0]), self.TODAY)
+        assert s["current_streak"] == 0
+        assert s["current_start"] == ""
+
+    def test_longest_streak_with_a_gap(self):
+        # run of 3, gap, run of 5 → longest is 5.
+        s = gc.compute_activity_stats(
+            _days("2026-01-01", [1, 1, 1, 0, 2, 2, 2, 2, 2]), self.TODAY)
+        assert s["longest_streak"] == 5
+        assert s["longest_start"] == "2026-01-05"
+        assert s["longest_end"] == "2026-01-09"
+
+    def test_future_days_are_ignored(self):
+        # The current-year calendar includes future zero days through Dec 31;
+        # they must not be read as a broken trailing streak.
+        cal = _days("2026-06-13", [4, 4, 4, 0, 0, 0, 0])  # 13,14,15 active; 16+ future zeros
+        s = gc.compute_activity_stats(cal, self.TODAY)
+        assert s["current_streak"] == 3
+        assert s["current_end"] == "2026-06-15"
+        assert s["total"] == 12  # future zeros excluded (they were 0 anyway)
+
+
+class TestActivityFormatters:
+    def test_fmt_date_drops_leading_zero_on_day(self):
+        assert gc._fmt_date("2010-09-23") == "Sep 23, 2010"
+        assert gc._fmt_date("2026-06-05") == "Jun 5, 2026"
+
+    def test_fmt_range_current_ends_in_present(self):
+        assert gc._fmt_range("2026-05-26", "2026-06-15", current=True) == "May 26, 2026 – Present"
+
+    def test_fmt_range_past_shows_both_dates(self):
+        assert gc._fmt_range("2026-03-10", "2026-04-21", current=False) == \
+            "Mar 10, 2026 – Apr 21, 2026"
+
+    def test_fmt_range_empty_is_dash(self):
+        assert gc._fmt_range("", "", current=True) == "—"
+
+
+class TestGithubToken:
+    def test_prefers_gh_token(self, monkeypatch):
+        monkeypatch.setenv("GH_TOKEN", "fine-grained")
+        monkeypatch.setenv("GITHUB_TOKEN", "actions")
+        assert gc.github_token() == "fine-grained"
+
+    def test_falls_back_to_github_token(self, monkeypatch):
+        monkeypatch.delenv("GH_TOKEN", raising=False)
+        monkeypatch.setenv("GITHUB_TOKEN", "actions")
+        assert gc.github_token() == "actions"
+
+    def test_none_when_unset(self, monkeypatch):
+        monkeypatch.delenv("GH_TOKEN", raising=False)
+        monkeypatch.delenv("GITHUB_TOKEN", raising=False)
+        assert gc.github_token() is None
+
+
+class TestBuildActivityCard:
+    def test_returns_none_without_token(self, monkeypatch):
+        # No token → skip gracefully (README section left untouched).
+        monkeypatch.setattr(gc, "github_token", lambda: None)
+        assert gc.build_activity_card() is None
+
+
+class TestActivityToHtml:
+    def test_emits_clickable_image_with_escaped_alt_and_width(self):
+        card = gc.Card(asset_path=None, rel_src="assets/activity_card.png?v=abc12345",
+                       url="https://github.com/bjgreenberg",
+                       alt='Activity "stats" & streaks')
+        out = gc.activity_to_html(card)
+        assert 'href="https://github.com/bjgreenberg"' in out
+        assert f'width="{gc.ACTIVITY_DISPLAY_W}"' in out
+        assert 'assets/activity_card.png?v=abc12345' in out
+        assert "&quot;stats&quot; &amp; streaks" in out  # HTML-escaped
+        assert out.startswith('<p align="center">')
 
 
 class TestCardsToHtml:
