@@ -5,7 +5,7 @@ target the deterministic text/HTML helpers. Run: pytest scripts/
 """
 
 import xml.etree.ElementTree as ET
-from datetime import date
+from datetime import date, datetime, timezone
 
 import generate_cards as gc
 
@@ -230,39 +230,48 @@ class TestFirstArticleLink:
         assert gc.first_article_link("<p>just words, no links</p>") is None
 
 
-class TestMastoHeroUrl:
+class TestMastoHero:
     def test_prefers_native_image_attachment(self, monkeypatch):
         # og_image must NOT be consulted when a real image attachment exists.
         monkeypatch.setattr(gc, "og_image", lambda url: "should-not-be-used")
         item = _item(media='<media:content url="https://cdn/x.jpg" medium="image" type="image/jpeg"/>')
-        assert gc.masto_hero_url(item, "https://post", "") == "https://cdn/x.jpg"
+        assert gc.masto_hero(item, "https://post", "") == "https://cdn/x.jpg"
 
-    def test_video_attachment_uses_post_og_image_poster_frame(self, monkeypatch):
-        # The .mp4 URL must never be returned; the post's og:image poster is.
+    def test_video_attachment_uses_ffmpeg_frame_bytes(self, monkeypatch):
+        # An extracted frame (bytes) is the preferred video hero; the .mp4 URL
+        # and og:image poster must never be used when a frame is available.
+        monkeypatch.setattr(gc, "extract_video_frame", lambda url: b"\x89PNG-frame")
+        monkeypatch.setattr(gc, "og_image", lambda url: "should-not-be-used")
+        item = _item(media='<media:content url="https://cdn/v.mp4" medium="video" type="video/mp4"/>')
+        assert gc.masto_hero(item, "https://post", "") == b"\x89PNG-frame"
+
+    def test_video_falls_back_to_poster_when_ffmpeg_yields_nothing(self, monkeypatch):
+        # ffmpeg unavailable / all frames blank → use the instance poster.
+        monkeypatch.setattr(gc, "extract_video_frame", lambda url: None)
         monkeypatch.setattr(gc, "og_image",
                             lambda url: "https://cdn/poster.png" if url == "https://post" else None)
         monkeypatch.setattr(gc, "usable_image", lambda url: True)
         item = _item(media='<media:content url="https://cdn/v.mp4" medium="video" type="video/mp4"/>')
-        assert gc.masto_hero_url(item, "https://post", "") == "https://cdn/poster.png"
+        assert gc.masto_hero(item, "https://post", "") == "https://cdn/poster.png"
 
     def test_blank_video_poster_falls_through_to_avatar(self, monkeypatch):
-        # Observed real case: Mastodon returns a flat #f2f2f2 poster for a
-        # video with no thumbnail. usable_image rejects it; with no article
-        # link, the card falls back to the avatar rather than a blank box.
+        # No ffmpeg frame, blank poster, no link → avatar, not a blank box.
+        monkeypatch.setattr(gc, "extract_video_frame", lambda url: None)
         monkeypatch.setattr(gc, "og_image", lambda url: "https://cdn/blank.png")
         monkeypatch.setattr(gc, "usable_image", lambda url: False)
         item = _item(media='<media:content url="https://cdn/v.mp4" medium="video"/>')
-        assert gc.masto_hero_url(item, "https://post", "") == gc.MASTO_AVATAR
+        assert gc.masto_hero(item, "https://post", "") == gc.MASTO_AVATAR
 
     def test_blank_video_poster_falls_through_to_article_link(self, monkeypatch):
-        # Blank poster, no instance card, but the post links an article → use it.
+        # No frame, blank poster, no instance card, but the post links an article.
+        monkeypatch.setattr(gc, "extract_video_frame", lambda url: None)
         monkeypatch.setattr(gc, "usable_image", lambda url: False)
         monkeypatch.setattr(gc, "masto_card_image", lambda url: None)
         monkeypatch.setattr(gc, "og_image",
                             lambda url: "https://verge/hero.png" if "theverge" in url else "https://cdn/blank.png")
         body = '<p>watch <a href="https://www.theverge.com/x" target="_blank">vg</a></p>'
         item = _item(media='<media:content url="https://cdn/v.mp4" medium="video"/>', body=body)
-        assert gc.masto_hero_url(item, "https://post", body) == "https://verge/hero.png"
+        assert gc.masto_hero(item, "https://post", body) == "https://verge/hero.png"
 
     def test_link_post_prefers_mastodon_preview_card(self, monkeypatch):
         # The instance's cached preview (on its CDN) wins over scraping the
@@ -270,7 +279,7 @@ class TestMastoHeroUrl:
         monkeypatch.setattr(gc, "masto_card_image", lambda url: "https://cdn.instance/preview.png")
         monkeypatch.setattr(gc, "og_image", lambda url: "should-not-be-used")
         body = '<p>read <a href="https://www.theverge.com/x" target="_blank">vg</a></p>'
-        assert gc.masto_hero_url(_item(body=body), "https://post/1", body) == "https://cdn.instance/preview.png"
+        assert gc.masto_hero(_item(body=body), "https://post/1", body) == "https://cdn.instance/preview.png"
 
     def test_link_post_falls_back_to_article_scrape_without_preview_card(self, monkeypatch):
         # No instance card → scrape the linked article's og:image.
@@ -278,29 +287,32 @@ class TestMastoHeroUrl:
         monkeypatch.setattr(gc, "og_image",
                             lambda url: "https://verge/hero.png" if "theverge" in url else None)
         body = '<p>read <a href="https://www.theverge.com/x" target="_blank">vg</a></p>'
-        assert gc.masto_hero_url(_item(body=body), "https://post/1", body) == "https://verge/hero.png"
+        assert gc.masto_hero(_item(body=body), "https://post/1", body) == "https://verge/hero.png"
 
     def test_image_attachment_wins_over_video_when_both_present(self, monkeypatch):
-        monkeypatch.setattr(gc, "og_image", lambda url: "poster")
+        # Image returns before the video branch, so ffmpeg is never invoked.
+        monkeypatch.setattr(gc, "extract_video_frame",
+                            lambda url: (_ for _ in ()).throw(AssertionError("ffmpeg must not run")))
         item = _item(
             media='<media:content url="https://cdn/v.mp4" medium="video"/>'
                   '<media:content url="https://cdn/x.jpg" medium="image"/>'
         )
-        assert gc.masto_hero_url(item, "https://post", "") == "https://cdn/x.jpg"
+        assert gc.masto_hero(item, "https://post", "") == "https://cdn/x.jpg"
 
     def test_falls_back_to_avatar_for_pure_text_post(self, monkeypatch):
         # No media, no instance card, no link, no og:image → account avatar.
         monkeypatch.setattr(gc, "og_image", lambda url: None)
         monkeypatch.setattr(gc, "masto_card_image", lambda url: None)
         item = _item(body="<p>just a thought, no link</p>")
-        assert gc.masto_hero_url(item, "https://post", "<p>just a thought</p>") == gc.MASTO_AVATAR
+        assert gc.masto_hero(item, "https://post", "<p>just a thought</p>") == gc.MASTO_AVATAR
 
-    def test_falls_back_to_avatar_when_video_poster_scrape_fails(self, monkeypatch):
-        # Video present but og:image scrape returns None and there's no link.
+    def test_falls_back_to_avatar_when_video_has_no_frame_or_poster(self, monkeypatch):
+        # Video present but ffmpeg + poster scrape both yield nothing, no link.
+        monkeypatch.setattr(gc, "extract_video_frame", lambda url: None)
         monkeypatch.setattr(gc, "og_image", lambda url: None)
         monkeypatch.setattr(gc, "masto_card_image", lambda url: None)
         item = _item(media='<media:content url="https://cdn/v.mp4" medium="video"/>')
-        assert gc.masto_hero_url(item, "https://post", "") == gc.MASTO_AVATAR
+        assert gc.masto_hero(item, "https://post", "") == gc.MASTO_AVATAR
 
 
 class TestMastoCardImage:
@@ -415,6 +427,70 @@ class TestComputeActivityStats:
         assert s["current_streak"] == 3
         assert s["current_end"] == "2026-06-15"
         assert s["total"] == 12  # future zeros excluded (they were 0 anyway)
+
+
+class TestExtractVideoFrame:
+    def test_returns_none_when_ffmpeg_missing(self, monkeypatch):
+        monkeypatch.setattr(gc.shutil, "which", lambda name: None)
+        # Must not even attempt a download when ffmpeg isn't installed.
+        monkeypatch.setattr(gc, "fetch_url",
+                            lambda *a, **k: (_ for _ in ()).throw(AssertionError("no download")))
+        assert gc.extract_video_frame("https://cdn/v.mp4") is None
+
+    def test_returns_none_when_download_fails(self, monkeypatch):
+        monkeypatch.setattr(gc.shutil, "which", lambda name: "/usr/bin/ffmpeg")
+        def boom(*a, **k):
+            raise OSError("network down")
+        monkeypatch.setattr(gc, "fetch_url", boom)
+        assert gc.extract_video_frame("https://cdn/v.mp4") is None
+
+
+class TestActivityStamp:
+    def test_summer_is_cdt_12_hour(self):
+        # 2026-07-01 18:30 UTC → 13:30 CDT (UTC-5).
+        dt = datetime(2026, 7, 1, 18, 30, tzinfo=timezone.utc)
+        assert gc._activity_stamp(dt) == "Updated Jul 1, 2026 · 1:30 PM CDT"
+
+    def test_winter_is_cst_and_noon_hour_not_stripped(self):
+        # 2026-01-15 18:30 UTC → 12:30 CST (UTC-6); "12" must stay "12".
+        dt = datetime(2026, 1, 15, 18, 30, tzinfo=timezone.utc)
+        assert gc._activity_stamp(dt) == "Updated Jan 15, 2026 · 12:30 PM CST"
+
+
+class TestImageHasContent:
+    @staticmethod
+    def _png(img):
+        import io
+        buf = io.BytesIO()
+        img.save(buf, format="PNG")
+        return buf.getvalue()
+
+    def test_flat_image_has_no_content(self):
+        from PIL import Image
+        assert gc._image_has_content(self._png(Image.new("RGB", (32, 32), (242, 242, 242)))) is False
+
+    def test_gradient_has_content(self):
+        from PIL import Image
+        assert gc._image_has_content(self._png(Image.linear_gradient("L").convert("RGB"))) is True
+
+    def test_undecodable_bytes_have_no_content(self):
+        assert gc._image_has_content(b"not an image") is False
+
+
+class TestFetchPhotoBytes:
+    def test_accepts_pre_decoded_bytes_without_network(self, monkeypatch):
+        import io
+        from PIL import Image
+        monkeypatch.setattr(gc, "fetch_url",
+                            lambda *a, **k: (_ for _ in ()).throw(AssertionError("no network")))
+        buf = io.BytesIO()
+        Image.new("RGB", (40, 30), (10, 120, 200)).save(buf, format="PNG")
+        out = gc.fetch_photo(buf.getvalue(), 100, 50)
+        assert out.size == (100, 50)
+
+    def test_bad_bytes_yield_placeholder(self, monkeypatch):
+        out = gc.fetch_photo(b"garbage", 60, 40)
+        assert out.size == (60, 40)  # placeholder, no exception
 
 
 class TestActivityFormatters:
