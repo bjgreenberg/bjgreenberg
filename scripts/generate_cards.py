@@ -114,7 +114,7 @@ MASTO_TEXT_LINES = 6
 
 ACTIVITY_DISPLAY_W = 450             # px width of the activity card in the README
 ACTIVITY_RENDER_W = ACTIVITY_DISPLAY_W * SCALE   # 900
-ACTIVITY_RENDER_H = 300              # render px (display 150)
+ACTIVITY_RENDER_H = 332              # render px (display 166) — extra room for footer
 RING_RADIUS = 66                     # current-streak ring radius (render px)
 RING_WIDTH = 10                      # ring stroke width (render px)
 
@@ -755,11 +755,13 @@ def _draw_centered(draw: ImageDraw.ImageDraw, cx: int, y: int, text: str,
     draw.text((cx - w / 2, y), text, font=font, fill=fill)
 
 
-def render_activity_card(stats: ActivityStats) -> Image.Image:
+def render_activity_card(stats: ActivityStats, generated_at: datetime) -> Image.Image:
     """Render the three-panel GitHub activity card (total / current / longest).
 
     Uses the same GitHub-dark palette as the blog/Mastodon cards so the whole
-    README reads as one consistent set of dark cards on either theme.
+    README reads as one consistent set of dark cards on either theme. A small
+    "Updated …" stamp (``generated_at``, in UTC) is drawn along the bottom so
+    viewers can see the card is live and how fresh it is.
     """
     big = _find_font(
         ["/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
@@ -770,6 +772,9 @@ def render_activity_card(stats: ActivityStats) -> Image.Image:
     small = _find_font(
         ["/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
          "/System/Library/Fonts/Supplemental/Arial.ttf"], 20)
+    footer_font = _find_font(
+        ["/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+         "/System/Library/Fonts/Supplemental/Arial.ttf"], 16)
 
     w, h = ACTIVITY_RENDER_W, ACTIVITY_RENDER_H
     card = Image.new("RGBA", (w, h), (0, 0, 0, 0))
@@ -778,9 +783,9 @@ def render_activity_card(stats: ActivityStats) -> Image.Image:
 
     col = w // 3
     centers = (col // 2, w // 2, w - col // 2)
-    # Column dividers.
+    # Column dividers (kept short; the footer sits below them).
     for x in (col, col * 2):
-        draw.line([(x, 50), (x, h - 50)], fill=MUTED_GRAY, width=1)
+        draw.line([(x, 50), (x, 250)], fill=MUTED_GRAY, width=1)
 
     # Left: total contributions.
     _draw_centered(draw, centers[0], 70, f"{stats['total']:,}", big, LINK_BLUE)
@@ -807,6 +812,11 @@ def render_activity_card(stats: ActivityStats) -> Image.Image:
     _draw_centered(draw, centers[2], 200,
                    _fmt_range(stats["longest_start"], stats["longest_end"], current=False),
                    small, MUTED_GRAY)
+
+    # Footer: small "Updated …" stamp, centered along the bottom.
+    stamp = f"Updated {generated_at.strftime('%b')} {generated_at.day}, " \
+            f"{generated_at.year} · {generated_at:%H:%M} UTC"
+    _draw_centered(draw, w // 2, h - 38, stamp, footer_font, MUTED_GRAY)
     return card
 
 
@@ -826,9 +836,10 @@ def build_activity_card() -> Card | None:
         log.error("Activity fetch failed: %s", exc)
         return None
 
-    stats = compute_activity_stats(days, datetime.now(timezone.utc).date())
+    now = datetime.now(timezone.utc)
+    stats = compute_activity_stats(days, now.date())
     path = ASSETS_DIR / "activity_card.png"
-    render_activity_card(stats).save(path)
+    render_activity_card(stats, now).save(path)
     alt = (f"GitHub activity — {stats['total']:,} total contributions, "
            f"{stats['current_streak']}-day current streak, "
            f"{stats['longest_streak']}-day longest streak")

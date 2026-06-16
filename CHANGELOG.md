@@ -10,7 +10,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## 2026-06-15 (3)
 
 ### Added
-- `generate_cards.py`: the **GitHub Activity** section is now a baked `activity_card.png` (total contributions, current streak, longest streak) rendered locally from the GitHub GraphQL contribution calendar — replacing the `streak-stats.demolab.com` image. New functions `github_token`, `fetch_contribution_days` (year-by-year, all-time), `compute_activity_stats` (pure streak logic), `render_activity_card` (3-panel card in the same GitHub-dark palette as the other cards), `build_activity_card`, and `activity_to_html`. Section is driven by `<!-- ACTIVITY-CARD:START/END -->` markers like the others. 16 new pytest cases (72 total); bandit clean
+- `generate_cards.py`: the **GitHub Activity** section is now a baked `activity_card.png` (total contributions, current streak, longest streak) rendered locally from the GitHub GraphQL contribution calendar — replacing the `streak-stats.demolab.com` image. New functions `github_token`, `fetch_contribution_days` (year-by-year, all-time), `compute_activity_stats` (pure streak logic), `render_activity_card` (3-panel card in the same GitHub-dark palette as the other cards, with a small "Updated … UTC" stamp along the bottom — the timestamp is passed in so rendering stays deterministic/testable), `build_activity_card`, and `activity_to_html`. Section is driven by `<!-- ACTIVITY-CARD:START/END -->` markers like the others. 16 new pytest cases (72 total); bandit clean
 - `blog-posts.yml`: passes `GH_TOKEN` (optional PAT secret) / `GITHUB_TOKEN` to the generate step for the contribution-calendar query
 
 ### Removed

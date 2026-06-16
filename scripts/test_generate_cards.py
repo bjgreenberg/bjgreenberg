@@ -457,6 +457,18 @@ class TestBuildActivityCard:
         assert gc.build_activity_card() is None
 
 
+class TestRenderActivityCard:
+    def test_renders_image_at_expected_size(self):
+        # Deterministic (no network): the timestamp is passed in, not read from
+        # the clock — so this guards the render signature and canvas size.
+        from datetime import datetime, timezone
+        stats = gc.compute_activity_stats(_days("2026-06-12", [5, 5, 5, 5]),
+                                          date(2026, 6, 15))
+        img = gc.render_activity_card(stats, datetime(2026, 6, 15, 16, 45, tzinfo=timezone.utc))
+        assert img.size == (gc.ACTIVITY_RENDER_W, gc.ACTIVITY_RENDER_H)
+        assert img.mode == "RGBA"
+
+
 class TestActivityToHtml:
     def test_emits_clickable_image_with_escaped_alt_and_width(self):
         card = gc.Card(asset_path=None, rel_src="assets/activity_card.png?v=abc12345",
