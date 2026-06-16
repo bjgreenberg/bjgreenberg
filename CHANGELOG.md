@@ -7,6 +7,11 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## 2026-06-15 (5)
+
+### Changed
+- `generate_cards.py`: widened the GitHub Activity card from 450px to **760px** to line up with the blog/Mastodon card rows (3 × 260 ≈ 780px) — at 450 it read as under-scaled beneath the full-width hero. The card geometry is now defined against a 900px reference and scaled to the render width (`ACTIVITY_SCALE`), so type, ring, spacing, and corner radius all grow proportionally rather than stretching. Render is now 1520 × 561 (display 760 × 280); `render_activity_card`'s literal positions/font sizes go through a scale helper
+
 ## 2026-06-15 (4)
 
 ### Added
