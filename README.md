@@ -22,7 +22,7 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 <!-- ACTIVITY-CARD:START -->
 <p align="center">
-  <a href="https://github.com/bjgreenberg" target="_blank" rel="noopener noreferrer"><img src="assets/activity_card.png" width="450" alt="GitHub activity"/></a>
+  <a href="https://github.com/bjgreenberg" target="_blank" rel="noopener noreferrer"><img src="assets/activity_card.png?v=bc198495" width="450" alt="GitHub activity — 3,005 total contributions, 22-day current streak, 43-day longest streak"/></a>
 </p>
 <!-- ACTIVITY-CARD:END -->
 
@@ -42,9 +42,9 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 <!-- MASTODON-POST-LIST:START -->
 <p align="center">
-  <a href="https://infosec.exchange/@brian_greenberg/116754407124700483" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_1.png?v=6c722cdd" width="260" alt="Loving our new brand... Shifting workplace expectations, geopolitical tensions, technology…"/></a>
-  <a href="https://infosec.exchange/@brian_greenberg/116749138541577580" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_2.png?v=c238489e" width="260" alt="This project really made me smile. Andrew Warkentin has created a virtual museum with over 600…"/></a>
-  <a href="https://infosec.exchange/@brian_greenberg/116749028717068067" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_3.png?v=c9177bbb" width="260" alt=" This new agentic AI demo from Apple&#x27;s WWDC was so cool. Apple Intelligence can now log into your…"/></a>
+  <a href="https://infosec.exchange/@brian_greenberg/116755712575221699" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_1.png?v=365d428c" width="260" alt="The most interesting thing about the new SearchLeak attack on Microsoft 365 Copilot isn&#x27;t any…"/></a>
+  <a href="https://infosec.exchange/@brian_greenberg/116755544221524623" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_2.png?v=64e39554" width="260" alt="For a long time, people said the law was behind when it came to deepfake abuse. That seems to be…"/></a>
+  <a href="https://infosec.exchange/@brian_greenberg/116755434801591744" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_3.png?v=aa865dbc" width="260" alt="I just finished reading Google&#x27;s new report about a Chinese espionage group that spent over a year…"/></a>
 </p>
 <!-- MASTODON-POST-LIST:END -->
 
