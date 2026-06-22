@@ -1,8 +1,45 @@
 # Profile README automation
 
+Last updated: 2026-06-22 06:47 AM CDT
+
 Generates the **GitHub Activity**, **Latest from the Blog**, and **Latest from
 Mastodon** sections of the GitHub profile README (`../README.md`) as borderless,
 clickable image "cards", refreshed daily by GitHub Actions.
+
+---
+
+## Pipeline at a glance
+
+One daily run: the workflow invokes `generate_cards.py`, which pulls three
+sources, picks a hero image per item (each step degrading gracefully), bakes the
+PNG cards with Pillow, rewrites only the fenced README sections, and the bot
+commits any changed assets + README back to `main`. Each piece is detailed in
+the sections below.
+
+```mermaid
+flowchart TB
+    cron["blog-posts.yml<br/>daily 08:00 UTC + manual dispatch"] --> gen["generate_cards.py"]
+    subgraph sources["fetch — each source degrades gracefully"]
+        s1["Blog RSS<br/>briangreenberg.net/feed"]
+        s2["Mastodon RSS<br/>infosec.exchange"]
+        s3["GitHub GraphQL<br/>contributionsCollection — GITHUB_TOKEN"]
+    end
+    gen --> sources
+    s1 --> hero1["hero: content img → og:image"]
+    s2 --> hero2["masto_hero: image → ffmpeg video frame<br/>→ preview card → article og:image → avatar"]
+    s3 --> stats["compute_activity_stats<br/>total / current / longest streak"]
+    hero1 --> render["render_card with Pillow<br/>baked PNG cards"]
+    hero2 --> render
+    stats --> renderA["render_activity_card"]
+    render --> assets[("assets/*_card_*.png")]
+    renderA --> assets
+    render --> upd["update_section between<br/>HTML-comment markers"]
+    renderA --> upd
+    upd --> readme[("../README.md profile sections")]
+    assets --> commit["bot commits changed PNGs + README to main"]
+    readme --> commit
+    commit --> ci["CI: pytest + bandit — non-gating"]
+```
 
 ---
 
@@ -189,9 +226,11 @@ post URL, alt text).
 
 ## CI
 
-Every push to `main` (including the daily bot commit) runs the `test` job of
-the CI workflow (`.github/workflows/ci.yml`): pytest (83 tests) + bandit on
-`generate_cards.py`, on Python 3.12 to match the bot's production runtime.
-Non-gating by design — `main` has no branch protection (the daily bot commits
-directly; documented exemption) — so a red run is an email alarm, not a merge
-gate.
+Every push to `main` (including the daily bot commit) runs the CI workflow
+(`.github/workflows/ci.yml`): the `test` job (pytest + bandit on
+`generate_cards.py`, Python 3.12 to match the bot's production runtime) and the
+`docs-render` job (renders every Mermaid diagram in the repo's Markdown via the
+digest-pinned `mermaid-cli` container — `scripts/render-diagrams.sh`).
+Both are **non-gating by design** — `main` has no branch protection (the daily
+bot commits directly; documented exemption) — so a red run is an email alarm,
+not a merge gate.

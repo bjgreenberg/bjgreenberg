@@ -34,3 +34,16 @@ jobs:
 
       - name: Bandit security scan
         run: bandit -q -ll scripts/generate_cards.py
+
+  # Render-check every ```mermaid block in the repo's Markdown (the pipeline
+  # diagram in scripts/README.md). Same non-gating safety-net role as `test`:
+  # main has no branch protection (the bot commits directly), so this emails on
+  # a broken diagram rather than blocking a merge. Digest-pinned mermaid-cli
+  # container — no Node/Chrome on the runner; Docker is preinstalled.
+  docs-render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Render-check Mermaid diagrams
+        run: scripts/render-diagrams.sh
