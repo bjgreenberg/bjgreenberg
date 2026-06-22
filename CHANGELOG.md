@@ -7,6 +7,18 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### Added
+- `docs`: **Pipeline-at-a-glance** Mermaid `flowchart` in `scripts/README.md` —
+  the daily card-generation flow (workflow → `generate_cards.py` → fetch
+  blog/Mastodon/GitHub sources → per-item hero selection → Pillow render →
+  `update_section` between markers → bot commit → non-gating CI). Co-located
+  with the generator docs; the public profile `README.md` is untouched.
+- `ci`: `docs-render` job + `scripts/render-diagrams.sh` — render-checks every
+  ` ```mermaid ` block via the digest-pinned `mermaid-cli` container. Non-gating,
+  matching the repo's existing safety-net CI posture (no branch protection — the
+  bot commits directly).
+- `docs`: `Last updated:` stamp on `scripts/README.md`.
+
 ## 2026-06-15 (5)
 
 ### Changed
