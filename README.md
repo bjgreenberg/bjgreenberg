@@ -22,7 +22,7 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 <!-- ACTIVITY-CARD:START -->
 <p align="center">
-  <a href="https://github.com/bjgreenberg" target="_blank" rel="noopener noreferrer"><img src="assets/activity_card.png?v=3e103c3a" width="760" alt="GitHub activity — 3,240 total contributions, 28-day current streak, 43-day longest streak"/></a>
+  <a href="https://github.com/bjgreenberg" target="_blank" rel="noopener noreferrer"><img src="assets/activity_card.png?v=5e1cf437" width="760" alt="GitHub activity — 3,257 total contributions, 28-day current streak, 43-day longest streak"/></a>
 </p>
 <!-- ACTIVITY-CARD:END -->
 
@@ -42,9 +42,9 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 <!-- MASTODON-POST-LIST:START -->
 <p align="center">
-  <a href="https://infosec.exchange/@brian_greenberg/116755712575221699" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_1.png?v=365d428c" width="260" alt="The most interesting thing about the new SearchLeak attack on Microsoft 365 Copilot isn&#x27;t any…"/></a>
-  <a href="https://infosec.exchange/@brian_greenberg/116755544221524623" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_2.png?v=64e39554" width="260" alt="For a long time, people said the law was behind when it came to deepfake abuse. That seems to be…"/></a>
-  <a href="https://infosec.exchange/@brian_greenberg/116755434801591744" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_3.png?v=aa865dbc" width="260" alt="I just finished reading Google&#x27;s new report about a Chinese espionage group that spent over a year…"/></a>
+  <a href="https://infosec.exchange/@brian_greenberg/116794426785867532" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_1.png?v=57e6ae9b" width="260" alt="When did it become OK for vendors to cold-text me and slide into my WhatsApp?You just trained your…"/></a>
+  <a href="https://infosec.exchange/@brian_greenberg/116755712575221699" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_2.png?v=365d428c" width="260" alt="The most interesting thing about the new SearchLeak attack on Microsoft 365 Copilot isn&#x27;t any…"/></a>
+  <a href="https://infosec.exchange/@brian_greenberg/116755544221524623" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_3.png?v=4f63ce45" width="260" alt="For a long time, people said the law was behind when it came to deepfake abuse. That seems to be…"/></a>
 </p>
 <!-- MASTODON-POST-LIST:END -->
 
