@@ -22,7 +22,7 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 <!-- ACTIVITY-CARD:START -->
 <p align="center">
-  <a href="https://github.com/bjgreenberg" target="_blank" rel="noopener noreferrer"><img src="assets/activity_card.png?v=2e039799" width="760" alt="GitHub activity — 3,417 total contributions, 2-day current streak, 43-day longest streak"/></a>
+  <a href="https://github.com/bjgreenberg" target="_blank" rel="noopener noreferrer"><img src="assets/activity_card.png?v=121ab38f" width="760" alt="GitHub activity — 3,512 total contributions, 3-day current streak, 43-day longest streak"/></a>
 </p>
 <!-- ACTIVITY-CARD:END -->
 
@@ -30,9 +30,9 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 <!-- BLOG-POST-LIST:START -->
 <p align="center">
-  <a href="https://briangreenberg.net/2026/05/07/how-to-protect-yourself-from-identity-theft/" target="_blank" rel="noopener noreferrer"><img src="assets/blog_card_1.png?v=3c900d78" width="260" alt="How to Protect Yourself from Identity Theft"/></a>
-  <a href="https://briangreenberg.net/2026/05/07/micro-transformations-ais-real-path-to-roi/" target="_blank" rel="noopener noreferrer"><img src="assets/blog_card_2.png?v=6f88fd3f" width="260" alt="Micro-Transformations: AI’s Real Path to ROI"/></a>
-  <a href="https://briangreenberg.net/2025/10/05/deepfakes-and-social-engineering-a-growing-threat-to-everyone-%f0%9f%92%80/" target="_blank" rel="noopener noreferrer"><img src="assets/blog_card_3.png?v=7cf84a48" width="260" alt="Deepfakes And Social Engineering: A Growing Threat To Everyone"/></a>
+  <a href="https://briangreenberg.net/2026/06/30/a-claude-code-skill-to-help-you-write-better-code/" target="_blank" rel="noopener noreferrer"><img src="assets/blog_card_1.png?v=9ae80eb3" width="260" alt="A Claude Code Skill to help you write better code."/></a>
+  <a href="https://briangreenberg.net/2026/05/07/how-to-protect-yourself-from-identity-theft/" target="_blank" rel="noopener noreferrer"><img src="assets/blog_card_2.png?v=3c900d78" width="260" alt="How to Protect Yourself from Identity Theft"/></a>
+  <a href="https://briangreenberg.net/2026/05/07/micro-transformations-ais-real-path-to-roi/" target="_blank" rel="noopener noreferrer"><img src="assets/blog_card_3.png?v=6f88fd3f" width="260" alt="Micro-Transformations: AI’s Real Path to ROI"/></a>
 </p>
 <!-- BLOG-POST-LIST:END -->
 
@@ -42,9 +42,9 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 <!-- MASTODON-POST-LIST:START -->
 <p align="center">
-  <a href="https://infosec.exchange/@brian_greenberg/116812246978621481" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_1.png?v=362074a9" width="260" alt="Spent today at the C-Vision Data, AI and CMO Think Tank in Chicago. The day opened on agentic AI…"/></a>
-  <a href="https://infosec.exchange/@brian_greenberg/116794426785867532" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_2.png?v=57e6ae9b" width="260" alt="When did it become OK for vendors to cold-text me and slide into my WhatsApp?You just trained your…"/></a>
-  <a href="https://infosec.exchange/@brian_greenberg/116755712575221699" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_3.png?v=365d428c" width="260" alt="The most interesting thing about the new SearchLeak attack on Microsoft 365 Copilot isn&#x27;t any…"/></a>
+  <a href="https://infosec.exchange/@brian_greenberg/116840666154590254" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_1.png?v=b8df0f4d" width="260" alt="Everyone&#x27;s using AI to write code faster. Almost nobody&#x27;s using it to write code better. It&#x27;s where…"/></a>
+  <a href="https://infosec.exchange/@brian_greenberg/116812246978621481" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_2.png?v=362074a9" width="260" alt="Spent today at the C-Vision Data, AI and CMO Think Tank in Chicago. The day opened on agentic AI…"/></a>
+  <a href="https://infosec.exchange/@brian_greenberg/116794426785867532" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_3.png?v=57e6ae9b" width="260" alt="When did it become OK for vendors to cold-text me and slide into my WhatsApp?You just trained your…"/></a>
 </p>
 <!-- MASTODON-POST-LIST:END -->
 
