@@ -5,6 +5,8 @@ target the deterministic text/HTML helpers. Run: pytest scripts/
 """
 
 import io
+import urllib.error
+import urllib.request
 import xml.etree.ElementTree as ET
 from datetime import date, datetime, timezone
 
@@ -655,3 +657,25 @@ class TestImageFetchSizeCap:
         monkeypatch.setattr(gc, "fetch_url", rec)
         gc.usable_image("https://example.com/hero.jpg")
         assert seen.get("max_bytes") == gc.IMAGE_MAX_BYTES
+
+
+class TestRedirectHandler:
+    """#2 (redirect hop) — the SSRF guard also covers 30x redirects.
+
+    A relative ``Location`` must resolve against the request URL (not be
+    rejected as host-less), while a redirect that lands on a private/metadata
+    host is refused.
+    """
+
+    def test_relative_location_resolves_and_is_allowed(self):
+        h = gc._PublicOnlyRedirectHandler()
+        req = urllib.request.Request("https://example.com/a/b")
+        new = h.redirect_request(req, io.BytesIO(b""), 302, "Found", {}, "/c")
+        assert new.full_url == "https://example.com/c"
+
+    def test_redirect_to_metadata_host_is_refused(self):
+        h = gc._PublicOnlyRedirectHandler()
+        req = urllib.request.Request("https://example.com/")
+        with pytest.raises(urllib.error.URLError):
+            h.redirect_request(req, io.BytesIO(b""), 302, "Found", {},
+                               "http://169.254.169.254/latest/meta-data/")

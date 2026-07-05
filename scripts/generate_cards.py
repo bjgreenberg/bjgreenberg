@@ -217,10 +217,15 @@ class _PublicOnlyRedirectHandler(urllib.request.HTTPRedirectHandler):
     """
 
     def redirect_request(self, req, fp, code, msg, headers, newurl):
-        parsed = urllib.parse.urlparse(newurl)
+        # urllib already absolutizes newurl against req before calling this, but
+        # resolve defensively so a relative/scheme-relative Location can never
+        # slip through as a host-less URL that fails the public-host check
+        # spuriously (a no-op when newurl is already absolute).
+        abs_url = urllib.parse.urljoin(req.full_url, newurl)
+        parsed = urllib.parse.urlparse(abs_url)
         if parsed.scheme not in ("http", "https") or not _host_is_public(parsed.hostname):
-            raise urllib.error.URLError(f"Refusing redirect to non-public URL: {newurl!r}")
-        return super().redirect_request(req, fp, code, msg, headers, newurl)
+            raise urllib.error.URLError(f"Refusing redirect to non-public URL: {abs_url!r}")
+        return super().redirect_request(req, fp, code, msg, headers, abs_url)
 
 
 _OPENER = urllib.request.build_opener(_PublicOnlyRedirectHandler)
