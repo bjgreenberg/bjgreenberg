@@ -19,6 +19,19 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   bot commits directly).
 - `docs`: `Last updated:` stamp on `scripts/README.md`.
 
+### Security
+- `generate_cards.py`: **cap image downloads** (`IMAGE_MAX_BYTES` = 20 MB) on the
+  two hero-image fetch paths and bound decoded pixels (`Image.MAX_IMAGE_PIXELS`)
+  — an attacker-influenced `og:image` (a shared article's meta tag) can no longer
+  OOM the runner with a multi-GB body or a decompression bomb. The video path
+  already capped; the image paths now match it.
+- `generate_cards.py`: **SSRF guard** — `fetch_url` now refuses hosts that resolve
+  to loopback/private/link-local/reserved ranges (e.g. the `169.254.169.254`
+  cloud-metadata endpoint), on the initial request *and* on every redirect hop
+  (`_host_is_public` + a redirect handler). Public feeds are unaffected; residual
+  DNS-rebinding TOCTOU is documented and accepted for this daily first-party bot.
+  11 new pytest cases (94 total); bandit clean.
+
 ## 2026-06-15 (5)
 
 ### Changed

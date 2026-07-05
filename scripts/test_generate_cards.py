@@ -4,8 +4,14 @@ Network, image rendering, and file I/O are not covered here — these tests
 target the deterministic text/HTML helpers. Run: pytest scripts/
 """
 
+import io
+import urllib.error
+import urllib.request
 import xml.etree.ElementTree as ET
 from datetime import date, datetime, timezone
+
+import pytest
+from PIL import Image
 
 import generate_cards as gc
 
@@ -575,3 +581,101 @@ class TestCardsToHtml:
     def test_centers_with_p_tag(self):
         cards = [gc.Card(asset_path=None, rel_src="a.png", url="u", alt="x")]
         assert gc.cards_to_html(cards).startswith('<p align="center">')
+
+
+def _tiny_png() -> bytes:
+    """A minimal valid PNG for exercising the image-fetch call path."""
+    buf = io.BytesIO()
+    Image.new("RGB", (8, 8), (10, 20, 30)).save(buf, "PNG")
+    return buf.getvalue()
+
+
+class TestHostGuard:
+    """#2 — fetch_url must refuse non-public hosts (SSRF defense-in-depth).
+
+    Attacker-influenceable URLs reach fetch_url (a shared article's og:image),
+    so a target of 169.254.169.254 / an internal host must be refused before
+    any socket is opened. Literal-IP checks resolve offline (no network).
+    """
+
+    def test_allows_public_ip(self):
+        assert gc._host_is_public("8.8.8.8") is True
+
+    def test_rejects_loopback_v4(self):
+        assert gc._host_is_public("127.0.0.1") is False
+
+    def test_rejects_private(self):
+        assert gc._host_is_public("10.0.0.1") is False
+
+    def test_rejects_cloud_metadata_link_local(self):
+        assert gc._host_is_public("169.254.169.254") is False
+
+    def test_rejects_loopback_v6(self):
+        assert gc._host_is_public("::1") is False
+
+    def test_rejects_unspecified(self):
+        assert gc._host_is_public("0.0.0.0") is False
+
+    def test_rejects_empty(self):
+        assert gc._host_is_public("") is False
+
+    def test_fetch_url_refuses_metadata_endpoint(self):
+        with pytest.raises(ValueError):
+            gc.fetch_url("http://169.254.169.254/latest/meta-data/")
+
+    def test_fetch_url_refuses_loopback(self):
+        with pytest.raises(ValueError):
+            gc.fetch_url("http://127.0.0.1:8080/admin")
+
+
+class TestImageFetchSizeCap:
+    """#1 — image downloads must pass an explicit byte cap to fetch_url.
+
+    An uncapped fetch of an attacker-controlled og:image can OOM the runner
+    (multi-GB body) before Pillow ever sees it. The video path already caps;
+    the two image paths must too.
+    """
+
+    def test_fetch_photo_caps_download(self, monkeypatch):
+        seen: dict = {}
+
+        def rec(url, **kw):
+            seen.update(kw)
+            return _tiny_png()
+
+        monkeypatch.setattr(gc, "fetch_url", rec)
+        gc.fetch_photo("https://example.com/hero.jpg", 10, 10)
+        assert seen.get("max_bytes") == gc.IMAGE_MAX_BYTES
+
+    def test_usable_image_caps_download(self, monkeypatch):
+        seen: dict = {}
+
+        def rec(url, **kw):
+            seen.update(kw)
+            return _tiny_png()
+
+        monkeypatch.setattr(gc, "fetch_url", rec)
+        gc.usable_image("https://example.com/hero.jpg")
+        assert seen.get("max_bytes") == gc.IMAGE_MAX_BYTES
+
+
+class TestRedirectHandler:
+    """#2 (redirect hop) — the SSRF guard also covers 30x redirects.
+
+    A relative ``Location`` must resolve against the request URL (not be
+    rejected as host-less), while a redirect that lands on a private/metadata
+    host is refused.
+    """
+
+    def test_relative_location_resolves_and_is_allowed(self):
+        h = gc._PublicOnlyRedirectHandler()
+        req = urllib.request.Request("https://example.com/a/b")
+        new = h.redirect_request(req, io.BytesIO(b""), 302, "Found", {}, "/c")
+        assert new.full_url == "https://example.com/c"
+
+    def test_redirect_to_metadata_host_is_refused(self):
+        h = gc._PublicOnlyRedirectHandler()
+        req = urllib.request.Request("https://example.com/")
+        with pytest.raises(urllib.error.URLError):
+            h.redirect_request(req, io.BytesIO(b""), 302, "Found", {},
+                               "http://169.254.169.254/latest/meta-data/")

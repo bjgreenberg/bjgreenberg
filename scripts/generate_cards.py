@@ -39,15 +39,18 @@ from __future__ import annotations
 import argparse
 import hashlib
 import html
+import ipaddress
 import io
 import json
 import logging
 import os
 import re
 import shutil
+import socket
 import subprocess  # nosec B404 — used only with fixed args + absolute ffmpeg path, no shell
 import sys
 import tempfile
+import urllib.error
 import urllib.parse
 import urllib.request
 import xml.etree.ElementTree as ET  # nosec B405 — type hints only; parsing uses defusedxml
@@ -80,6 +83,14 @@ DISPLAY_TZ = "America/Chicago"
 # on the instance poster (which is frame 0 — often a blank intro card).
 VIDEO_FRAME_SECONDS = (1, 2, 4)      # seek points to try, in order
 MAX_VIDEO_BYTES = 60_000_000         # safety cap on a downloaded attachment
+
+# Safety cap on any fetched image body. Card heroes come from partly
+# attacker-influenced URLs (a shared article's og:image), so an uncapped read
+# could pull a multi-GB body and OOM the runner before Pillow decodes it.
+IMAGE_MAX_BYTES = 20_000_000
+# Bound decoded pixel count too (decompression bomb) rather than relying on
+# Pillow's ~89 Mpx default — a card hero never needs more than this.
+Image.MAX_IMAGE_PIXELS = 50_000_000
 
 # Avatar used when a Mastodon post has no media attachment of its own.
 MASTO_AVATAR = (
@@ -173,6 +184,53 @@ class ActivityStats(TypedDict):
 
 # ── Feed parsing helpers ────────────────────────────────────────────────────
 
+def _host_is_public(host: str | None) -> bool:
+    """True only if every address ``host`` resolves to is globally routable.
+
+    Blocks SSRF to loopback/private/link-local/reserved ranges — notably the
+    ``169.254.169.254`` cloud-metadata endpoint — for URLs derived from
+    external, partly attacker-controlled data (a shared article's og:image). A
+    literal IP resolves offline; a hostname is looked up once here.
+
+    Residual (accepted for this daily first-party bot): the name is re-resolved
+    at connect time, so a DNS-rebinding race could still swap in a private
+    address between this check and the socket connect.
+    """
+    if not host:
+        return False
+    try:
+        infos = socket.getaddrinfo(host, None)
+    except socket.gaierror:
+        return False
+    for info in infos:
+        ip = ipaddress.ip_address(info[4][0])
+        if not ip.is_global or ip.is_multicast:
+            return False
+    return True
+
+
+class _PublicOnlyRedirectHandler(urllib.request.HTTPRedirectHandler):
+    """Re-validate scheme + host on every redirect hop.
+
+    A public URL that 30x-redirects to ``http://169.254.169.254/`` would
+    otherwise sail past the one-time pre-fetch check in ``fetch_url``.
+    """
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        # urllib already absolutizes newurl against req before calling this, but
+        # resolve defensively so a relative/scheme-relative Location can never
+        # slip through as a host-less URL that fails the public-host check
+        # spuriously (a no-op when newurl is already absolute).
+        abs_url = urllib.parse.urljoin(req.full_url, newurl)
+        parsed = urllib.parse.urlparse(abs_url)
+        if parsed.scheme not in ("http", "https") or not _host_is_public(parsed.hostname):
+            raise urllib.error.URLError(f"Refusing redirect to non-public URL: {abs_url!r}")
+        return super().redirect_request(req, fp, code, msg, headers, abs_url)
+
+
+_OPENER = urllib.request.build_opener(_PublicOnlyRedirectHandler)
+
+
 def fetch_url(url: str, *, max_bytes: int | None = None) -> bytes:
     """Fetch ``url`` and return the raw bytes.
 
@@ -185,14 +243,17 @@ def fetch_url(url: str, *, max_bytes: int | None = None) -> bytes:
         The response body as bytes.
 
     Raises:
-        ValueError: if the URL scheme is not http/https (blocks file://, etc.).
+        ValueError: if the URL scheme is not http/https (blocks file://, etc.)
+            or the host resolves to a non-public address (SSRF guard).
         urllib.error.URLError / OSError on network failure.
     """
-    scheme = urllib.parse.urlparse(url).scheme
-    if scheme not in ("http", "https"):
-        raise ValueError(f"Refusing non-HTTP(S) URL scheme: {scheme!r}")
+    parsed = urllib.parse.urlparse(url)
+    if parsed.scheme not in ("http", "https"):
+        raise ValueError(f"Refusing non-HTTP(S) URL scheme: {parsed.scheme!r}")
+    if not _host_is_public(parsed.hostname):
+        raise ValueError(f"Refusing to fetch non-public host: {parsed.hostname!r}")
     req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
-    with urllib.request.urlopen(req, timeout=HTTP_TIMEOUT) as resp:  # nosec B310 — scheme validated above
+    with _OPENER.open(req, timeout=HTTP_TIMEOUT) as resp:  # nosec B310 — scheme + host validated above
         return resp.read(max_bytes) if max_bytes else resp.read()
 
 
@@ -353,7 +414,7 @@ def usable_image(url: str) -> bool:
     falls through to the next candidate. Returns False on any fetch error too.
     """
     try:
-        raw = fetch_url(strip_photon(url))
+        raw = fetch_url(strip_photon(url), max_bytes=IMAGE_MAX_BYTES)
     except (OSError, ValueError) as exc:
         log.warning("Hero probe failed for %s: %s", url, exc)
         return False
@@ -533,7 +594,7 @@ def fetch_photo(src: str | bytes, width: int, height: int) -> Image.Image:
     ratio.
     """
     try:
-        raw = src if isinstance(src, bytes) else fetch_url(strip_photon(src))
+        raw = src if isinstance(src, bytes) else fetch_url(strip_photon(src), max_bytes=IMAGE_MAX_BYTES)
         img = Image.open(io.BytesIO(raw)).convert("RGB")
         return ImageOps.fit(img, (width, height), method=Image.LANCZOS,
                             centering=(0.5, 0.5))
