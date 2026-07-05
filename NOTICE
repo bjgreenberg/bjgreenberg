@@ -7,6 +7,7 @@ License at https://www.apache.org/licenses/LICENSE-2.0 (see the LICENSE file).
 
 This repository is a personal GitHub profile README plus the Python automation
 (`scripts/generate_cards.py`) that regenerates its blog / Mastodon / activity
-cards. The license covers the code and configuration in this repository; it does
-not grant rights to the personal content, imagery, or trademarks shown in the
-rendered profile.
+cards. This NOTICE is informational and does not modify the License. Consistent
+with Apache-2.0 §6, the License grants no trademark rights; some rendered profile
+elements (personal content, imagery, logos) may also be subject to separate
+third-party rights.

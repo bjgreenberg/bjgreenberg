@@ -1,6 +1,8 @@
-# Dev / CI tools for scripts/ — pinned so a yanked or compromised release can't
-# silently flow into CI. Runtime deps live in requirements.txt. Dependabot keeps
-# both current (.github/dependabot.yml).
+# Dev / CI tools for scripts/ — version-pinned so an unreviewed upgrade can't
+# silently enter CI; Dependabot proposes reviewed bumps (.github/dependabot.yml).
+# (Pinning alone doesn't stop a yanked or compromised *pinned* release — the
+# pip-audit gate is what catches a known-vulnerable pin.) Runtime deps live in
+# requirements.txt.
 pytest==9.1.1
 bandit==1.9.4
 pip-audit==2.10.1
