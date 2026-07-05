@@ -1,0 +1,28 @@
+name: release-please
+
+# Automates versioning + releases from Conventional Commits. On each push to
+# main it keeps an open release PR that bumps the version in
+# .release-please-manifest.json and CITATION.cff (via the x-release-please
+# annotations) and prepends the CHANGELOG section; merging that PR tags the
+# release and publishes a GitHub Release. The daily card-refresh bot commits as
+# `chore:`, which release-please ignores — only real feat/fix PRs cut a version.
+#
+# NOTE: requires "Allow GitHub Actions to create and approve pull requests"
+# (Settings → Actions → General → Workflow permissions). Without it the action
+# cannot open the release PR.
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5.0.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
