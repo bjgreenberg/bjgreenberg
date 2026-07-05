@@ -18,6 +18,23 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   matching the repo's existing safety-net CI posture (no branch protection — the
   bot commits directly).
 - `docs`: `Last updated:` stamp on `scripts/README.md`.
+- `legal`: **Apache-2.0 `LICENSE` + `NOTICE`** — the repo's code is now explicitly
+  licensed (previously unlicensed / all-rights-reserved).
+- `docs`: **`CITATION.cff`** (CFF 1.2.0) so GitHub shows a *Cite this repository*
+  button; static/unversioned by design (no release automation to keep a version
+  field honest, so none is carried).
+- `docs`: **status badge row** (live CI status + Apache-2.0 license) on the profile
+  `README.md` and `scripts/README.md` — live badges only, per the badge-honesty rule.
+- `ci`: **`.github/dependabot.yml`** (pip + github-actions, weekly) and a **`pip-audit`**
+  dependency-audit gate over `requirements.txt` plus a new pinned
+  **`requirements-dev.txt`** (pytest/bandit/pip-audit) — a known-vulnerable pin now
+  fails CI instead of lurking, and the dev tools are no longer installed unpinned.
+
+### Changed
+- `ci`: **SHA-pin** the GitHub Actions (`actions/checkout` → v4.3.1,
+  `actions/setup-python` → v5.6.0) in both workflows — a moved tag can no longer swap
+  the action out from under the daily bot's `contents: write` token. Dependabot keeps
+  the pins current.
 
 ### Security
 - `generate_cards.py`: **cap image downloads** (`IMAGE_MAX_BYTES` = 20 MB) on the

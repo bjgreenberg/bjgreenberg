@@ -1,0 +1,6 @@
+# Dev / CI tools for scripts/ — pinned so a yanked or compromised release can't
+# silently flow into CI. Runtime deps live in requirements.txt. Dependabot keeps
+# both current (.github/dependabot.yml).
+pytest==9.1.1
+bandit==1.9.4
+pip-audit==2.10.1

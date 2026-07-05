@@ -1,0 +1,21 @@
+# Keep the card-generator's Python deps and the workflows' actions current.
+# Security updates are urgent (alert-to-zero); these scheduled version PRs are
+# reviewed as code before merge. SHA-pinned actions carry a version comment so
+# Dependabot can still bump them.
+version: 2
+updates:
+  - package-ecosystem: pip
+    directory: /scripts
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    labels:
+      - dependencies
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    labels:
+      - dependencies

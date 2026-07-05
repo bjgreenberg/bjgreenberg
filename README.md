@@ -18,6 +18,11 @@
 
 I build AI-native systems for the modern enterprise, teach the next generation of cybersecurity professionals, and write about the intersection of technology, leadership, and ethics.
 
+<p>
+  <a href="https://github.com/bjgreenberg/bjgreenberg/actions/workflows/ci.yml" target="_blank" rel="noopener noreferrer"><img alt="CI" src="https://github.com/bjgreenberg/bjgreenberg/actions/workflows/ci.yml/badge.svg"></a>
+  <a href="https://github.com/bjgreenberg/bjgreenberg/blob/main/LICENSE" target="_blank" rel="noopener noreferrer"><img alt="License: Apache-2.0" src="https://img.shields.io/badge/License-Apache_2.0-blue.svg"></a>
+</p>
+
 ## 📊 GitHub Activity
 
 <!-- ACTIVITY-CARD:START -->

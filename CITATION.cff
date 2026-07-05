@@ -1,0 +1,22 @@
+# CITATION.cff — citation metadata for this repository (Citation File Format
+# 1.2.0, https://citation-file-format.github.io/). GitHub renders it as the
+# "Cite this repository" button. This repo is unversioned (no releases), so no
+# `version`/`date-released` are carried — there is no release automation to keep
+# them honest, and a hand-maintained version would only drift.
+cff-version: 1.2.0
+message: "If you reference this project, please cite it as below."
+title: "Brian Greenberg — GitHub profile & README card automation"
+type: software
+authors:
+  - family-names: "Greenberg"
+    given-names: "Brian"
+    website: "https://briangreenberg.net"
+license: Apache-2.0
+repository-code: "https://github.com/bjgreenberg/bjgreenberg"
+url: "https://briangreenberg.net"
+keywords:
+  - github-profile
+  - readme-automation
+  - python
+  - pillow
+  - github-actions
