@@ -21,8 +21,13 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - `legal`: **Apache-2.0 `LICENSE` + `NOTICE`** — the repo's code is now explicitly
   licensed (previously unlicensed / all-rights-reserved).
 - `docs`: **`CITATION.cff`** (CFF 1.2.0) so GitHub shows a *Cite this repository*
-  button; static/unversioned by design (no release automation to keep a version
-  field honest, so none is carried).
+  button, carrying `version` + `date-released`.
+- `ci`: **release automation** (`release-please`) — the version, `CHANGELOG`, and
+  the CITATION `version`/`date-released` are bumped from Conventional Commits on
+  merge of the release PR (`release-please-config.json`,
+  `.release-please-manifest.json`, `.github/workflows/release-please.yml`); the
+  daily card bot's `chore:` commits are ignored. **v1.0.0** is the first tagged
+  release.
 - `docs`: **status badge row** (live CI status + Apache-2.0 license) on the profile
   `README.md` and `scripts/README.md` — live badges only, per the badge-honesty rule.
 - `ci`: **`.github/dependabot.yml`** (pip + github-actions, weekly) and a **`pip-audit`**
