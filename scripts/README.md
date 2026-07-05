@@ -1,6 +1,9 @@
 # Profile README automation
 
-Last updated: 2026-06-22 06:47 AM CDT
+Last updated: 2026-07-05 08:20 AM CDT
+
+[![CI](https://github.com/bjgreenberg/bjgreenberg/actions/workflows/ci.yml/badge.svg)](https://github.com/bjgreenberg/bjgreenberg/actions/workflows/ci.yml)
+[![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](../LICENSE)
 
 Generates the **GitHub Activity**, **Latest from the Blog**, and **Latest from
 Mastodon** sections of the GitHub profile README (`../README.md`) as borderless,
