@@ -11,10 +11,10 @@
 
 # 👋 Hi, I'm Brian Greenberg
 
-- 🚀 Chief Information Officer @ RHR International
-- 🎓 Cybersecurity Professor at DePaul University
-- ✍️ Contributor on the Forbes Technology Council
-- 🤖 Building AI-native workflows for the modern enterprise
+ 🚀 Chief Information Officer @ RHR International
+ 🎓 Cybersecurity Professor at DePaul University
+ ✍️ Contributor on the Forbes Technology Council
+ 🤖 Building AI-native workflows for the modern enterprise
 
 I build AI-native systems for the modern enterprise, teach the next generation of cybersecurity professionals, and write about the intersection of technology, leadership, and ethics.
 
