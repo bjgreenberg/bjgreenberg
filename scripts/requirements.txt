@@ -1,0 +1,9 @@
+# Dependencies for scripts/generate_cards.py
+# Install: pip3 install -r scripts/requirements.txt
+Pillow==12.2.0
+defusedxml==0.7.1
+
+# System dependency (NOT a pip package): ffmpeg — used to extract a hero frame
+# from Mastodon video attachments. Preinstalled on GitHub's ubuntu-latest;
+# locally: brew install ffmpeg. Optional — video posts fall back to the
+# poster/avatar if it's missing.
