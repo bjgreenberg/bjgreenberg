@@ -27,13 +27,13 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 <!-- ACTIVITY-CARD:START -->
 <p align="center">
-  <a href="https://github.com/bjgreenberg" target="_blank" rel="noopener noreferrer"><img src="assets/activity_card.png?v=e7c868a5" width="760" alt="GitHub activity — 3,730 total contributions, 10-day current streak, 43-day longest streak"/></a>
+  <a href="https://github.com/bjgreenberg" target="_blank" rel="noopener noreferrer"><img src="assets/activity_card.png?v=c24edbfe" width="760" alt="GitHub activity — 3,732 total contributions, 10-day current streak, 43-day longest streak"/></a>
 </p>
 <!-- ACTIVITY-CARD:END -->
 
 <!-- CONTRIB-HEATMAP:START -->
 <p align="center">
-  <a href="https://github.com/bjgreenberg" target="_blank" rel="noopener noreferrer"><img src="assets/contrib_heatmap.png?v=8a388e70" width="760" alt="Contribution heatmap — 3,707 contributions in the past year"/></a>
+  <a href="https://github.com/bjgreenberg" target="_blank" rel="noopener noreferrer"><img src="assets/contrib_heatmap.png?v=8a388e70" width="760" alt="Contribution heatmap — 3,709 contributions in the past year"/></a>
 </p>
 <!-- CONTRIB-HEATMAP:END -->
 
@@ -41,7 +41,7 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 <!-- FEATURED-PROJECT:START -->
 <p align="center">
-  <a href="https://github.com/bjgreenberg/senior-engineering-partner" target="_blank" rel="noopener noreferrer"><img src="assets/featured_card.png?v=4490a7c4" width="760" alt="Featured project — bjgreenberg/senior-engineering-partner: Python · Apache-2.0 · v1.16.2 · 98 stars · 13 forks"/></a>
+  <a href="https://github.com/bjgreenberg/senior-engineering-partner" target="_blank" rel="noopener noreferrer"><img src="assets/featured_card.png?v=1c13f79b" width="760" alt="Featured project — bjgreenberg/senior-engineering-partner: Python · Apache-2.0 · v1.16.2 · 98 stars · 13 forks"/></a>
 </p>
 <!-- FEATURED-PROJECT:END -->
 
