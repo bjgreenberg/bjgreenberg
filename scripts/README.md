@@ -1,6 +1,6 @@
 # Profile README automation
 
-Last updated: 2026-07-05 08:20 AM CDT
+Last updated: 2026-07-07 05:28 PM CDT
 
 [![CI](https://github.com/bjgreenberg/bjgreenberg/actions/workflows/ci.yml/badge.svg)](https://github.com/bjgreenberg/bjgreenberg/actions/workflows/ci.yml)
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](../LICENSE)
@@ -31,13 +31,17 @@ flowchart TB
     s1 --> hero1["hero: content img → og:image"]
     s2 --> hero2["masto_hero: image → ffmpeg video frame<br/>→ preview card → article og:image → avatar"]
     s3 --> stats["compute_activity_stats<br/>total / current / longest streak"]
+    s3 --> heat["build_heatmap_grid<br/>trailing-year daily counts"]
     hero1 --> render["render_card with Pillow<br/>baked PNG cards"]
     hero2 --> render
     stats --> renderA["render_activity_card"]
+    heat --> renderH["render_heatmap_card<br/>green-squares grid"]
     render --> assets[("assets/*_card_*.png")]
     renderA --> assets
+    renderH --> assets
     render --> upd["update_section between<br/>HTML-comment markers"]
     renderA --> upd
+    renderH --> upd
     upd --> readme[("../README.md profile sections")]
     assets --> commit["bot commits changed PNGs + README to main"]
     readme --> commit
@@ -108,8 +112,9 @@ python3 scripts/generate_cards.py --dry-run
 GH_TOKEN="$(gh auth token)" python3 scripts/generate_cards.py
 ```
 
-Cards are written to `../assets/blog_card_{1..3}.png` and
-`../assets/masto_card_{1..3}.png`. The script overwrites the same filenames each
+Cards are written to `../assets/blog_card_{1..3}.png`,
+`../assets/masto_card_{1..3}.png`, `../assets/activity_card.png`, and
+`../assets/contrib_heatmap.png`. The script overwrites the same filenames each
 run, so the README references are stable.
 
 ## How it runs in production
@@ -127,7 +132,7 @@ No cost: the profile repo is public, and GitHub Actions is free for public repos
 
 | Section | Feed | Image source |
 |---|---|---|
-| GitHub Activity | GitHub GraphQL `contributionsCollection` | Computed metrics rendered to `activity_card.png` (no external image — total, current streak, longest streak) |
+| GitHub Activity | GitHub GraphQL `contributionsCollection` (one fetch feeds both cards) | Computed metrics rendered to `activity_card.png` (total, current streak, longest streak) + `contrib_heatmap.png` (trailing-year green-squares heatmap) — no external images |
 | Blog | `https://briangreenberg.net/feed/` | First `<img>` in `<content:encoded>`; falls back to the post page's `og:image` meta tag |
 | Mastodon | `https://infosec.exchange/@brian_greenberg.rss` | First **image** `<media:content>` attachment → for a **video**, a frame extracted with **ffmpeg** (then the instance poster if it isn't blank) → for a **link** post, the instance's cached preview card (`/api/v1/statuses/{id}` → `card.image`), then the linked article's `og:image` → account avatar |
 
@@ -179,12 +184,16 @@ glyphs (the link still points at the full original post).
 | `_wrap` | Greedy pixel-width word wrap |
 | `render_card` | Render one RGBA card (rounded corners, photo + text) |
 | `build_blog_cards` / `build_masto_cards` | Per-feed card builders → `list[Card]` |
-| `github_token` | Read `GH_TOKEN`/`GITHUB_TOKEN` from env (None → skip activity card) |
+| `github_token` | Read `GH_TOKEN`/`GITHUB_TOKEN` from env (None → skip both GitHub cards) |
 | `fetch_contribution_days` | GraphQL contribution calendar, year-by-year, all-time |
 | `compute_activity_stats` | Total + current + longest streak (pure logic, future days dropped) |
 | `render_activity_card` | Render the 3-panel activity card (total / ring / longest) + "Updated …" footer |
 | `_activity_stamp` | Format the footer timestamp in Chicago local time (CST/CDT), 12-hour |
-| `build_activity_card` | Orchestrate fetch→compute→render→`Card`; None on no-token/error |
+| `build_activity_card` | Render the streak/stats card from pre-fetched days → `Card` |
+| `heatmap_start` / `build_heatmap_grid` | Trailing-year Sun-start grid of daily counts (pure logic) |
+| `heatmap_level` / `month_label_columns` | Intensity bucketing (quarters of peak day) and month-label placement (pure logic) |
+| `render_heatmap_card` | Render the green-squares heatmap (month/weekday labels, Less→More legend) |
+| `build_heatmap_card` | Render the heatmap card from pre-fetched days → `Card` |
 | `cards_to_html` / `activity_to_html` | Centered `<p>` of `<a><img></a>` link(s) |
 | `update_section` | Replace content between `<!-- TAG:START/END -->` markers |
 | `main` | Orchestrate both feeds; `--dry-run` supported |
