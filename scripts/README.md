@@ -14,7 +14,7 @@ GitHub Actions.
 
 ## Pipeline at a glance
 
-One daily run: the workflow invokes `generate_cards.py`, which pulls three
+One daily run: the workflow invokes `generate_cards.py`, which pulls four
 sources, picks a hero image per item (each step degrading gracefully), bakes the
 PNG cards with Pillow, rewrites only the fenced README sections, and the bot
 commits any changed assets + README back to `main`. Each piece is detailed in
@@ -89,10 +89,11 @@ attribute for basic screen-reader accessibility.
   - **Ubuntu CI** — DejaVu (`fonts-dejavu-core`, preinstalled on `ubuntu-latest`)
   - **macOS (local)** — Arial (preinstalled)
   - Falls back to Pillow's bitmap font if neither is found (ugly but non-fatal)
-- A GitHub token in `GH_TOKEN` (preferred) or `GITHUB_TOKEN`, used **only** for the
-  GitHub Activity card's contribution-calendar GraphQL query. In CI the workflow
-  passes the auto-injected `GITHUB_TOKEN`; locally, `GH_TOKEN=$(gh auth token)`
-  works. With no token the activity card is skipped (the rest still runs).
+- A GitHub token in `GH_TOKEN` (preferred) or `GITHUB_TOKEN`, used **only** for
+  the GraphQL queries behind the GitHub cards (contribution calendar +
+  featured-repo metadata). In CI the workflow passes the auto-injected
+  `GITHUB_TOKEN`; locally, `GH_TOKEN=$(gh auth token)` works. With no token the
+  GitHub cards are skipped (the rest still runs).
 - **ffmpeg** on `PATH`, used **only** to extract a hero frame from Mastodon video
   attachments. Preinstalled on GitHub's `ubuntu-latest` runners; install locally
   with `brew install ffmpeg`. If absent, video posts fall back to the poster/avatar
