@@ -27,13 +27,13 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 <!-- ACTIVITY-CARD:START -->
 <p align="center">
-  <a href="https://github.com/bjgreenberg" target="_blank" rel="noopener noreferrer"><img src="assets/activity_card.png?v=9e2e7619" width="760" alt="GitHub activity — 3,729 total contributions, 9-day current streak, 43-day longest streak"/></a>
+  <a href="https://github.com/bjgreenberg" target="_blank" rel="noopener noreferrer"><img src="assets/activity_card.png?v=e7c868a5" width="760" alt="GitHub activity — 3,730 total contributions, 10-day current streak, 43-day longest streak"/></a>
 </p>
 <!-- ACTIVITY-CARD:END -->
 
 <!-- CONTRIB-HEATMAP:START -->
 <p align="center">
-  <a href="https://github.com/bjgreenberg" target="_blank" rel="noopener noreferrer"><img src="assets/contrib_heatmap.png?v=db77609a" width="760" alt="Contribution heatmap — 3,706 contributions in the past year"/></a>
+  <a href="https://github.com/bjgreenberg" target="_blank" rel="noopener noreferrer"><img src="assets/contrib_heatmap.png?v=8a388e70" width="760" alt="Contribution heatmap — 3,707 contributions in the past year"/></a>
 </p>
 <!-- CONTRIB-HEATMAP:END -->
 
