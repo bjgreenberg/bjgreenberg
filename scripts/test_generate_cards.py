@@ -519,6 +519,37 @@ class TestRenderHeatmapCard:
         assert img.size == (gc.ACTIVITY_RENDER_W, gc.HEATMAP_RENDER_H)
 
 
+class TestFeaturedMetaLine:
+    @staticmethod
+    def _meta(**over):
+        base = gc.RepoMeta(description="A skill.", stars=98, forks=13,
+                           license="Apache-2.0", release="v1.16.2",
+                           language="Python")
+        base.update(over)  # type: ignore[typeddict-item]
+        return base
+
+    def test_full_meta_joins_with_middots(self):
+        assert gc.featured_meta_line(self._meta()) == \
+            "Python · Apache-2.0 · v1.16.2 · 98 stars · 13 forks"
+
+    def test_absent_fields_are_skipped_but_zero_counts_shown(self):
+        line = gc.featured_meta_line(
+            self._meta(license="", release="", language="", stars=0))
+        assert line == "0 stars · 13 forks"
+
+    def test_counts_use_thousands_separators(self):
+        assert "1,234 stars" in gc.featured_meta_line(self._meta(stars=1234))
+
+
+class TestRenderFeaturedCard:
+    def test_smoke_renders_card_at_expected_size(self):
+        meta = gc.RepoMeta(description="Words " * 60, stars=1, forks=0,
+                           license="Apache-2.0", release="v1.0.0",
+                           language="Python")
+        img = gc.render_featured_card(meta)
+        assert img.size == (gc.ACTIVITY_RENDER_W, gc.FEATURED_RENDER_H)
+
+
 class TestExtractVideoFrame:
     def test_returns_none_when_ffmpeg_missing(self, monkeypatch):
         monkeypatch.setattr(gc.shutil, "which", lambda name: None)

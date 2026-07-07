@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 """Generate composite post-card images for the GitHub profile README.
 
-This script powers the "GitHub Activity", "Latest from the Blog", and "Latest
-from Mastodon" sections of the profile README. For each feed it builds up to
-three self-contained PNG "cards" (featured image + title/text baked in), and
-from one GraphQL contribution-calendar fetch it renders two GitHub Activity
-cards: the streak/stats card (total/current/longest) and a trailing-year
-contribution heatmap (GitHub's green squares). All are saved under
+This script powers the "GitHub Activity", "Featured Project", "Latest from
+the Blog", and "Latest from Mastodon" sections of the profile README. For
+each feed it builds up to three self-contained PNG "cards" (featured image +
+title/text baked in); from one GraphQL contribution-calendar fetch it renders
+two GitHub Activity cards — the streak/stats card (total/current/longest) and
+a trailing-year contribution heatmap (GitHub's green squares) — and it bakes
+a pin-style Featured Project card from live repo metadata. All are saved under
 ``assets/`` and the marked README sections are rewritten with a borderless
 ``<p>`` of per-card links.
 
@@ -165,6 +166,17 @@ HEATMAP_LEVELS = (
     (57, 211, 83),                   # #39d353
 )
 
+# ── Featured-project pin card (same 900px base design / scale) ──────────────
+# Rendered daily by the same bot, so stars/forks/release stay current — a
+# self-hosted stand-in for the github-readme-stats "pin" card.
+
+FEATURED_OWNER = "bjgreenberg"
+FEATURED_REPO = "senior-engineering-partner"
+FEATURED_URL = f"https://github.com/{FEATURED_OWNER}/{FEATURED_REPO}"
+FEATURED_RENDER_H = round(236 * ACTIVITY_SCALE)
+FEATURED_DESC_LINES = 3
+FEATURED_TEXT = (230, 237, 243)      # #e6edf3 — body text on the dark card
+
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 log = logging.getLogger("generate_cards")
 
@@ -185,6 +197,17 @@ class ContribDay(TypedDict):
 
     date: str          # ISO yyyy-mm-dd
     count: int          # contributions that day
+
+
+class RepoMeta(TypedDict):
+    """Live metadata for the featured-project pin card ("" when absent)."""
+
+    description: str
+    stars: int
+    forks: int
+    license: str       # SPDX id, e.g. "Apache-2.0"
+    release: str       # latest release tag, e.g. "v1.16.2"
+    language: str      # primary language name
 
 
 class ActivityStats(TypedDict):
@@ -797,6 +820,22 @@ def github_token() -> str | None:
     return os.environ.get("GH_TOKEN") or os.environ.get("GITHUB_TOKEN") or None
 
 
+def _github_graphql(query: str, variables: dict[str, str], token: str) -> dict:
+    """POST one GitHub GraphQL query and return the ``data`` payload."""
+    headers = {
+        "Authorization": f"bearer {token}",
+        "User-Agent": USER_AGENT,
+        "Content-Type": "application/json",
+    }
+    body = json.dumps({"query": query, "variables": variables}).encode()
+    req = urllib.request.Request(GITHUB_GRAPHQL, data=body, headers=headers)
+    with urllib.request.urlopen(req, timeout=HTTP_TIMEOUT) as resp:  # nosec B310 — constant HTTPS endpoint
+        payload = json.loads(resp.read())
+    if payload.get("errors"):
+        raise ValueError(f"GraphQL errors: {payload['errors']}")
+    return payload["data"]
+
+
 def fetch_contribution_days(login: str, token: str) -> list[ContribDay]:
     """Fetch the full contribution calendar for ``login`` via the GraphQL API.
 
@@ -805,20 +844,8 @@ def fetch_contribution_days(login: str, token: str) -> list[ContribDay]:
     complete day-by-day history (needed for an all-time longest streak). Days
     are returned sorted ascending by date.
     """
-    headers = {
-        "Authorization": f"bearer {token}",
-        "User-Agent": USER_AGENT,
-        "Content-Type": "application/json",
-    }
-
     def graphql(query: str, variables: dict[str, str]) -> dict:
-        body = json.dumps({"query": query, "variables": variables}).encode()
-        req = urllib.request.Request(GITHUB_GRAPHQL, data=body, headers=headers)
-        with urllib.request.urlopen(req, timeout=HTTP_TIMEOUT) as resp:  # nosec B310 — constant HTTPS endpoint
-            payload = json.loads(resp.read())
-        if payload.get("errors"):
-            raise ValueError(f"GraphQL errors: {payload['errors']}")
-        return payload["data"]["user"]
+        return _github_graphql(query, variables, token)["user"]
 
     created = graphql(
         "query($login:String!){ user(login:$login){ createdAt } }",
@@ -1182,6 +1209,86 @@ def build_heatmap_card(days: list[ContribDay], today: date) -> Card:
                 url=GITHUB_PROFILE_URL, alt=alt)
 
 
+# ── Featured-project pin card ────────────────────────────────────────────────
+
+def fetch_repo_meta(owner: str, name: str, token: str) -> RepoMeta:
+    """Fetch the featured repo's live metadata via one GraphQL query."""
+    repo = _github_graphql(
+        "query($owner:String!,$name:String!){ repository(owner:$owner,name:$name){"
+        " description stargazerCount forkCount licenseInfo{spdxId}"
+        " latestRelease{tagName} primaryLanguage{name} } }",
+        {"owner": owner, "name": name}, token)["repository"]
+    return RepoMeta(
+        description=repo["description"] or "",
+        stars=repo["stargazerCount"],
+        forks=repo["forkCount"],
+        license=(repo["licenseInfo"] or {}).get("spdxId") or "",
+        release=(repo["latestRelease"] or {}).get("tagName") or "",
+        language=(repo["primaryLanguage"] or {}).get("name") or "",
+    )
+
+
+def featured_meta_line(meta: RepoMeta) -> str:
+    """Compose the card's metadata row, skipping absent fields.
+
+    E.g. ``Python · Apache-2.0 · v1.16.2 · 98 stars · 13 forks``. Stars and
+    forks are always shown (a zero is honest); the rest only when present.
+    """
+    parts = [meta["language"], meta["license"], meta["release"],
+             f"{meta['stars']:,} stars", f"{meta['forks']:,} forks"]
+    return " · ".join(p for p in parts if p)
+
+
+def render_featured_card(meta: RepoMeta) -> Image.Image:
+    """Render the featured-project pin card (name, description, meta row)."""
+    sc = ACTIVITY_SCALE
+
+    def s(v: float) -> int:
+        """Scale a base-design (900px-wide) measurement to the render width."""
+        return round(v * sc)
+
+    title_font = _find_font(
+        ["/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
+         "/System/Library/Fonts/Supplemental/Arial Bold.ttf"], s(30))
+    body_font = _find_font(
+        ["/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+         "/System/Library/Fonts/Supplemental/Arial.ttf"], s(22))
+    meta_font = _find_font(
+        ["/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+         "/System/Library/Fonts/Supplemental/Arial.ttf"], s(20))
+
+    w, h = ACTIVITY_RENDER_W, FEATURED_RENDER_H
+    card = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(card)
+    draw.rounded_rectangle([0, 0, w, h], radius=s(RADIUS), fill=CARD_BG)
+
+    draw.text((s(PAD), s(26)), f"{FEATURED_OWNER}/{FEATURED_REPO}",
+              font=title_font, fill=LINK_BLUE)
+
+    lines = _wrap(draw, meta["description"], body_font,
+                  w - 2 * s(PAD))[:FEATURED_DESC_LINES]
+    y = 76
+    for line in lines:
+        draw.text((s(PAD), s(y)), line, font=body_font, fill=FEATURED_TEXT)
+        y += 30
+
+    draw.text((s(PAD), s(FEATURED_RENDER_H / sc - 48)), featured_meta_line(meta),
+              font=meta_font, fill=MUTED_GRAY)
+    return card
+
+
+def build_featured_card(token: str) -> Card:
+    """Fetch the featured repo's metadata, render its pin card, return it."""
+    meta = fetch_repo_meta(FEATURED_OWNER, FEATURED_REPO, token)
+    path = ASSETS_DIR / "featured_card.png"
+    render_featured_card(meta).save(path)
+    alt = (f"Featured project — {FEATURED_OWNER}/{FEATURED_REPO}: "
+           f"{featured_meta_line(meta)}")
+    log.info("Featured card: %s", alt)
+    return Card(asset_path=path, rel_src=f"assets/{path.name}?v={asset_version(path)}",
+                url=FEATURED_URL, alt=alt)
+
+
 # ── README assembly ─────────────────────────────────────────────────────────
 
 def cards_to_html(cards: list[Card]) -> str:
@@ -1230,19 +1337,26 @@ def main() -> int:
     except Exception as exc:  # noqa: BLE001
         log.error("Mastodon section failed: %s", exc)
 
-    try:
-        token = github_token()
-        if token:
+    token = github_token()
+    if not token:
+        log.warning("No GH_TOKEN/GITHUB_TOKEN set — skipping GitHub cards.")
+
+    if token:
+        try:
             days = fetch_contribution_days(GITHUB_LOGIN, token)
             now = datetime.now(timezone.utc)
             readme = update_section(readme, "ACTIVITY-CARD",
                                     activity_to_html(build_activity_card(days, now)))
             readme = update_section(readme, "CONTRIB-HEATMAP",
                                     activity_to_html(build_heatmap_card(days, now.date())))
-        else:
-            log.warning("No GH_TOKEN/GITHUB_TOKEN set — skipping GitHub activity cards.")
-    except Exception as exc:  # noqa: BLE001
-        log.error("GitHub activity section failed: %s", exc)
+        except Exception as exc:  # noqa: BLE001
+            log.error("GitHub activity section failed: %s", exc)
+
+        try:
+            readme = update_section(readme, "FEATURED-PROJECT",
+                                    activity_to_html(build_featured_card(token)))
+        except Exception as exc:  # noqa: BLE001
+            log.error("Featured-project section failed: %s", exc)
 
     if args.dry_run:
         log.info("Dry run — README not written.")

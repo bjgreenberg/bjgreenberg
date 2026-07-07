@@ -1,13 +1,14 @@
 # Profile README automation
 
-Last updated: 2026-07-07 05:28 PM CDT
+Last updated: 2026-07-07 05:34 PM CDT
 
 [![CI](https://github.com/bjgreenberg/bjgreenberg/actions/workflows/ci.yml/badge.svg)](https://github.com/bjgreenberg/bjgreenberg/actions/workflows/ci.yml)
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](../LICENSE)
 
-Generates the **GitHub Activity**, **Latest from the Blog**, and **Latest from
-Mastodon** sections of the GitHub profile README (`../README.md`) as borderless,
-clickable image "cards", refreshed daily by GitHub Actions.
+Generates the **GitHub Activity**, **Featured Project**, **Latest from the
+Blog**, and **Latest from Mastodon** sections of the GitHub profile README
+(`../README.md`) as borderless, clickable image "cards", refreshed daily by
+GitHub Actions.
 
 ---
 
@@ -26,6 +27,7 @@ flowchart TB
         s1["Blog RSS<br/>briangreenberg.net/feed"]
         s2["Mastodon RSS<br/>infosec.exchange"]
         s3["GitHub GraphQL<br/>contributionsCollection — GITHUB_TOKEN"]
+        s4["GitHub GraphQL<br/>featured-repo metadata — GITHUB_TOKEN"]
     end
     gen --> sources
     s1 --> hero1["hero: content img → og:image"]
@@ -36,12 +38,15 @@ flowchart TB
     hero2 --> render
     stats --> renderA["render_activity_card"]
     heat --> renderH["render_heatmap_card<br/>green-squares grid"]
+    s4 --> renderF["render_featured_card<br/>pin-style project card"]
     render --> assets[("assets/*_card_*.png")]
     renderA --> assets
     renderH --> assets
+    renderF --> assets
     render --> upd["update_section between<br/>HTML-comment markers"]
     renderA --> upd
     renderH --> upd
+    renderF --> upd
     upd --> readme[("../README.md profile sections")]
     assets --> commit["bot commits changed PNGs + README to main"]
     readme --> commit
@@ -113,9 +118,9 @@ GH_TOKEN="$(gh auth token)" python3 scripts/generate_cards.py
 ```
 
 Cards are written to `../assets/blog_card_{1..3}.png`,
-`../assets/masto_card_{1..3}.png`, `../assets/activity_card.png`, and
-`../assets/contrib_heatmap.png`. The script overwrites the same filenames each
-run, so the README references are stable.
+`../assets/masto_card_{1..3}.png`, `../assets/activity_card.png`,
+`../assets/contrib_heatmap.png`, and `../assets/featured_card.png`. The script
+overwrites the same filenames each run, so the README references are stable.
 
 ## How it runs in production
 
@@ -133,6 +138,7 @@ No cost: the profile repo is public, and GitHub Actions is free for public repos
 | Section | Feed | Image source |
 |---|---|---|
 | GitHub Activity | GitHub GraphQL `contributionsCollection` (one fetch feeds both cards) | Computed metrics rendered to `activity_card.png` (total, current streak, longest streak) + `contrib_heatmap.png` (trailing-year green-squares heatmap) — no external images |
+| Featured Project | GitHub GraphQL repo metadata (description, stars, forks, license, latest release, language) | Rendered to `featured_card.png` — a self-hosted pin card, refreshed daily so the numbers stay honest |
 | Blog | `https://briangreenberg.net/feed/` | First `<img>` in `<content:encoded>`; falls back to the post page's `og:image` meta tag |
 | Mastodon | `https://infosec.exchange/@brian_greenberg.rss` | First **image** `<media:content>` attachment → for a **video**, a frame extracted with **ffmpeg** (then the instance poster if it isn't blank) → for a **link** post, the instance's cached preview card (`/api/v1/statuses/{id}` → `card.image`), then the linked article's `og:image` → account avatar |
 
@@ -184,7 +190,8 @@ glyphs (the link still points at the full original post).
 | `_wrap` | Greedy pixel-width word wrap |
 | `render_card` | Render one RGBA card (rounded corners, photo + text) |
 | `build_blog_cards` / `build_masto_cards` | Per-feed card builders → `list[Card]` |
-| `github_token` | Read `GH_TOKEN`/`GITHUB_TOKEN` from env (None → skip both GitHub cards) |
+| `github_token` | Read `GH_TOKEN`/`GITHUB_TOKEN` from env (None → skip all GitHub cards) |
+| `_github_graphql` | POST one GitHub GraphQL query; raises on API errors |
 | `fetch_contribution_days` | GraphQL contribution calendar, year-by-year, all-time |
 | `compute_activity_stats` | Total + current + longest streak (pure logic, future days dropped) |
 | `render_activity_card` | Render the 3-panel activity card (total / ring / longest) + "Updated …" footer |
@@ -194,6 +201,9 @@ glyphs (the link still points at the full original post).
 | `heatmap_level` / `month_label_columns` | Intensity bucketing (quarters of peak day) and month-label placement (pure logic) |
 | `render_heatmap_card` | Render the green-squares heatmap (month/weekday labels, Less→More legend) |
 | `build_heatmap_card` | Render the heatmap card from pre-fetched days → `Card` |
+| `fetch_repo_meta` | Featured repo's live metadata (stars/forks/license/release/language) via GraphQL |
+| `featured_meta_line` | Compose the pin card's `·`-separated metadata row, skipping absent fields (pure logic) |
+| `render_featured_card` / `build_featured_card` | Render the pin-style Featured Project card → `Card` |
 | `cards_to_html` / `activity_to_html` | Centered `<p>` of `<a><img></a>` link(s) |
 | `update_section` | Replace content between `<!-- TAG:START/END -->` markers |
 | `main` | Orchestrate both feeds; `--dry-run` supported |

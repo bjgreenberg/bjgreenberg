@@ -37,6 +37,14 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 </p>
 <!-- CONTRIB-HEATMAP:END -->
 
+## 🚀 Featured Project
+
+<!-- FEATURED-PROJECT:START -->
+<p align="center">
+  <a href="https://github.com/bjgreenberg/senior-engineering-partner" target="_blank" rel="noopener noreferrer"><img src="assets/featured_card.png?v=4490a7c4" width="760" alt="Featured project — bjgreenberg/senior-engineering-partner: Python · Apache-2.0 · v1.16.2 · 98 stars · 13 forks"/></a>
+</p>
+<!-- FEATURED-PROJECT:END -->
+
 ## <img src="assets/gsd-favicon.png" width="16" height="16" alt=""> Latest from the Blog
 
 <!-- BLOG-POST-LIST:START -->
