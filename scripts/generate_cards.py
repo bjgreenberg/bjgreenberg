@@ -4,10 +4,9 @@
 This script powers the "GitHub Activity", "Featured Project", "Latest from
 the Blog", and "Latest from Mastodon" sections of the profile README. For
 each feed it builds up to three self-contained PNG "cards" (featured image +
-title/text baked in); from one GraphQL contribution-calendar fetch it renders
-two GitHub Activity cards — the streak/stats card (total/current/longest) and
-a trailing-year contribution heatmap (GitHub's green squares) — and it bakes
-a pin-style Featured Project card from live repo metadata. All are saved under
+title/text baked in); it renders the GitHub Activity streak/stats card
+(total/current/longest, from the GraphQL contribution calendar) and bakes a
+pin-style Featured Project card from live repo metadata. All are saved under
 ``assets/`` and the marked README sections are rewritten with a borderless
 ``<p>`` of per-card links.
 
@@ -45,7 +44,6 @@ import ipaddress
 import io
 import json
 import logging
-import math
 import os
 import re
 import shutil
@@ -149,22 +147,6 @@ ACTIVITY_SCALE = ACTIVITY_RENDER_W / _ACTIVITY_BASE_W
 ACTIVITY_RENDER_H = round(332 * ACTIVITY_SCALE)  # display height ÷2; room for footer
 RING_RADIUS = round(66 * ACTIVITY_SCALE)         # current-streak ring radius (render px)
 RING_WIDTH = round(10 * ACTIVITY_SCALE)          # ring stroke width (render px)
-
-# ── Contribution heatmap geometry (same 900px base design / scale) ──────────
-
-HEATMAP_RENDER_H = round(214 * ACTIVITY_SCALE)
-HEATMAP_WEEKS = 53                   # 52 full weeks + the current partial week
-
-# GitHub dark-mode contribution palette, dimmest → brightest. Index = heatmap
-# level 1–4; level 0 (no contributions) uses HEATMAP_EMPTY, which is a step
-# lighter than CARD_BG so empty cells stay visible on the card.
-HEATMAP_EMPTY = (33, 38, 45)         # #21262d
-HEATMAP_LEVELS = (
-    (14, 68, 41),                    # #0e4429
-    (0, 109, 50),                    # #006d32
-    (38, 166, 65),                   # #26a641
-    (57, 211, 83),                   # #39d353
-)
 
 # ── Featured-project pin card (same 900px base design / scale) ──────────────
 # Rendered daily by the same bot, so stars/forks/release stay current — a
@@ -1043,8 +1025,8 @@ def render_activity_card(stats: ActivityStats, generated_at: datetime) -> Image.
 def build_activity_card(days: list[ContribDay], now: datetime) -> Card:
     """Render the streak/stats card from pre-fetched contribution days.
 
-    The GraphQL fetch lives in ``main`` so the heatmap card can reuse the same
-    calendar without a second round of year-by-year queries.
+    The GraphQL fetch lives in ``main`` (alongside the token gate shared with
+    the featured-project card), keeping this builder deterministic.
     """
     stats = compute_activity_stats(days, now.date())
     path = ASSETS_DIR / "activity_card.png"
@@ -1066,147 +1048,6 @@ def activity_to_html(card: Card) -> str:
         f'alt="{html.escape(card["alt"], quote=True)}"/></a>\n'
         '</p>'
     )
-
-
-# ── Contribution heatmap card ────────────────────────────────────────────────
-
-def heatmap_start(today: date) -> date:
-    """The Sunday that opens the trailing-year heatmap grid.
-
-    Walks back 364 days and then snaps to the preceding Sunday (GitHub's
-    calendar weeks run Sunday–Saturday), so the grid is always 53 columns:
-    52 full weeks plus the current, possibly partial, one.
-    """
-    start = today - timedelta(days=364)
-    return start - timedelta(days=(start.weekday() + 1) % 7)
-
-
-def heatmap_level(count: int, peak: int) -> int:
-    """Bucket a day's contribution count into intensity levels 0–4.
-
-    Levels are quarters of the window's busiest day (``peak``), mirroring the
-    look of GitHub's own heatmap: 0 = no contributions, 4 = at (or clamped
-    above) the peak.
-    """
-    if count <= 0 or peak <= 0:
-        return 0
-    return min(4, math.ceil(count * 4 / peak))
-
-
-def build_heatmap_grid(days: list[ContribDay], today: date) -> list[list[int | None]]:
-    """Trailing-year grid of daily counts: ``grid[week][row]``, rows Sun–Sat.
-
-    Cells after ``today`` (the tail of the final, partial week) are None so
-    the renderer leaves them blank; dates missing from the calendar count 0.
-    """
-    counts = {d["date"]: d["count"] for d in days}
-    start = heatmap_start(today)
-    n_weeks = (today - start).days // 7 + 1
-    grid: list[list[int | None]] = []
-    for week in range(n_weeks):
-        col: list[int | None] = []
-        for row in range(7):
-            day = start + timedelta(days=week * 7 + row)
-            col.append(None if day > today else counts.get(day.isoformat(), 0))
-        grid.append(col)
-    return grid
-
-
-def month_label_columns(start: date, n_weeks: int) -> list[tuple[int, str]]:
-    """``(column, "Jan")`` pairs marking where a new month begins.
-
-    A label lands on the first column whose Sunday falls in a new month. The
-    leading label is dropped when the next one is fewer than three columns
-    away — a sliver of a 13th month at the left edge would otherwise overlap
-    its neighbour.
-    """
-    labels: list[tuple[int, str]] = []
-    prev_month = 0
-    for week in range(n_weeks):
-        sunday = start + timedelta(days=week * 7)
-        if sunday.month != prev_month:
-            labels.append((week, sunday.strftime("%b")))
-            prev_month = sunday.month
-    if len(labels) >= 2 and labels[1][0] - labels[0][0] < 3:
-        labels = labels[1:]
-    return labels
-
-
-def render_heatmap_card(grid: list[list[int | None]], start: date) -> Image.Image:
-    """Render the trailing-year contribution heatmap (GitHub's green squares).
-
-    Same GitHub-dark card chrome and 900px base design as the activity card,
-    so the two stack as one visual unit in the README. Month labels run along
-    the top, Mon/Wed/Fri gutter labels down the left, and a Less→More legend
-    sits bottom-right.
-    """
-    sc = ACTIVITY_SCALE
-
-    def s(v: float) -> int:
-        """Scale a base-design (900px-wide) measurement to the render width."""
-        return round(v * sc)
-
-    label_font = _find_font(
-        ["/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
-         "/System/Library/Fonts/Supplemental/Arial.ttf"], s(18))
-
-    w, h = ACTIVITY_RENDER_W, HEATMAP_RENDER_H
-    card = Image.new("RGBA", (w, h), (0, 0, 0, 0))
-    draw = ImageDraw.Draw(card)
-    draw.rounded_rectangle([0, 0, w, h], radius=s(RADIUS), fill=CARD_BG)
-
-    # Grid geometry (base-design units): weekday gutter left of the cells,
-    # month labels above, legend below.
-    gutter = 44
-    grid_x0, grid_y0 = PAD + gutter, 56
-    step = (_ACTIVITY_BASE_W - 2 * PAD - gutter) / HEATMAP_WEEKS  # ≈ 15.2
-    cell = step - 2.5
-
-    peak = max((c for col in grid for c in col if c), default=0)
-
-    for week, name in month_label_columns(start, len(grid)):
-        draw.text((s(grid_x0 + week * step), s(28)), name,
-                  font=label_font, fill=MUTED_GRAY)
-
-    for row, name in ((1, "Mon"), (3, "Wed"), (5, "Fri")):
-        draw.text((s(PAD), s(grid_y0 + row * step)), name,
-                  font=label_font, fill=MUTED_GRAY)
-
-    for week, col in enumerate(grid):
-        for row, count in enumerate(col):
-            if count is None:
-                continue
-            level = heatmap_level(count, peak)
-            fill = HEATMAP_EMPTY if level == 0 else HEATMAP_LEVELS[level - 1]
-            x, y = s(grid_x0 + week * step), s(grid_y0 + row * step)
-            draw.rounded_rectangle([x, y, x + s(cell), y + s(cell)],
-                                   radius=s(3), fill=fill)
-
-    # Legend, right-aligned under the grid: Less ▢▢▢▢▢ More.
-    ly = grid_y0 + 7 * step + 14
-    gap = s(8)
-    x_cursor = s(_ACTIVITY_BASE_W - PAD) - round(draw.textlength("More", font=label_font))
-    draw.text((x_cursor, s(ly)), "More", font=label_font, fill=MUTED_GRAY)
-    for i in range(4, -1, -1):
-        x_cursor -= gap + s(cell)
-        fill = HEATMAP_EMPTY if i == 0 else HEATMAP_LEVELS[i - 1]
-        draw.rounded_rectangle([x_cursor, s(ly + 2), x_cursor + s(cell), s(ly + 2) + s(cell)],
-                               radius=s(3), fill=fill)
-    x_cursor -= gap + round(draw.textlength("Less", font=label_font))
-    draw.text((x_cursor, s(ly)), "Less", font=label_font, fill=MUTED_GRAY)
-    return card
-
-
-def build_heatmap_card(days: list[ContribDay], today: date) -> Card:
-    """Render the heatmap card from pre-fetched contribution days."""
-    grid = build_heatmap_grid(days, today)
-    year_total = sum(c for col in grid for c in col if c)
-    path = ASSETS_DIR / "contrib_heatmap.png"
-    render_heatmap_card(grid, heatmap_start(today)).save(path)
-    alt = f"Contribution heatmap — {year_total:,} contributions in the past year"
-    log.info("Heatmap card: %s", alt)
-    return Card(asset_path=path, rel_src=f"assets/{path.name}?v={asset_version(path)}",
-                url=GITHUB_PROFILE_URL, alt=alt)
 
 
 # ── Featured-project pin card ────────────────────────────────────────────────
@@ -1347,8 +1188,6 @@ def main() -> int:
             now = datetime.now(timezone.utc)
             readme = update_section(readme, "ACTIVITY-CARD",
                                     activity_to_html(build_activity_card(days, now)))
-            readme = update_section(readme, "CONTRIB-HEATMAP",
-                                    activity_to_html(build_heatmap_card(days, now.date())))
         except Exception as exc:  # noqa: BLE001
             log.error("GitHub activity section failed: %s", exc)
 

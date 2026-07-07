@@ -9,7 +9,7 @@ import io
 import urllib.error
 import urllib.request
 import xml.etree.ElementTree as ET
-from datetime import date, datetime, timedelta, timezone
+from datetime import date, datetime, timezone
 
 import pytest
 from PIL import Image
@@ -436,89 +436,6 @@ class TestComputeActivityStats:
         assert s["total"] == 12  # future zeros excluded (they were 0 anyway)
 
 
-class TestHeatmapStart:
-    def test_snaps_back_to_the_preceding_sunday(self):
-        # 2026-07-07 is a Tuesday; 364 days back is Tue 2025-07-08 → Sun 2025-07-06.
-        assert gc.heatmap_start(date(2026, 7, 7)) == date(2025, 7, 6)
-
-    def test_always_a_sunday_spanning_53_grid_weeks(self):
-        for offset in range(7):  # one of each weekday
-            today = date(2026, 3, 1) + timedelta(days=offset)
-            start = gc.heatmap_start(today)
-            assert (start.weekday() + 1) % 7 == 0, "grid must open on a Sunday"
-            assert (today - start).days // 7 + 1 == 53
-
-
-class TestHeatmapLevel:
-    def test_zero_count_is_level_zero(self):
-        assert gc.heatmap_level(0, 8) == 0
-
-    def test_zero_peak_is_level_zero(self):
-        assert gc.heatmap_level(3, 0) == 0
-
-    def test_quarter_boundaries_with_peak_eight(self):
-        levels = [gc.heatmap_level(c, 8) for c in range(1, 9)]
-        assert levels == [1, 1, 2, 2, 3, 3, 4, 4]
-
-    def test_count_above_peak_clamps_to_four(self):
-        assert gc.heatmap_level(9, 8) == 4
-
-    def test_peak_of_one_renders_brightest(self):
-        assert gc.heatmap_level(1, 1) == 4
-
-
-class TestBuildHeatmapGrid:
-    TODAY = date(2026, 7, 7)  # a Tuesday → grid starts Sun 2025-07-06
-
-    def test_grid_is_53_weeks_of_7_rows(self):
-        grid = gc.build_heatmap_grid([], self.TODAY)
-        assert len(grid) == 53
-        assert all(len(col) == 7 for col in grid)
-
-    def test_cells_after_today_are_none_missing_days_zero(self):
-        grid = gc.build_heatmap_grid([], self.TODAY)
-        # Final week: Sun 7/5, Mon 7/6, Tue 7/7 (today) exist; Wed–Sat are future.
-        assert grid[52][:3] == [0, 0, 0]
-        assert grid[52][3:] == [None, None, None, None]
-        assert grid[0] == [0] * 7  # pre-window days default to 0, not None
-
-    def test_counts_land_on_the_right_cell(self):
-        # 2026-01-01 is 179 days after the start Sunday → week 25, row 4 (Thu).
-        grid = gc.build_heatmap_grid(
-            [gc.ContribDay(date="2026-01-01", count=6)], self.TODAY)
-        assert grid[25][4] == 6
-
-    def test_days_outside_the_window_are_ignored(self):
-        grid = gc.build_heatmap_grid(
-            [gc.ContribDay(date="2024-01-01", count=9)], self.TODAY)
-        assert not any(c for col in grid for c in col if c)
-
-
-class TestMonthLabelColumns:
-    def test_labels_start_at_month_changes(self):
-        labels = gc.month_label_columns(date(2025, 7, 6), 53)
-        assert labels[0] == (0, "Jul")
-        assert labels[1] == (4, "Aug")
-        assert labels[-1] == (52, "Jul")
-
-    def test_leading_sliver_label_is_dropped(self):
-        # Start Sun 2025-06-29: "Jun" holds only column 0 before "Jul" at
-        # column 1 — too narrow to label without overlap.
-        labels = gc.month_label_columns(date(2025, 6, 29), 8)
-        assert labels == [(1, "Jul"), (5, "Aug")]
-
-
-class TestRenderHeatmapCard:
-    def test_smoke_renders_card_at_expected_size(self):
-        # Rendering is otherwise untested (see module docstring); this smoke
-        # test just proves the draw path runs and the canvas is the advertised
-        # geometry — pixel content is checked by eye on the committed asset.
-        today = date(2026, 7, 7)
-        grid = gc.build_heatmap_grid(_days("2026-06-30", [3, 0, 5, 1]), today)
-        img = gc.render_heatmap_card(grid, gc.heatmap_start(today))
-        assert img.size == (gc.ACTIVITY_RENDER_W, gc.HEATMAP_RENDER_H)
-
-
 class TestFeaturedMetaLine:
     @staticmethod
     def _meta(**over):
@@ -648,8 +565,8 @@ class TestGithubToken:
 
 
 class TestBuildGithubCards:
-    # Token gating moved to main() (one GraphQL fetch feeds both GitHub
-    # cards); the builders now just render from pre-fetched days.
+    # Token gating lives in main() (one shared gate for the GitHub cards);
+    # the builder just renders from pre-fetched days.
 
     def test_activity_card_renders_from_prefetched_days(self, monkeypatch, tmp_path):
         monkeypatch.setattr(gc, "ASSETS_DIR", tmp_path)
@@ -657,13 +574,6 @@ class TestBuildGithubCards:
         card = gc.build_activity_card(_days("2026-06-12", [5, 5, 5, 5]), now)
         assert card["asset_path"].exists()
         assert "20 total contributions" in card["alt"]
-
-    def test_heatmap_card_renders_from_prefetched_days(self, monkeypatch, tmp_path):
-        monkeypatch.setattr(gc, "ASSETS_DIR", tmp_path)
-        card = gc.build_heatmap_card(_days("2026-06-12", [5, 5, 5, 5]),
-                                     date(2026, 6, 15))
-        assert card["asset_path"].exists()
-        assert "20 contributions in the past year" in card["alt"]
 
 
 class TestRenderActivityCard:

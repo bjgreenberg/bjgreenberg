@@ -31,12 +31,6 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 </p>
 <!-- ACTIVITY-CARD:END -->
 
-<!-- CONTRIB-HEATMAP:START -->
-<p align="center">
-  <a href="https://github.com/bjgreenberg" target="_blank" rel="noopener noreferrer"><img src="assets/contrib_heatmap.png?v=8a388e70" width="760" alt="Contribution heatmap — 3,709 contributions in the past year"/></a>
-</p>
-<!-- CONTRIB-HEATMAP:END -->
-
 ## 🚀 Featured Project
 
 <!-- FEATURED-PROJECT:START -->
