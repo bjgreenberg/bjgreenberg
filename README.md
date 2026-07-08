@@ -27,7 +27,7 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 <!-- ACTIVITY-CARD:START -->
 <p align="center">
-  <a href="https://github.com/bjgreenberg" target="_blank" rel="noopener noreferrer"><img src="assets/activity_card.png?v=c24edbfe" width="760" alt="GitHub activity — 3,732 total contributions, 10-day current streak, 43-day longest streak"/></a>
+  <a href="https://github.com/bjgreenberg" target="_blank" rel="noopener noreferrer"><img src="assets/activity_card.png?v=d80b2714" width="760" alt="GitHub activity — 3,768 total contributions, 10-day current streak, 43-day longest streak"/></a>
 </p>
 <!-- ACTIVITY-CARD:END -->
 
@@ -35,7 +35,7 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 <!-- FEATURED-PROJECT:START -->
 <p align="center">
-  <a href="https://github.com/bjgreenberg/senior-engineering-partner" target="_blank" rel="noopener noreferrer"><img src="assets/featured_card.png?v=1c13f79b" width="760" alt="Featured project — bjgreenberg/senior-engineering-partner: Python · Apache-2.0 · v1.16.2 · 98 stars · 13 forks"/></a>
+  <a href="https://github.com/bjgreenberg/senior-engineering-partner" target="_blank" rel="noopener noreferrer"><img src="assets/featured_card.png?v=9523c36d" width="760" alt="Featured project — bjgreenberg/senior-engineering-partner: Python · Apache-2.0 · v1.18.0 · 100 stars · 13 forks"/></a>
 </p>
 <!-- FEATURED-PROJECT:END -->
 <p align="center">
