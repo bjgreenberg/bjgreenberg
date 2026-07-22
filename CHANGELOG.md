@@ -5,6 +5,33 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [1.1.0](https://github.com/bjgreenberg/bjgreenberg/compare/v1.0.0...v1.1.0) (2026-07-10)
+
+
+### ⚠ BREAKING CHANGES
+
+* **cards:** contrib_heatmap.png and the heatmap functions (heatmap_start/heatmap_level/build_heatmap_grid/month_label_columns/ render_heatmap_card/build_heatmap_card) are removed.
+
+### Features
+
+* **cards:** bake a featured-project pin card (senior-engineering-partner) ([af1d87a](https://github.com/bjgreenberg/bjgreenberg/commit/af1d87af9a5a99f7df6c19b6d0c3f38f9eb3458d))
+* **cards:** bake a trailing-year contribution heatmap card ([dc52454](https://github.com/bjgreenberg/bjgreenberg/commit/dc524540ae380bbf41f6efe377bf4cfeefa76fa8))
+
+
+### Bug Fixes
+
+* render-diagrams gate runs on stock macOS bash 3.2 ([13e3760](https://github.com/bjgreenberg/bjgreenberg/commit/13e3760f0a75a74ed44426561f41d9e7c778979f))
+
+
+### Miscellaneous Chores
+
+* pin next release version ([5fe3822](https://github.com/bjgreenberg/bjgreenberg/commit/5fe382215758bff5a673fb8141b9978726d1b550))
+
+
+### Code Refactoring
+
+* **cards:** drop the contribution heatmap card as redundant ([b582b85](https://github.com/bjgreenberg/bjgreenberg/commit/b582b852dcda8097b80be7982dbd10e86c3561e3))
+
 ## [1.0.0] - 2026-07-05
 
 ### Added
