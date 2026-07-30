@@ -27,7 +27,7 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 <!-- ACTIVITY-CARD:START -->
 <p align="center">
-  <a href="https://github.com/bjgreenberg" target="_blank" rel="noopener noreferrer"><img src="assets/activity_card.png?v=bfc6f542" width="760" alt="GitHub activity — 4,557 total contributions, 17-day current streak, 43-day longest streak"/></a>
+  <a href="https://github.com/bjgreenberg" target="_blank" rel="noopener noreferrer"><img src="assets/activity_card.png?v=b399219b" width="760" alt="GitHub activity — 4,564 total contributions, 18-day current streak, 43-day longest streak"/></a>
 </p>
 <!-- ACTIVITY-CARD:END -->
 
@@ -58,9 +58,9 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 <!-- MASTODON-POST-LIST:START -->
 <p align="center">
-  <a href="https://infosec.exchange/@brian_greenberg/116874551174939629" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_1.png?v=03d3f8f1" width="260" alt="Some news I&#x27;m honored to share. I&#x27;ve been nominated for the 2026 Chicago CIO of the Year Award, and…"/></a>
-  <a href="https://infosec.exchange/@brian_greenberg/116840666154590254" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_2.png?v=b8df0f4d" width="260" alt="Everyone&#x27;s using AI to write code faster. Almost nobody&#x27;s using it to write code better. It&#x27;s where…"/></a>
-  <a href="https://infosec.exchange/@brian_greenberg/116812246978621481" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_3.png?v=1f9af0c1" width="260" alt="Spent today at the C-Vision Data, AI and CMO Think Tank in Chicago. The day opened on agentic AI…"/></a>
+  <a href="https://infosec.exchange/@brian_greenberg/117004077210925155" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_1.png?v=b410e764" width="260" alt="My friend Jeff Olsen wrote a really good piece on status updates, and it&#x27;s been rattling around my…"/></a>
+  <a href="https://infosec.exchange/@brian_greenberg/116874551174939629" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_2.png?v=03d3f8f1" width="260" alt="Some news I&#x27;m honored to share. I&#x27;ve been nominated for the 2026 Chicago CIO of the Year Award, and…"/></a>
+  <a href="https://infosec.exchange/@brian_greenberg/116840666154590254" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_3.png?v=b8df0f4d" width="260" alt="Everyone&#x27;s using AI to write code faster. Almost nobody&#x27;s using it to write code better. It&#x27;s where…"/></a>
 </p>
 <!-- MASTODON-POST-LIST:END -->
 
