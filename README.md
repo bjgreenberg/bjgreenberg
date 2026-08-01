@@ -27,7 +27,7 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 <!-- ACTIVITY-CARD:START -->
 <p align="center">
-  <a href="https://github.com/bjgreenberg" target="_blank" rel="noopener noreferrer"><img src="assets/activity_card.png?v=e8e68529" width="760" alt="GitHub activity — 4,576 total contributions, 19-day current streak, 43-day longest streak"/></a>
+  <a href="https://github.com/bjgreenberg" target="_blank" rel="noopener noreferrer"><img src="assets/activity_card.png?v=06359304" width="760" alt="GitHub activity — 4,630 total contributions, 20-day current streak, 43-day longest streak"/></a>
 </p>
 <!-- ACTIVITY-CARD:END -->
 
@@ -46,7 +46,7 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 <!-- BLOG-POST-LIST:START -->
 <p align="center">
-  <a href="https://briangreenberg.net/2026/07/30/default-on-ai-are-saas-vendors-outsourcing-their-risk-to-you/" target="_blank" rel="noopener noreferrer"><img src="assets/blog_card_1.png?v=8a497674" width="260" alt="Default-On AI: Are SaaS Vendors Outsourcing Their Risk To You?"/></a>
+  <a href="https://briangreenberg.net/2026/07/30/default-on-ai-are-saas-vendors-outsourcing-their-risk-to-you/" target="_blank" rel="noopener noreferrer"><img src="assets/blog_card_1.png?v=83bcfabc" width="260" alt="Default-On AI: Are SaaS Vendors Outsourcing Their Risk To You?"/></a>
   <a href="https://briangreenberg.net/2026/06/30/a-claude-code-skill-to-help-you-write-better-code/" target="_blank" rel="noopener noreferrer"><img src="assets/blog_card_2.png?v=9a368dea" width="260" alt="A Claude Code Skill to help you write better code."/></a>
   <a href="https://briangreenberg.net/2026/05/07/micro-transformations-ais-real-path-to-roi/" target="_blank" rel="noopener noreferrer"><img src="assets/blog_card_3.png?v=6d6210c9" width="260" alt="Micro-Transformations: AI&#x27;s Real Path to ROI"/></a>
 </p>
