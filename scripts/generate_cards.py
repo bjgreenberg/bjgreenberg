@@ -152,11 +152,20 @@ RING_WIDTH = round(10 * ACTIVITY_SCALE)          # ring stroke width (render px)
 # Rendered daily by the same bot, so stars/forks/release stay current — a
 # self-hosted stand-in for the github-readme-stats "pin" card.
 
-# (owner, repo) per featured project, rendered in this order. Each gets its
-# own daily-refreshed pin card.
+# (owner, repo, caption_html) per featured project, rendered in this order.
+# Each gets its own daily-refreshed pin card with its caption directly
+# beneath it — the caption is emitted by the generator so card and caption
+# can never drift apart in the README.
 FEATURED_REPOS = [
-    ("bjgreenberg", "senior-engineering-partner"),
-    ("bjgreenberg", "vendor-dashboard"),
+    ("bjgreenberg", "senior-engineering-partner",
+     'Install it in Claude Code: <code>/plugin marketplace add '
+     'bjgreenberg/senior-engineering-partner</code> → <code>/plugin '
+     'install senior-engineering-partner@bjgreenberg</code>'),
+    ("bjgreenberg", "vendor-dashboard",
+     'See it live: <a href="https://briangreenberg.net/service-status">'
+     'briangreenberg.net/service-status</a> · or <a href="https://'
+     'deploy.workers.cloudflare.com/?url=https://github.com/bjgreenberg/'
+     'vendor-dashboard">deploy your own</a>'),
 ]
 FEATURED_RENDER_H = round(236 * ACTIVITY_SCALE)
 FEATURED_DESC_LINES = 3
@@ -1121,10 +1130,14 @@ def render_featured_card(meta: RepoMeta, owner: str, repo: str) -> Image.Image:
     return card
 
 
-def build_featured_cards(token: str) -> list[Card]:
-    """Fetch each featured repo's metadata and render its pin card."""
-    cards: list[Card] = []
-    for i, (owner, repo) in enumerate(FEATURED_REPOS):
+def build_featured_cards(token: str) -> list[tuple[Card, str]]:
+    """Fetch each featured repo's metadata and render its pin card.
+
+    Returns (card, caption_html) pairs; the caption renders directly under
+    its own card inside the managed section.
+    """
+    cards: list[tuple[Card, str]] = []
+    for i, (owner, repo, caption) in enumerate(FEATURED_REPOS):
         meta = fetch_repo_meta(owner, repo, token)
         # The first card keeps the historical filename so the asset does not
         # churn (and no orphan is left behind); later cards are repo-named.
@@ -1133,9 +1146,10 @@ def build_featured_cards(token: str) -> list[Card]:
         render_featured_card(meta, owner, repo).save(path)
         alt = f"Featured project — {owner}/{repo}: {featured_meta_line(meta)}"
         log.info("Featured card: %s", alt)
-        cards.append(Card(asset_path=path,
-                          rel_src=f"assets/{path.name}?v={asset_version(path)}",
-                          url=f"https://github.com/{owner}/{repo}", alt=alt))
+        cards.append((Card(asset_path=path,
+                           rel_src=f"assets/{path.name}?v={asset_version(path)}",
+                           url=f"https://github.com/{owner}/{repo}", alt=alt),
+                      caption))
     return cards
 
 
@@ -1203,7 +1217,10 @@ def main() -> int:
         try:
             readme = update_section(
                 readme, "FEATURED-PROJECT",
-                "\n".join(activity_to_html(c) for c in build_featured_cards(token)))
+                "\n".join(
+                    activity_to_html(card)
+                    + f'\n<p align="center">\n  {caption}\n</p>'
+                    for card, caption in build_featured_cards(token)))
         except Exception as exc:  # noqa: BLE001
             log.error("Featured-project section failed: %s", exc)
 

@@ -27,7 +27,7 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 <!-- ACTIVITY-CARD:START -->
 <p align="center">
-  <a href="https://github.com/bjgreenberg" target="_blank" rel="noopener noreferrer"><img src="assets/activity_card.png?v=1b72f197" width="760" alt="GitHub activity — 4,533 total contributions, 21-day current streak, 43-day longest streak"/></a>
+  <a href="https://github.com/bjgreenberg" target="_blank" rel="noopener noreferrer"><img src="assets/activity_card.png?v=d6cb67d7" width="760" alt="GitHub activity — 4,536 total contributions, 21-day current streak, 43-day longest streak"/></a>
 </p>
 <!-- ACTIVITY-CARD:END -->
 
@@ -38,13 +38,15 @@ I build AI-native systems for the modern enterprise, teach the next generation o
   <a href="https://github.com/bjgreenberg/senior-engineering-partner" target="_blank" rel="noopener noreferrer"><img src="assets/featured_card.png?v=c9492edb" width="760" alt="Featured project — bjgreenberg/senior-engineering-partner: Python · Apache-2.0 · v1.24.0 · 142 stars · 14 forks"/></a>
 </p>
 <p align="center">
+  Install it in Claude Code: <code>/plugin marketplace add bjgreenberg/senior-engineering-partner</code> → <code>/plugin install senior-engineering-partner@bjgreenberg</code>
+</p>
+<p align="center">
   <a href="https://github.com/bjgreenberg/vendor-dashboard" target="_blank" rel="noopener noreferrer"><img src="assets/featured_card_vendor-dashboard.png?v=dae8d6cd" width="760" alt="Featured project — bjgreenberg/vendor-dashboard: JavaScript · Apache-2.0 · v2.0.0 · 0 stars · 0 forks"/></a>
 </p>
-<!-- FEATURED-PROJECT:END -->
 <p align="center">
-  Install the skill in Claude Code: <code>/plugin marketplace add bjgreenberg/senior-engineering-partner</code> → <code>/plugin install senior-engineering-partner@bjgreenberg</code><br>
-  See the dashboard live: <a href="https://briangreenberg.net/service-status">briangreenberg.net/service-status</a> · or <a href="https://deploy.workers.cloudflare.com/?url=https://github.com/bjgreenberg/vendor-dashboard">deploy your own</a>
+  See it live: <a href="https://briangreenberg.net/service-status">briangreenberg.net/service-status</a> · or <a href="https://deploy.workers.cloudflare.com/?url=https://github.com/bjgreenberg/vendor-dashboard">deploy your own</a>
 </p>
+<!-- FEATURED-PROJECT:END -->
 
 ## <img src="assets/gsd-favicon.png" width="16" height="16" alt=""> Latest from the Blog
 
