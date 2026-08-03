@@ -27,28 +27,32 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 <!-- ACTIVITY-CARD:START -->
 <p align="center">
-  <a href="https://github.com/bjgreenberg" target="_blank" rel="noopener noreferrer"><img src="assets/activity_card.png?v=b99cd611" width="760" alt="GitHub activity — 4,648 total contributions, 21-day current streak, 43-day longest streak"/></a>
+  <a href="https://github.com/bjgreenberg" target="_blank" rel="noopener noreferrer"><img src="assets/activity_card.png?v=1b72f197" width="760" alt="GitHub activity — 4,533 total contributions, 21-day current streak, 43-day longest streak"/></a>
 </p>
 <!-- ACTIVITY-CARD:END -->
 
-## 🚀 Featured Project
+## 🚀 Featured Projects
 
 <!-- FEATURED-PROJECT:START -->
 <p align="center">
-  <a href="https://github.com/bjgreenberg/senior-engineering-partner" target="_blank" rel="noopener noreferrer"><img src="assets/featured_card.png?v=04188729" width="760" alt="Featured project — bjgreenberg/senior-engineering-partner: Python · Apache-2.0 · v1.24.0 · 142 stars · 14 forks"/></a>
+  <a href="https://github.com/bjgreenberg/senior-engineering-partner" target="_blank" rel="noopener noreferrer"><img src="assets/featured_card.png?v=c9492edb" width="760" alt="Featured project — bjgreenberg/senior-engineering-partner: Python · Apache-2.0 · v1.24.0 · 142 stars · 14 forks"/></a>
+</p>
+<p align="center">
+  <a href="https://github.com/bjgreenberg/vendor-dashboard" target="_blank" rel="noopener noreferrer"><img src="assets/featured_card_vendor-dashboard.png?v=dae8d6cd" width="760" alt="Featured project — bjgreenberg/vendor-dashboard: JavaScript · Apache-2.0 · v2.0.0 · 0 stars · 0 forks"/></a>
 </p>
 <!-- FEATURED-PROJECT:END -->
 <p align="center">
-  Install it in Claude Code: <code>/plugin marketplace add bjgreenberg/senior-engineering-partner</code> → <code>/plugin install senior-engineering-partner@bjgreenberg</code>
+  Install the skill in Claude Code: <code>/plugin marketplace add bjgreenberg/senior-engineering-partner</code> → <code>/plugin install senior-engineering-partner@bjgreenberg</code><br>
+  See the dashboard live: <a href="https://briangreenberg.net/service-status">briangreenberg.net/service-status</a> · or <a href="https://deploy.workers.cloudflare.com/?url=https://github.com/bjgreenberg/vendor-dashboard">deploy your own</a>
 </p>
 
 ## <img src="assets/gsd-favicon.png" width="16" height="16" alt=""> Latest from the Blog
 
 <!-- BLOG-POST-LIST:START -->
 <p align="center">
-  <a href="https://briangreenberg.net/2026/07/30/default-on-ai-are-saas-vendors-outsourcing-their-risk-to-you/" target="_blank" rel="noopener noreferrer"><img src="assets/blog_card_1.png?v=83bcfabc" width="260" alt="Default-On AI: Are SaaS Vendors Outsourcing Their Risk To You?"/></a>
-  <a href="https://briangreenberg.net/2026/06/30/a-claude-code-skill-to-help-you-write-better-code/" target="_blank" rel="noopener noreferrer"><img src="assets/blog_card_2.png?v=9a368dea" width="260" alt="A Claude Code Skill to help you write better code."/></a>
-  <a href="https://briangreenberg.net/2026/05/07/micro-transformations-ais-real-path-to-roi/" target="_blank" rel="noopener noreferrer"><img src="assets/blog_card_3.png?v=6d6210c9" width="260" alt="Micro-Transformations: AI&#x27;s Real Path to ROI"/></a>
+  <a href="https://briangreenberg.net/2026/07/30/default-on-ai-are-saas-vendors-outsourcing-their-risk-to-you/" target="_blank" rel="noopener noreferrer"><img src="assets/blog_card_1.png?v=e6c259a7" width="260" alt="Default-On AI: Are SaaS Vendors Outsourcing Their Risk To You?"/></a>
+  <a href="https://briangreenberg.net/2026/06/30/a-claude-code-skill-to-help-you-write-better-code/" target="_blank" rel="noopener noreferrer"><img src="assets/blog_card_2.png?v=5e60d553" width="260" alt="A Claude Code Skill to help you write better code."/></a>
+  <a href="https://briangreenberg.net/2026/05/07/micro-transformations-ais-real-path-to-roi/" target="_blank" rel="noopener noreferrer"><img src="assets/blog_card_3.png?v=9d50c7ab" width="260" alt="Micro-Transformations: AI&#x27;s Real Path to ROI"/></a>
 </p>
 <!-- BLOG-POST-LIST:END -->
 
@@ -58,9 +62,9 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 <!-- MASTODON-POST-LIST:START -->
 <p align="center">
-  <a href="https://infosec.exchange/@brian_greenberg/117004077210925155" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_1.png?v=b410e764" width="260" alt="My friend Jeff Olsen wrote a really good piece on status updates, and it&#x27;s been rattling around my…"/></a>
-  <a href="https://infosec.exchange/@brian_greenberg/116874551174939629" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_2.png?v=03d3f8f1" width="260" alt="Some news I&#x27;m honored to share. I&#x27;ve been nominated for the 2026 Chicago CIO of the Year Award, and…"/></a>
-  <a href="https://infosec.exchange/@brian_greenberg/116840666154590254" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_3.png?v=b8df0f4d" width="260" alt="Everyone&#x27;s using AI to write code faster. Almost nobody&#x27;s using it to write code better. It&#x27;s where…"/></a>
+  <a href="https://infosec.exchange/@brian_greenberg/117029046806458976" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_1.png?v=4028317a" width="260" alt="✨ A sparkle icon shows up in an app you own. Nobody in IT put it there. A user opens a ticket…"/></a>
+  <a href="https://infosec.exchange/@brian_greenberg/117027001333118979" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_2.png?v=f716e6c2" width="260" alt="Even though this isn’t a true photo or from a real town, this is the kind of attitude I can get…"/></a>
+  <a href="https://infosec.exchange/@brian_greenberg/117004077210925155" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_3.png?v=e315b0d9" width="260" alt="My friend Jeff Olsen wrote a really good piece on status updates, and it&#x27;s been rattling around my…"/></a>
 </p>
 <!-- MASTODON-POST-LIST:END -->
 

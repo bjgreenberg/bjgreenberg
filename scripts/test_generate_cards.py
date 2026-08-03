@@ -463,7 +463,7 @@ class TestRenderFeaturedCard:
         meta = gc.RepoMeta(description="Words " * 60, stars=1, forks=0,
                            license="Apache-2.0", release="v1.0.0",
                            language="Python")
-        img = gc.render_featured_card(meta)
+        img = gc.render_featured_card(meta, "bjgreenberg", "senior-engineering-partner")
         assert img.size == (gc.ACTIVITY_RENDER_W, gc.FEATURED_RENDER_H)
 
 

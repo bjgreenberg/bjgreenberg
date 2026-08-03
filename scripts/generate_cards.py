@@ -152,9 +152,12 @@ RING_WIDTH = round(10 * ACTIVITY_SCALE)          # ring stroke width (render px)
 # Rendered daily by the same bot, so stars/forks/release stay current — a
 # self-hosted stand-in for the github-readme-stats "pin" card.
 
-FEATURED_OWNER = "bjgreenberg"
-FEATURED_REPO = "senior-engineering-partner"
-FEATURED_URL = f"https://github.com/{FEATURED_OWNER}/{FEATURED_REPO}"
+# (owner, repo) per featured project, rendered in this order. Each gets its
+# own daily-refreshed pin card.
+FEATURED_REPOS = [
+    ("bjgreenberg", "senior-engineering-partner"),
+    ("bjgreenberg", "vendor-dashboard"),
+]
 FEATURED_RENDER_H = round(236 * ACTIVITY_SCALE)
 FEATURED_DESC_LINES = 3
 FEATURED_TEXT = (230, 237, 243)      # #e6edf3 — body text on the dark card
@@ -1080,8 +1083,8 @@ def featured_meta_line(meta: RepoMeta) -> str:
     return " · ".join(p for p in parts if p)
 
 
-def render_featured_card(meta: RepoMeta) -> Image.Image:
-    """Render the featured-project pin card (name, description, meta row)."""
+def render_featured_card(meta: RepoMeta, owner: str, repo: str) -> Image.Image:
+    """Render a featured-project pin card (name, description, meta row)."""
     sc = ACTIVITY_SCALE
 
     def s(v: float) -> int:
@@ -1103,7 +1106,7 @@ def render_featured_card(meta: RepoMeta) -> Image.Image:
     draw = ImageDraw.Draw(card)
     draw.rounded_rectangle([0, 0, w, h], radius=s(RADIUS), fill=CARD_BG)
 
-    draw.text((s(PAD), s(26)), f"{FEATURED_OWNER}/{FEATURED_REPO}",
+    draw.text((s(PAD), s(26)), f"{owner}/{repo}",
               font=title_font, fill=LINK_BLUE)
 
     lines = _wrap(draw, meta["description"], body_font,
@@ -1118,16 +1121,22 @@ def render_featured_card(meta: RepoMeta) -> Image.Image:
     return card
 
 
-def build_featured_card(token: str) -> Card:
-    """Fetch the featured repo's metadata, render its pin card, return it."""
-    meta = fetch_repo_meta(FEATURED_OWNER, FEATURED_REPO, token)
-    path = ASSETS_DIR / "featured_card.png"
-    render_featured_card(meta).save(path)
-    alt = (f"Featured project — {FEATURED_OWNER}/{FEATURED_REPO}: "
-           f"{featured_meta_line(meta)}")
-    log.info("Featured card: %s", alt)
-    return Card(asset_path=path, rel_src=f"assets/{path.name}?v={asset_version(path)}",
-                url=FEATURED_URL, alt=alt)
+def build_featured_cards(token: str) -> list[Card]:
+    """Fetch each featured repo's metadata and render its pin card."""
+    cards: list[Card] = []
+    for i, (owner, repo) in enumerate(FEATURED_REPOS):
+        meta = fetch_repo_meta(owner, repo, token)
+        # The first card keeps the historical filename so the asset does not
+        # churn (and no orphan is left behind); later cards are repo-named.
+        name = "featured_card.png" if i == 0 else f"featured_card_{repo}.png"
+        path = ASSETS_DIR / name
+        render_featured_card(meta, owner, repo).save(path)
+        alt = f"Featured project — {owner}/{repo}: {featured_meta_line(meta)}"
+        log.info("Featured card: %s", alt)
+        cards.append(Card(asset_path=path,
+                          rel_src=f"assets/{path.name}?v={asset_version(path)}",
+                          url=f"https://github.com/{owner}/{repo}", alt=alt))
+    return cards
 
 
 # ── README assembly ─────────────────────────────────────────────────────────
@@ -1192,8 +1201,9 @@ def main() -> int:
             log.error("GitHub activity section failed: %s", exc)
 
         try:
-            readme = update_section(readme, "FEATURED-PROJECT",
-                                    activity_to_html(build_featured_card(token)))
+            readme = update_section(
+                readme, "FEATURED-PROJECT",
+                "\n".join(activity_to_html(c) for c in build_featured_cards(token)))
         except Exception as exc:  # noqa: BLE001
             log.error("Featured-project section failed: %s", exc)
 
