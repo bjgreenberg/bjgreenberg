@@ -27,7 +27,7 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 <!-- ACTIVITY-CARD:START -->
 <p align="center">
-  <a href="https://github.com/bjgreenberg" target="_blank" rel="noopener noreferrer"><img src="assets/activity_card.png?v=d6cb67d7" width="760" alt="GitHub activity — 4,536 total contributions, 21-day current streak, 43-day longest streak"/></a>
+  <a href="https://github.com/bjgreenberg" target="_blank" rel="noopener noreferrer"><img src="assets/activity_card.png?v=836d8dc3" width="760" alt="GitHub activity — 4,717 total contributions, 23-day current streak, 43-day longest streak"/></a>
 </p>
 <!-- ACTIVITY-CARD:END -->
 
@@ -35,13 +35,13 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 <!-- FEATURED-PROJECT:START -->
 <p align="center">
-  <a href="https://github.com/bjgreenberg/senior-engineering-partner" target="_blank" rel="noopener noreferrer"><img src="assets/featured_card.png?v=c9492edb" width="760" alt="Featured project — bjgreenberg/senior-engineering-partner: Python · Apache-2.0 · v1.24.0 · 142 stars · 14 forks"/></a>
+  <a href="https://github.com/bjgreenberg/senior-engineering-partner" target="_blank" rel="noopener noreferrer"><img src="assets/featured_card.png?v=04188729" width="760" alt="Featured project — bjgreenberg/senior-engineering-partner: Python · Apache-2.0 · v1.24.0 · 142 stars · 14 forks"/></a>
 </p>
 <p align="center">
   Install it in Claude Code: <code>/plugin marketplace add bjgreenberg/senior-engineering-partner</code> → <code>/plugin install senior-engineering-partner@bjgreenberg</code>
 </p>
 <p align="center">
-  <a href="https://github.com/bjgreenberg/vendor-dashboard" target="_blank" rel="noopener noreferrer"><img src="assets/featured_card_vendor-dashboard.png?v=dae8d6cd" width="760" alt="Featured project — bjgreenberg/vendor-dashboard: JavaScript · Apache-2.0 · v2.0.0 · 0 stars · 0 forks"/></a>
+  <a href="https://github.com/bjgreenberg/vendor-dashboard" target="_blank" rel="noopener noreferrer"><img src="assets/featured_card_vendor-dashboard.png?v=bfddb1be" width="760" alt="Featured project — bjgreenberg/vendor-dashboard: JavaScript · Apache-2.0 · v2.0.0 · 3 stars · 0 forks"/></a>
 </p>
 <p align="center">
   See it live: <a href="https://briangreenberg.net/service-status">briangreenberg.net/service-status</a> · or <a href="https://deploy.workers.cloudflare.com/?url=https://github.com/bjgreenberg/vendor-dashboard">deploy your own</a>
@@ -52,9 +52,9 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 <!-- BLOG-POST-LIST:START -->
 <p align="center">
-  <a href="https://briangreenberg.net/2026/07/30/default-on-ai-are-saas-vendors-outsourcing-their-risk-to-you/" target="_blank" rel="noopener noreferrer"><img src="assets/blog_card_1.png?v=e6c259a7" width="260" alt="Default-On AI: Are SaaS Vendors Outsourcing Their Risk To You?"/></a>
-  <a href="https://briangreenberg.net/2026/06/30/a-claude-code-skill-to-help-you-write-better-code/" target="_blank" rel="noopener noreferrer"><img src="assets/blog_card_2.png?v=5e60d553" width="260" alt="A Claude Code Skill to help you write better code."/></a>
-  <a href="https://briangreenberg.net/2026/05/07/micro-transformations-ais-real-path-to-roi/" target="_blank" rel="noopener noreferrer"><img src="assets/blog_card_3.png?v=9d50c7ab" width="260" alt="Micro-Transformations: AI&#x27;s Real Path to ROI"/></a>
+  <a href="https://briangreenberg.net/2026/07/30/default-on-ai-are-saas-vendors-outsourcing-their-risk-to-you/" target="_blank" rel="noopener noreferrer"><img src="assets/blog_card_1.png?v=83bcfabc" width="260" alt="Default-On AI: Are SaaS Vendors Outsourcing Their Risk To You?"/></a>
+  <a href="https://briangreenberg.net/2026/06/30/a-claude-code-skill-to-help-you-write-better-code/" target="_blank" rel="noopener noreferrer"><img src="assets/blog_card_2.png?v=9a368dea" width="260" alt="A Claude Code Skill to help you write better code."/></a>
+  <a href="https://briangreenberg.net/2026/05/07/micro-transformations-ais-real-path-to-roi/" target="_blank" rel="noopener noreferrer"><img src="assets/blog_card_3.png?v=6d6210c9" width="260" alt="Micro-Transformations: AI&#x27;s Real Path to ROI"/></a>
 </p>
 <!-- BLOG-POST-LIST:END -->
 
@@ -64,9 +64,9 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 <!-- MASTODON-POST-LIST:START -->
 <p align="center">
-  <a href="https://infosec.exchange/@brian_greenberg/117029046806458976" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_1.png?v=4028317a" width="260" alt="✨ A sparkle icon shows up in an app you own. Nobody in IT put it there. A user opens a ticket…"/></a>
-  <a href="https://infosec.exchange/@brian_greenberg/117027001333118979" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_2.png?v=f716e6c2" width="260" alt="Even though this isn’t a true photo or from a real town, this is the kind of attitude I can get…"/></a>
-  <a href="https://infosec.exchange/@brian_greenberg/117004077210925155" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_3.png?v=e315b0d9" width="260" alt="My friend Jeff Olsen wrote a really good piece on status updates, and it&#x27;s been rattling around my…"/></a>
+  <a href="https://infosec.exchange/@brian_greenberg/117029823603021771" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_1.png?v=7685515a" width="260" alt="I open-sourced the status dashboard I use to watch my cloud vendor stack. The backstory: I audited…"/></a>
+  <a href="https://infosec.exchange/@brian_greenberg/117029046806458976" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_2.png?v=648874ef" width="260" alt="✨ A sparkle icon shows up in an app you own. Nobody in IT put it there. A user opens a ticket…"/></a>
+  <a href="https://infosec.exchange/@brian_greenberg/117027001333118979" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_3.png?v=bfa336fa" width="260" alt="Even though this isn’t a true photo or from a real town, this is the kind of attitude I can get…"/></a>
 </p>
 <!-- MASTODON-POST-LIST:END -->
 
