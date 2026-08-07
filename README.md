@@ -27,7 +27,7 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 <!-- ACTIVITY-CARD:START -->
 <p align="center">
-  <a href="https://github.com/bjgreenberg" target="_blank" rel="noopener noreferrer"><img src="assets/activity_card.png?v=b89ad762" width="760" alt="GitHub activity — 4,919 total contributions, 26-day current streak, 43-day longest streak"/></a>
+  <a href="https://github.com/bjgreenberg" target="_blank" rel="noopener noreferrer"><img src="assets/activity_card.png?v=8b7e2e5c" width="760" alt="GitHub activity — 4,968 total contributions, 27-day current streak, 43-day longest streak"/></a>
 </p>
 <!-- ACTIVITY-CARD:END -->
 
@@ -35,7 +35,7 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 <!-- FEATURED-PROJECT:START -->
 <p align="center">
-  <a href="https://github.com/bjgreenberg/senior-engineering-partner" target="_blank" rel="noopener noreferrer"><img src="assets/featured_card.png?v=24373610" width="760" alt="Featured project — bjgreenberg/senior-engineering-partner: Python · Apache-2.0 · v1.24.0 · 143 stars · 14 forks"/></a>
+  <a href="https://github.com/bjgreenberg/senior-engineering-partner" target="_blank" rel="noopener noreferrer"><img src="assets/featured_card.png?v=04e72b97" width="760" alt="Featured project — bjgreenberg/senior-engineering-partner: Python · Apache-2.0 · v1.24.0 · 144 stars · 14 forks"/></a>
 </p>
 <p align="center">
   Install it in Claude Code: <code>/plugin marketplace add bjgreenberg/senior-engineering-partner</code> → <code>/plugin install senior-engineering-partner@bjgreenberg</code>
