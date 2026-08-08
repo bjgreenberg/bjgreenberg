@@ -27,7 +27,7 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 <!-- ACTIVITY-CARD:START -->
 <p align="center">
-  <a href="https://github.com/bjgreenberg" target="_blank" rel="noopener noreferrer"><img src="assets/activity_card.png?v=8b7e2e5c" width="760" alt="GitHub activity — 4,968 total contributions, 27-day current streak, 43-day longest streak"/></a>
+  <a href="https://github.com/bjgreenberg" target="_blank" rel="noopener noreferrer"><img src="assets/activity_card.png?v=03134b54" width="760" alt="GitHub activity — 4,979 total contributions, 27-day current streak, 43-day longest streak"/></a>
 </p>
 <!-- ACTIVITY-CARD:END -->
 
@@ -64,9 +64,9 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 <!-- MASTODON-POST-LIST:START -->
 <p align="center">
-  <a href="https://infosec.exchange/@brian_greenberg/117029823603021771" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_1.png?v=7685515a" width="260" alt="I open-sourced the status dashboard I use to watch my cloud vendor stack. The backstory: I audited…"/></a>
-  <a href="https://infosec.exchange/@brian_greenberg/117029046806458976" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_2.png?v=648874ef" width="260" alt="✨ A sparkle icon shows up in an app you own. Nobody in IT put it there. A user opens a ticket…"/></a>
-  <a href="https://infosec.exchange/@brian_greenberg/117027001333118979" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_3.png?v=bfa336fa" width="260" alt="Even though this isn’t a true photo or from a real town, this is the kind of attitude I can get…"/></a>
+  <a href="https://infosec.exchange/@brian_greenberg/117055453128827119" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_1.png?v=19b83561" width="260" alt="A software investor told an AI agent, 11 times in all caps, DO NOT TOUCH ANYTHING WITHOUT…"/></a>
+  <a href="https://infosec.exchange/@brian_greenberg/117055381879562071" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_2.png?v=7401e53b" width="260" alt="Is it just me, or is Fable the pro &amp; Opus the occasionally drunk intern? This is what my week has…"/></a>
+  <a href="https://infosec.exchange/@brian_greenberg/117029823603021771" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_3.png?v=7685515a" width="260" alt="I open-sourced the status dashboard I use to watch my cloud vendor stack. The backstory: I audited…"/></a>
 </p>
 <!-- MASTODON-POST-LIST:END -->
 
