@@ -29,7 +29,9 @@ jobs:
           python-version: '3.12'
 
       - name: Install dependencies
-        run: pip install -r scripts/requirements.txt
+        # --require-hashes: the lockfile carries sha256 hashes (compiled from
+        # scripts/requirements.in) — integrity-verified, not just pinned.
+        run: pip install --require-hashes -r scripts/requirements.txt
 
       - name: Generate post cards and refresh README
         env:

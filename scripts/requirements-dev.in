@@ -1,0 +1,11 @@
+# Top-level dev / CI tools for scripts/ — version-pinned so an unreviewed
+# upgrade can't silently enter CI; Dependabot proposes reviewed bumps
+# (.github/dependabot.yml). The installable lockfile is requirements-dev.txt —
+# compiled from this file with hashes (pinning alone doesn't verify integrity;
+# the hash does, and the pip-audit gate catches a known-vulnerable pin):
+#   uv pip compile --generate-hashes --python-version 3.12 \
+#     scripts/requirements-dev.in -o scripts/requirements-dev.txt
+# Runtime deps live in requirements.in / requirements.txt.
+pytest==9.1.1
+bandit==1.9.4
+pip-audit==2.10.1

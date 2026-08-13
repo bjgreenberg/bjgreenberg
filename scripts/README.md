@@ -1,6 +1,6 @@
 # Profile README automation
 
-Last updated: 2026-08-13 05:08 PM CDT
+Last updated: 2026-08-13 05:09 PM CDT
 
 [![CI](https://github.com/bjgreenberg/bjgreenberg/actions/workflows/ci.yml/badge.svg)](https://github.com/bjgreenberg/bjgreenberg/actions/workflows/ci.yml)
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](../LICENSE)
@@ -80,7 +80,10 @@ attribute for basic screen-reader accessibility.
 ## Prerequisites
 
 - Python 3.12+
-- Pillow (pinned in [`requirements.txt`](requirements.txt))
+- Pillow (hash-locked in [`requirements.txt`](requirements.txt), which is
+  compiled from the top-level pins in [`requirements.in`](requirements.in) —
+  to bump a dependency, edit the `.in` file and recompile:
+  `uv pip compile --generate-hashes --python-version 3.12 scripts/requirements.in -o scripts/requirements.txt`)
 - A TrueType font:
   - **Ubuntu CI** — DejaVu (`fonts-dejavu-core`, preinstalled on `ubuntu-latest`)
   - **macOS (local)** — Arial (preinstalled)
@@ -219,7 +222,7 @@ post URL, alt text).
 | A Mastodon **link** post showed the avatar on CI but the article image locally | The news site blocked/rate-limited the GitHub Actions datacenter IP during the direct `og:image` scrape. `masto_card_image` now pulls the preview from the instance CDN (`media.infosec.exchange`) instead, which the runner reaches reliably; the direct scrape is only a fallback. |
 | Blog card has no image | The post had no inline image **and** no `og:image`. Add a featured image to the post. |
 | Cards in a row have uneven heights | Should not happen — height is fixed per section via the `*_LINES` constants. If you change those, both cards in a section must use the same values. |
-| `pip install` fails on the runner | The pinned Pillow version may lack a wheel for the runner's Python. Bump `Pillow==` in `requirements.txt` to a version with a `cp312` wheel. |
+| `pip install` fails on the runner | The pinned Pillow version may lack a wheel for the runner's Python. Bump `Pillow==` in `requirements.in` and recompile the hash-locked `requirements.txt` (command under Prerequisites). A hash-mismatch error means the fetched artifact differs from the locked one — investigate before re-locking. |
 | Emoji missing from card text | Expected — emoji are stripped (no color-glyph support). The full post still has them. |
 | GitHub Activity card missing / not updating | No token available (`github_token()` logged a warning and the section was skipped), or the GraphQL call failed. Confirm the workflow passes `GITHUB_TOKEN`; locally run with `GH_TOKEN=$(gh auth token)`. |
 | Current streak shows 0 despite recent activity | The contribution calendar includes future days (count 0 through Dec 31); `compute_activity_stats` drops days after today so they can't read as a broken streak. If you still see 0, the most recent contribution is older than yesterday. |
