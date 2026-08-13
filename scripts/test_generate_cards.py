@@ -588,6 +588,60 @@ class TestRenderActivityCard:
         assert img.mode == "RGBA"
 
 
+class TestIsHttpUrl:
+    def test_accepts_absolute_http_and_https(self):
+        assert gc.is_http_url("https://example.com/post") is True
+        assert gc.is_http_url("http://example.com/post") is True
+
+    def test_rejects_other_schemes_and_relative_urls(self):
+        # M1: feed permalinks land in README href attributes — anything that
+        # isn't an absolute http(s) URL must be refused at ingestion.
+        assert gc.is_http_url("javascript:alert(1)") is False
+        assert gc.is_http_url("ftp://example.com/f") is False
+        assert gc.is_http_url("/relative/path") is False
+        assert gc.is_http_url("") is False
+
+
+class TestBuildBlogCards:
+    def test_skips_item_with_non_http_link(self, monkeypatch, tmp_path):
+        # M1: a hostile feed <link> must never reach the generated HTML.
+        feed = (
+            "<rss><channel>"
+            "<item><title>Bad</title><link>javascript:alert(1)</link>"
+            "<description>d</description></item>"
+            "<item><title>Good</title><link>https://example.com/good</link>"
+            "<description>d</description></item>"
+            "</channel></rss>"
+        )
+        monkeypatch.setattr(gc, "fetch_rss", lambda url: ET.fromstring(feed))
+        monkeypatch.setattr(gc, "ASSETS_DIR", tmp_path)
+        monkeypatch.setattr(gc, "og_image", lambda url: None)
+        monkeypatch.setattr(gc, "render_card",
+                            lambda *a, **k: Image.new("RGBA", (8, 8)))
+        cards = gc.build_blog_cards()
+        assert [c["url"] for c in cards] == ["https://example.com/good"]
+
+
+class TestBuildMastoCards:
+    def test_skips_item_with_non_http_link(self, monkeypatch, tmp_path):
+        # M1: same ingestion guard as the blog builder, Mastodon side.
+        feed = (
+            '<rss xmlns:media="http://search.yahoo.com/mrss/"><channel>'
+            "<item><link>data:text/html,x</link>"
+            "<description>a real caption</description></item>"
+            "<item><link>https://infosec.exchange/@b/1</link>"
+            "<description>another caption</description></item>"
+            "</channel></rss>"
+        )
+        monkeypatch.setattr(gc, "fetch_rss", lambda url: ET.fromstring(feed))
+        monkeypatch.setattr(gc, "ASSETS_DIR", tmp_path)
+        monkeypatch.setattr(gc, "masto_hero", lambda *a: gc.MASTO_AVATAR)
+        monkeypatch.setattr(gc, "render_card",
+                            lambda *a, **k: Image.new("RGBA", (8, 8)))
+        cards = gc.build_masto_cards()
+        assert [c["url"] for c in cards] == ["https://infosec.exchange/@b/1"]
+
+
 class TestActivityToHtml:
     def test_emits_clickable_image_with_escaped_alt_and_width(self):
         card = gc.Card(asset_path=None, rel_src="assets/activity_card.png?v=abc12345",
@@ -599,6 +653,14 @@ class TestActivityToHtml:
         assert 'assets/activity_card.png?v=abc12345' in out
         assert "&quot;stats&quot; &amp; streaks" in out  # HTML-escaped
         assert out.startswith('<p align="center">')
+
+    def test_escapes_quote_in_url_attribute(self):
+        # M1: a URL containing `"` must not break out of the href attribute.
+        card = gc.Card(asset_path=None, rel_src="a.png",
+                       url='https://example.com/y"onmouseover=x', alt="t")
+        out = gc.activity_to_html(card)
+        assert '/y"onmouseover' not in out
+        assert '/y&quot;onmouseover' in out
 
 
 class TestCardsToHtml:
@@ -614,6 +676,15 @@ class TestCardsToHtml:
         assert f'width="{gc.DISPLAY_W}"' in html_out
         # Alt text must be HTML-escaped to survive quotes.
         assert "&quot;quoted&quot;" in html_out
+
+    def test_escapes_quote_in_url_attribute(self):
+        # M1: a feed-supplied URL containing `"` must not break out of the
+        # href attribute (HTML injection into the committed README).
+        cards = [gc.Card(asset_path=None, rel_src="a.png",
+                         url='https://example.com/x"><img src=x>', alt="t")]
+        html_out = gc.cards_to_html(cards)
+        assert '/x"><img' not in html_out
+        assert 'https://example.com/x&quot;&gt;&lt;img' in html_out
 
     def test_centers_with_p_tag(self):
         cards = [gc.Card(asset_path=None, rel_src="a.png", url="u", alt="x")]

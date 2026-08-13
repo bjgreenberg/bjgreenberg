@@ -1,6 +1,6 @@
 # Profile README automation
 
-Last updated: 2026-07-07 06:19 PM CDT
+Last updated: 2026-08-13 05:06 PM CDT
 
 [![CI](https://github.com/bjgreenberg/bjgreenberg/actions/workflows/ci.yml/badge.svg)](https://github.com/bjgreenberg/bjgreenberg/actions/workflows/ci.yml)
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](../LICENSE)
@@ -172,6 +172,7 @@ glyphs (the link still points at the full original post).
 | `strip_emoji` | Drop glyphs the fonts can't render (emoji/symbols) |
 | `make_excerpt` | Word-boundary truncate with an ellipsis |
 | `is_bare_url` | Detect caption-less Mastodon link shares (skipped) |
+| `is_http_url` | Ingestion guard: only absolute http(s) permalinks may reach the README `href`s |
 | `strip_photon` | Rewrite Jetpack Photon CDN URLs (`iN.wp.com`) to their origin |
 | `asset_version` | Content hash appended as `?v=` to card URLs (cache busting) |
 | `og_image` | Scrape a page's `og:image` (post permalink or linked article); HTML-unescapes the result |

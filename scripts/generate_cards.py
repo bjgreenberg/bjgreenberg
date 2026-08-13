@@ -336,6 +336,16 @@ def is_bare_url(text: str) -> bool:
     return bool(re.match(r"^https?://\S+$", text.strip()))
 
 
+def is_http_url(url: str) -> bool:
+    """True if ``url`` is an absolute http(s) URL.
+
+    Feed-supplied permalinks are embedded as ``href`` values in the committed
+    README, so anything else (``javascript:``, ``data:``, a relative path) is
+    refused at ingestion and can never reach the generated HTML.
+    """
+    return url.startswith(("http://", "https://"))
+
+
 def strip_photon(url: str) -> str:
     """Rewrite a Jetpack Photon CDN URL to its origin URL.
 
@@ -742,6 +752,9 @@ def build_blog_cards() -> list[Card]:
         url = (item.findtext("link") or "").strip()
         if not title or not url:
             continue
+        if not is_http_url(url):
+            log.warning("Skipping blog item with non-http(s) link: %r", url)
+            continue
 
         blurb = strip_tags(item.findtext("description"))
         blurb = re.split(r"\s+The post\s+", blurb)[0].strip()  # drop WP boilerplate
@@ -781,6 +794,9 @@ def build_masto_cards() -> list[Card]:
         raw_desc = item.findtext("description") or ""
         text = collapse_ws(strip_tags(raw_desc))
         if not url or not text or is_bare_url(text):
+            continue
+        if not is_http_url(url):
+            log.warning("Skipping Mastodon item with non-http(s) link: %r", url)
             continue
 
         hero = masto_hero(item, url, raw_desc)
@@ -1055,7 +1071,8 @@ def activity_to_html(card: Card) -> str:
     """Render a centered, clickable full-width card image link (760px row)."""
     return (
         '<p align="center">\n'
-        f'  <a href="{card["url"]}" target="_blank" rel="noopener noreferrer">'
+        f'  <a href="{html.escape(card["url"], quote=True)}" '
+        'target="_blank" rel="noopener noreferrer">'
         f'<img src="{card["rel_src"]}" width="{ACTIVITY_DISPLAY_W}" '
         f'alt="{html.escape(card["alt"], quote=True)}"/></a>\n'
         '</p>'
@@ -1158,7 +1175,8 @@ def build_featured_cards(token: str) -> list[tuple[Card, str]]:
 def cards_to_html(cards: list[Card]) -> str:
     """Render a borderless, centered row of per-card image links."""
     anchors = [
-        f'<a href="{c["url"]}" target="_blank" rel="noopener noreferrer">'
+        f'<a href="{html.escape(c["url"], quote=True)}" '
+        'target="_blank" rel="noopener noreferrer">'
         f'<img src="{c["rel_src"]}" width="{DISPLAY_W}" '
         f'alt="{html.escape(c["alt"], quote=True)}"/></a>'
         for c in cards
