@@ -1,6 +1,6 @@
 # Profile README automation
 
-Last updated: 2026-08-13 05:06 PM CDT
+Last updated: 2026-08-13 05:08 PM CDT
 
 [![CI](https://github.com/bjgreenberg/bjgreenberg/actions/workflows/ci.yml/badge.svg)](https://github.com/bjgreenberg/bjgreenberg/actions/workflows/ci.yml)
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](../LICENSE)
@@ -167,7 +167,7 @@ glyphs (the link still points at the full original post).
 | Function | Purpose |
 |---|---|
 | `fetch_url` | HTTP GET with a UA header; optional byte cap for `<head>` scraping |
-| `fetch_rss` | Fetch + parse an RSS feed to an XML root element |
+| `fetch_rss` | Fetch + parse an RSS feed to an XML root element (byte-capped read) |
 | `strip_tags` / `collapse_ws` | Clean HTML and whitespace from feed text |
 | `strip_emoji` | Drop glyphs the fonts can't render (emoji/symbols) |
 | `make_excerpt` | Word-boundary truncate with an ellipsis |
@@ -178,7 +178,7 @@ glyphs (the link still points at the full original post).
 | `og_image` | Scrape a page's `og:image` (post permalink or linked article); HTML-unescapes the result |
 | `media_kind` | Classify a `<media:content>` as `image`/`video`/`audio` (by `medium`, then MIME `type`) |
 | `first_article_link` | First outbound article URL in a toot body, skipping mention/hashtag anchors |
-| `masto_card_image` | Instance-cached link-preview image via `/api/v1/statuses/{id}` (`card.image`) — CDN-hosted, CI-reliable |
+| `masto_card_image` | Instance-cached link-preview image via `/api/v1/statuses/{id}` (`card.image`) — CDN-hosted, CI-reliable, byte-capped read |
 | `extract_video_frame` | ffmpeg frame grab from a video attachment (skips blank frame 0); returns PNG bytes or None |
 | `_image_has_content` | True if image bytes aren't a near-flat single color (shared blank-frame check) |
 | `usable_image` | `_image_has_content` over a downloaded URL — rejects a blank poster so selection falls through |

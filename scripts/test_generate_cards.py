@@ -642,6 +642,33 @@ class TestBuildMastoCards:
         assert [c["url"] for c in cards] == ["https://infosec.exchange/@b/1"]
 
 
+class TestFeedFetchCaps:
+    """L2 — every fetch path is byte-capped, not just images/video."""
+
+    def test_fetch_rss_caps_read_size(self, monkeypatch):
+        seen = {}
+
+        def fake_fetch(url, *, max_bytes=None):
+            seen["max_bytes"] = max_bytes
+            return b"<rss/>"
+
+        monkeypatch.setattr(gc, "fetch_url", fake_fetch)
+        gc.fetch_rss("https://example.com/feed")
+        assert seen["max_bytes"] == gc.FEED_MAX_BYTES
+
+    def test_masto_card_lookup_caps_read_size(self, monkeypatch):
+        seen = {}
+
+        def fake_fetch(url, *, max_bytes=None):
+            seen["max_bytes"] = max_bytes
+            return b'{"card": {"image": "https://cdn.example/img.png"}}'
+
+        monkeypatch.setattr(gc, "fetch_url", fake_fetch)
+        img = gc.masto_card_image("https://infosec.exchange/@b/123")
+        assert img == "https://cdn.example/img.png"
+        assert seen["max_bytes"] == gc.FEED_MAX_BYTES
+
+
 class TestActivityToHtml:
     def test_emits_clickable_image_with_escaped_alt_and_width(self):
         card = gc.Card(asset_path=None, rel_src="assets/activity_card.png?v=abc12345",

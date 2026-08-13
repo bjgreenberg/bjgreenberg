@@ -8,6 +8,13 @@ on:
 permissions:
   contents: write
 
+# One run at a time: a manual dispatch overlapping the scheduled run would
+# race the final `git push` (non-fast-forward rejection). Queue, don't cancel —
+# both runs' results are wanted.
+concurrency:
+  group: blog-posts
+  cancel-in-progress: false
+
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 

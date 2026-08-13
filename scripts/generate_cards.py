@@ -48,13 +48,15 @@ import os
 import re
 import shutil
 import socket
-import subprocess  # nosec B404 — used only with fixed args + absolute ffmpeg path, no shell
+# B404: subprocess is used only with fixed args + an absolute ffmpeg path, no shell.
+import subprocess  # nosec B404
 import sys
 import tempfile
 import urllib.error
 import urllib.parse
 import urllib.request
-import xml.etree.ElementTree as ET  # nosec B405 — type hints only; parsing uses defusedxml
+# B405: imported for type hints only; all parsing goes through defusedxml.
+import xml.etree.ElementTree as ET  # nosec B405
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import TypedDict
@@ -102,6 +104,12 @@ MASTO_AVATAR = (
 CARDS_PER_SECTION = 3
 HTTP_TIMEOUT = 15
 USER_AGENT = "bjgreenberg-readme-bot/1.0"
+
+# Cap on RSS-feed and status-API bodies. First-party hosts, but capped so a
+# hostile feed (the same compromise precondition as the href-escaping guard)
+# can't OOM the runner with an unbounded body. A truncated body simply fails
+# XML/JSON parsing and degrades exactly like a network error.
+FEED_MAX_BYTES = 5_000_000
 
 # Bytes to read when scraping a page's <head> for og:image. News sites
 # (The Verge, Gizmodo, …) carry heavy <head> markup, so the 8 KB used for
@@ -288,7 +296,8 @@ def fetch_url(url: str, *, max_bytes: int | None = None) -> bytes:
     if not _host_is_public(parsed.hostname):
         raise ValueError(f"Refusing to fetch non-public host: {parsed.hostname!r}")
     req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
-    with _OPENER.open(req, timeout=HTTP_TIMEOUT) as resp:  # nosec B310 — scheme + host validated above
+    # B310: scheme + host validated above (and on every redirect hop).
+    with _OPENER.open(req, timeout=HTTP_TIMEOUT) as resp:  # nosec B310
         return resp.read(max_bytes) if max_bytes else resp.read()
 
 
@@ -298,7 +307,7 @@ def fetch_rss(url: str) -> ET.Element:
     Uses defusedxml to guard against XML attacks (billion laughs, external
     entity expansion) even though the feeds are first-party.
     """
-    return safe_xml_fromstring(fetch_url(url))
+    return safe_xml_fromstring(fetch_url(url, max_bytes=FEED_MAX_BYTES))
 
 
 def strip_tags(text: str | None) -> str:
@@ -487,7 +496,7 @@ def masto_card_image(post_url: str) -> str | None:
         return None
     api_url = f"{parts.scheme}://{parts.netloc}/api/v1/statuses/{m.group(1)}"
     try:
-        status = json.loads(fetch_url(api_url))
+        status = json.loads(fetch_url(api_url, max_bytes=FEED_MAX_BYTES))
     except (OSError, ValueError) as exc:
         log.warning("Mastodon card lookup failed for %s: %s", post_url, exc)
         return None
@@ -529,7 +538,8 @@ def extract_video_frame(video_url: str) -> bytes | None:
         Path(video_path).write_bytes(raw)
         for seconds in VIDEO_FRAME_SECONDS:
             try:
-                subprocess.run(  # nosec B603 — fixed args, absolute path, no shell, local files only
+                # B603: fixed args, absolute path, no shell, local files only.
+                subprocess.run(  # nosec B603
                     [ffmpeg, "-nostdin", "-loglevel", "error", "-y",
                      "-ss", str(seconds), "-i", video_path,
                      "-frames:v", "1", frame_path],
@@ -839,7 +849,8 @@ def _github_graphql(query: str, variables: dict[str, str], token: str) -> dict:
     }
     body = json.dumps({"query": query, "variables": variables}).encode()
     req = urllib.request.Request(GITHUB_GRAPHQL, data=body, headers=headers)
-    with urllib.request.urlopen(req, timeout=HTTP_TIMEOUT) as resp:  # nosec B310 — constant HTTPS endpoint
+    # B310: constant HTTPS endpoint (GITHUB_GRAPHQL), not derived from input.
+    with urllib.request.urlopen(req, timeout=HTTP_TIMEOUT) as resp:  # nosec B310
         payload = json.loads(resp.read())
     if payload.get("errors"):
         raise ValueError(f"GraphQL errors: {payload['errors']}")
