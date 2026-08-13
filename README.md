@@ -27,7 +27,7 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 <!-- ACTIVITY-CARD:START -->
 <p align="center">
-  <a href="https://github.com/bjgreenberg" target="_blank" rel="noopener noreferrer"><img src="assets/activity_card.png?v=10b1fd1a" width="760" alt="GitHub activity — 5,087 total contributions, 31-day current streak, 43-day longest streak"/></a>
+  <a href="https://github.com/bjgreenberg" target="_blank" rel="noopener noreferrer"><img src="assets/activity_card.png?v=8eeba7b0" width="760" alt="GitHub activity — 5,120 total contributions, 33-day current streak, 43-day longest streak"/></a>
 </p>
 <!-- ACTIVITY-CARD:END -->
 
@@ -35,13 +35,13 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 <!-- FEATURED-PROJECT:START -->
 <p align="center">
-  <a href="https://github.com/bjgreenberg/senior-engineering-partner" target="_blank" rel="noopener noreferrer"><img src="assets/featured_card.png?v=9b8a0d14" width="760" alt="Featured project — bjgreenberg/senior-engineering-partner: Python · Apache-2.0 · v1.25.0 · 147 stars · 14 forks"/></a>
+  <a href="https://github.com/bjgreenberg/senior-engineering-partner" target="_blank" rel="noopener noreferrer"><img src="assets/featured_card.png?v=9fe38126" width="760" alt="Featured project — bjgreenberg/senior-engineering-partner: Python · Apache-2.0 · v1.25.0 · 146 stars · 14 forks"/></a>
 </p>
 <p align="center">
   Install it in Claude Code: <code>/plugin marketplace add bjgreenberg/senior-engineering-partner</code> → <code>/plugin install senior-engineering-partner@bjgreenberg</code>
 </p>
 <p align="center">
-  <a href="https://github.com/bjgreenberg/vendor-dashboard" target="_blank" rel="noopener noreferrer"><img src="assets/featured_card_vendor-dashboard.png?v=ae4a70aa" width="760" alt="Featured project — bjgreenberg/vendor-dashboard: JavaScript · Apache-2.0 · v2.2.0 · 5 stars · 1 forks"/></a>
+  <a href="https://github.com/bjgreenberg/vendor-dashboard" target="_blank" rel="noopener noreferrer"><img src="assets/featured_card_vendor-dashboard.png?v=e3d65702" width="760" alt="Featured project — bjgreenberg/vendor-dashboard: JavaScript · Apache-2.0 · v2.3.1 · 4 stars · 1 forks"/></a>
 </p>
 <p align="center">
   See it live: <a href="https://briangreenberg.net/service-status">briangreenberg.net/service-status</a> · or <a href="https://deploy.workers.cloudflare.com/?url=https://github.com/bjgreenberg/vendor-dashboard">deploy your own</a>
