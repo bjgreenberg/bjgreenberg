@@ -27,7 +27,7 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 <!-- ACTIVITY-CARD:START -->
 <p align="center">
-  <a href="https://github.com/bjgreenberg" target="_blank" rel="noopener noreferrer"><img src="assets/activity_card.png?v=e0cfce3c" width="760" alt="GitHub activity — 6,277 total contributions, 21-day current streak, 43-day longest streak"/></a>
+  <a href="https://github.com/bjgreenberg" target="_blank" rel="noopener noreferrer"><img src="assets/activity_card.png?v=289bdca6" width="760" alt="GitHub activity — 6,376 total contributions, 23-day current streak, 43-day longest streak"/></a>
 </p>
 <!-- ACTIVITY-CARD:END -->
 
@@ -35,7 +35,7 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 <!-- FEATURED-PROJECT:START -->
 <p align="center">
-  <a href="https://github.com/bjgreenberg/senior-engineering-partner" target="_blank" rel="noopener noreferrer"><img src="assets/featured_card.png?v=eda021da" width="760" alt="Featured project — bjgreenberg/senior-engineering-partner: Python · Apache-2.0 · v1.27.0 · 148 stars · 16 forks"/></a>
+  <a href="https://github.com/bjgreenberg/senior-engineering-partner" target="_blank" rel="noopener noreferrer"><img src="assets/featured_card.png?v=de726691" width="760" alt="Featured project — bjgreenberg/senior-engineering-partner: Python · Apache-2.0 · v1.28.0 · 148 stars · 16 forks"/></a>
 </p>
 <p align="center">
   Install it in Claude Code: <code>/plugin marketplace add bjgreenberg/senior-engineering-partner</code> → <code>/plugin install senior-engineering-partner@bjgreenberg</code>
@@ -52,9 +52,9 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 <!-- BLOG-POST-LIST:START -->
 <p align="center">
-  <a href="https://briangreenberg.net/2026/07/30/default-on-ai-are-saas-vendors-outsourcing-their-risk-to-you/" target="_blank" rel="noopener noreferrer"><img src="assets/blog_card_1.png?v=83bcfabc" width="260" alt="Default-On AI: Are SaaS Vendors Outsourcing Their Risk To You?"/></a>
-  <a href="https://briangreenberg.net/2026/06/30/a-claude-code-skill-to-help-you-write-better-code/" target="_blank" rel="noopener noreferrer"><img src="assets/blog_card_2.png?v=9a368dea" width="260" alt="A Claude Code Skill to help you write better code."/></a>
-  <a href="https://briangreenberg.net/2026/05/07/micro-transformations-ais-real-path-to-roi/" target="_blank" rel="noopener noreferrer"><img src="assets/blog_card_3.png?v=6d6210c9" width="260" alt="Micro-Transformations: AI&#x27;s Real Path to ROI"/></a>
+  <a href="https://briangreenberg.net/2026/08/07/your-ai-is-learning-from-someone-make-sure-its-your-best-engineer/" target="_blank" rel="noopener noreferrer"><img src="assets/blog_card_1.png?v=1e1aafd8" width="260" alt="Your AI Is Learning From Someone. Make Sure It’s Your Best Engineer"/></a>
+  <a href="https://briangreenberg.net/2026/07/30/default-on-ai-are-saas-vendors-outsourcing-their-risk-to-you/" target="_blank" rel="noopener noreferrer"><img src="assets/blog_card_2.png?v=83bcfabc" width="260" alt="Default-On AI: Are SaaS Vendors Outsourcing Their Risk To You?"/></a>
+  <a href="https://briangreenberg.net/2026/06/30/a-claude-code-skill-to-help-you-write-better-code/" target="_blank" rel="noopener noreferrer"><img src="assets/blog_card_3.png?v=9a368dea" width="260" alt="A Claude Code Skill to help you write better code."/></a>
 </p>
 <!-- BLOG-POST-LIST:END -->
 
