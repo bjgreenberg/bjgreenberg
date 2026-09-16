@@ -27,7 +27,7 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 <!-- ACTIVITY-CARD:START -->
 <p align="center">
-  <a href="https://github.com/bjgreenberg" target="_blank" rel="noopener noreferrer"><img src="assets/activity_card.png?v=289bdca6" width="760" alt="GitHub activity — 6,376 total contributions, 23-day current streak, 43-day longest streak"/></a>
+  <a href="https://github.com/bjgreenberg" target="_blank" rel="noopener noreferrer"><img src="assets/activity_card.png?v=725f2955" width="760" alt="GitHub activity — 6,403 total contributions, 24-day current streak, 43-day longest streak"/></a>
 </p>
 <!-- ACTIVITY-CARD:END -->
 
@@ -64,9 +64,9 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 <!-- MASTODON-POST-LIST:START -->
 <p align="center">
-  <a href="https://infosec.exchange/@brian_greenberg/117208764176282101" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_1.png?v=3d7f5d93" width="260" alt="Some of the most widely shared content from the Iran conflict so far has been AI-animated LEGO…"/></a>
-  <a href="https://infosec.exchange/@brian_greenberg/117207457897746276" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_2.png?v=5e5dff9a" width="260" alt="Last night I was back at the Metropolitan Club with a room full of Chicago CISOs, and the whole…"/></a>
-  <a href="https://infosec.exchange/@brian_greenberg/117201997266526749" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_3.png?v=95616ff4" width="260" alt="Brian Krebs found his own driver&#x27;s license for sale on a Russian crime forum this week. The…"/></a>
+  <a href="https://infosec.exchange/@brian_greenberg/117275439206372993" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_1.png?v=8c1f163a" width="260" alt="Last summer, an AI coding agent wiped a production database holding records on over a thousand…"/></a>
+  <a href="https://infosec.exchange/@brian_greenberg/117208764176282101" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_2.png?v=3d7f5d93" width="260" alt="Some of the most widely shared content from the Iran conflict so far has been AI-animated LEGO…"/></a>
+  <a href="https://infosec.exchange/@brian_greenberg/117207457897746276" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_3.png?v=5e5dff9a" width="260" alt="Last night I was back at the Metropolitan Club with a room full of Chicago CISOs, and the whole…"/></a>
 </p>
 <!-- MASTODON-POST-LIST:END -->
 
