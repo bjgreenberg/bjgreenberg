@@ -27,7 +27,7 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 <!-- ACTIVITY-CARD:START -->
 <p align="center">
-  <a href="https://github.com/bjgreenberg" target="_blank" rel="noopener noreferrer"><img src="assets/activity_card.png?v=725f2955" width="760" alt="GitHub activity — 6,403 total contributions, 24-day current streak, 43-day longest streak"/></a>
+  <a href="https://github.com/bjgreenberg" target="_blank" rel="noopener noreferrer"><img src="assets/activity_card.png?v=fe5907b8" width="760" alt="GitHub activity — 6,440 total contributions, 25-day current streak, 43-day longest streak"/></a>
 </p>
 <!-- ACTIVITY-CARD:END -->
 
@@ -35,7 +35,7 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 <!-- FEATURED-PROJECT:START -->
 <p align="center">
-  <a href="https://github.com/bjgreenberg/senior-engineering-partner" target="_blank" rel="noopener noreferrer"><img src="assets/featured_card.png?v=de726691" width="760" alt="Featured project — bjgreenberg/senior-engineering-partner: Python · Apache-2.0 · v1.28.0 · 148 stars · 16 forks"/></a>
+  <a href="https://github.com/bjgreenberg/senior-engineering-partner" target="_blank" rel="noopener noreferrer"><img src="assets/featured_card.png?v=39d9f35d" width="760" alt="Featured project — bjgreenberg/senior-engineering-partner: Python · Apache-2.0 · v1.28.0 · 148 stars · 15 forks"/></a>
 </p>
 <p align="center">
   Install it in Claude Code: <code>/plugin marketplace add bjgreenberg/senior-engineering-partner</code> → <code>/plugin install senior-engineering-partner@bjgreenberg</code>
@@ -64,9 +64,9 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 <!-- MASTODON-POST-LIST:START -->
 <p align="center">
-  <a href="https://infosec.exchange/@brian_greenberg/117275439206372993" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_1.png?v=8c1f163a" width="260" alt="Last summer, an AI coding agent wiped a production database holding records on over a thousand…"/></a>
-  <a href="https://infosec.exchange/@brian_greenberg/117208764176282101" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_2.png?v=3d7f5d93" width="260" alt="Some of the most widely shared content from the Iran conflict so far has been AI-animated LEGO…"/></a>
-  <a href="https://infosec.exchange/@brian_greenberg/117207457897746276" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_3.png?v=5e5dff9a" width="260" alt="Last night I was back at the Metropolitan Club with a room full of Chicago CISOs, and the whole…"/></a>
+  <a href="https://infosec.exchange/@brian_greenberg/117284484895331890" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_1.png?v=8c462877" width="260" alt="Have you been looking for something to help you focus? Have you heard of a pomodoro timer?It&#x27;s an…"/></a>
+  <a href="https://infosec.exchange/@brian_greenberg/117275439206372993" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_2.png?v=8c1f163a" width="260" alt="Last summer, an AI coding agent wiped a production database holding records on over a thousand…"/></a>
+  <a href="https://infosec.exchange/@brian_greenberg/117208764176282101" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_3.png?v=3d7f5d93" width="260" alt="Some of the most widely shared content from the Iran conflict so far has been AI-animated LEGO…"/></a>
 </p>
 <!-- MASTODON-POST-LIST:END -->
 
