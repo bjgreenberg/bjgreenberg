@@ -27,7 +27,7 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 <!-- ACTIVITY-CARD:START -->
 <p align="center">
-  <a href="https://github.com/bjgreenberg" target="_blank" rel="noopener noreferrer"><img src="assets/activity_card.png?v=fe5907b8" width="760" alt="GitHub activity — 6,440 total contributions, 25-day current streak, 43-day longest streak"/></a>
+  <a href="https://github.com/bjgreenberg" target="_blank" rel="noopener noreferrer"><img src="assets/activity_card.png?v=96248e5f" width="760" alt="GitHub activity — 6,484 total contributions, 26-day current streak, 43-day longest streak"/></a>
 </p>
 <!-- ACTIVITY-CARD:END -->
 
@@ -64,9 +64,9 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 <!-- MASTODON-POST-LIST:START -->
 <p align="center">
-  <a href="https://infosec.exchange/@brian_greenberg/117284484895331890" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_1.png?v=8c462877" width="260" alt="Have you been looking for something to help you focus? Have you heard of a pomodoro timer?It&#x27;s an…"/></a>
-  <a href="https://infosec.exchange/@brian_greenberg/117275439206372993" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_2.png?v=8c1f163a" width="260" alt="Last summer, an AI coding agent wiped a production database holding records on over a thousand…"/></a>
-  <a href="https://infosec.exchange/@brian_greenberg/117208764176282101" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_3.png?v=3d7f5d93" width="260" alt="Some of the most widely shared content from the Iran conflict so far has been AI-animated LEGO…"/></a>
+  <a href="https://infosec.exchange/@brian_greenberg/117286772839579666" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_1.png?v=a2e2359a" width="260" alt="☕️"/></a>
+  <a href="https://infosec.exchange/@brian_greenberg/117284484895331890" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_2.png?v=8c462877" width="260" alt="Have you been looking for something to help you focus? Have you heard of a pomodoro timer?It&#x27;s an…"/></a>
+  <a href="https://infosec.exchange/@brian_greenberg/117275439206372993" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_3.png?v=8c1f163a" width="260" alt="Last summer, an AI coding agent wiped a production database holding records on over a thousand…"/></a>
 </p>
 <!-- MASTODON-POST-LIST:END -->
 
