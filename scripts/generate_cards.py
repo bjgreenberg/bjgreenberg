@@ -1205,6 +1205,41 @@ def update_section(readme: str, tag: str, content: str) -> str:
     )
 
 
+STAMP_TAG = "README-STAMP"
+
+
+def readme_stamp(now: datetime) -> str:
+    """The README's ``Last updated:`` line, in the fleet's stamp format.
+
+    Chicago local time, 12-hour, live zone abbreviation — the same shape every
+    other repo's stamp uses (``2026-09-18 04:30 PM CDT``), italicised because it
+    sits at the foot of a public profile page.
+    """
+    try:
+        local = now.astimezone(ZoneInfo(DISPLAY_TZ))
+    except Exception as exc:  # noqa: BLE001 — missing tzdata → show source zone
+        log.warning("Timezone %s unavailable: %s", DISPLAY_TZ, exc)
+        local = now
+    return f"_Last updated: {local.strftime('%Y-%m-%d %I:%M %p %Z')}_"
+
+
+def restamp(original: str, updated: str, now: datetime) -> str:
+    """Move the README's stamp only when something other than the stamp changed.
+
+    The house rule is that the stamp moves in the same commit as the edit, and
+    a hand-written stamp here would be stale within a day because this script
+    rewrites the README on a schedule. So the generator owns the stamp. It
+    leaves it alone on a run that changed nothing else, so an idle day never
+    produces a stamp-only commit.
+    """
+    if STAMP_TAG not in original:
+        log.warning("README has no %s markers — stamp not written.", STAMP_TAG)
+        return updated
+    if update_section(original, STAMP_TAG, "") == update_section(updated, STAMP_TAG, ""):
+        return updated
+    return update_section(updated, STAMP_TAG, readme_stamp(now))
+
+
 def main() -> int:
     """Generate cards for both feeds and update the README. Returns exit code."""
     parser = argparse.ArgumentParser(description="Generate README post cards.")
@@ -1213,7 +1248,8 @@ def main() -> int:
     args = parser.parse_args()
 
     ASSETS_DIR.mkdir(exist_ok=True)
-    readme = README_PATH.read_text()
+    original = README_PATH.read_text()
+    readme = original
 
     # Each feed is independent: one failing must not wipe the other's section.
     try:
@@ -1252,6 +1288,8 @@ def main() -> int:
                     for card, caption in build_featured_cards(token)))
         except Exception as exc:  # noqa: BLE001
             log.error("Featured-project section failed: %s", exc)
+
+    readme = restamp(original, readme, datetime.now(timezone.utc))
 
     if args.dry_run:
         log.info("Dry run — README not written.")
