@@ -1,6 +1,6 @@
 # Profile README automation
 
-Last updated: 2026-08-13 05:09 PM CDT
+Last updated: 2026-09-18 04:27 PM CDT
 
 [![CI](https://github.com/bjgreenberg/bjgreenberg/actions/workflows/ci.yml/badge.svg)](https://github.com/bjgreenberg/bjgreenberg/actions/workflows/ci.yml)
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](../LICENSE)
@@ -43,7 +43,8 @@ flowchart TB
     render --> upd["update_section between<br/>HTML-comment markers"]
     renderA --> upd
     renderF --> upd
-    upd --> readme[("../README.md profile sections")]
+    upd --> stamp["restamp: move the Last updated line<br/>only if another section changed"]
+    stamp --> readme[("../README.md profile sections")]
     assets --> commit["bot commits changed PNGs + README to main"]
     readme --> commit
     commit --> ci["CI: pytest + bandit — non-gating"]
@@ -203,6 +204,7 @@ glyphs (the link still points at the full original post).
 | `render_featured_card` / `build_featured_card` | Render the pin-style Featured Project card → `Card` |
 | `cards_to_html` / `activity_to_html` | Centered `<p>` of `<a><img></a>` link(s) |
 | `update_section` | Replace content between `<!-- TAG:START/END -->` markers |
+| `readme_stamp` / `restamp` | Write the profile README's `Last updated:` line (between `README-STAMP` markers), moving it only when another section changed, so an idle day makes no stamp-only commit |
 | `main` | Orchestrate both feeds; `--dry-run` supported |
 
 `Card` is a `TypedDict` describing a rendered card (asset path, README `src`,
