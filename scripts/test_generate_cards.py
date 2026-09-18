@@ -180,6 +180,44 @@ class TestUpdateSection:
         assert once == twice
 
 
+class TestReadmeStamp:
+    NOW = datetime(2026, 9, 18, 21, 30, tzinfo=timezone.utc)  # 4:30 PM CDT
+
+    @staticmethod
+    def _readme(body: str, stamp: str = "_Last updated: 2026-01-01 09:00 AM CST_") -> str:
+        return (f"<!-- X:START -->\n{body}\n<!-- X:END -->\n"
+                f"<!-- README-STAMP:START -->\n{stamp}\n<!-- README-STAMP:END -->")
+
+    def test_stamp_uses_fleet_format_in_chicago_time(self):
+        assert gc.readme_stamp(self.NOW) == "_Last updated: 2026-09-18 04:30 PM CDT_"
+
+    def test_stamp_matches_the_docs_stamp_gate_pattern(self):
+        # developer-handbook check-doc-stamps.py STAMP_RE, verbatim.
+        import re
+        assert re.search(r"^\s*[_*]{0,2}\s*Last updated:\s*\S", gc.readme_stamp(self.NOW), re.M)
+
+    def test_moves_when_content_changed(self):
+        original = self._readme("old")
+        updated = gc.update_section(original, "X", "new")
+        out = gc.restamp(original, updated, self.NOW)
+        assert "_Last updated: 2026-09-18 04:30 PM CDT_" in out
+        assert "new" in out
+
+    def test_stays_put_when_nothing_else_changed(self):
+        original = self._readme("same")
+        updated = gc.update_section(original, "X", "same")
+        assert gc.restamp(original, updated, self.NOW) == original
+
+    def test_missing_markers_leave_readme_untouched(self):
+        assert gc.restamp("a", "b", self.NOW) == "b"
+
+    def test_real_readme_carries_the_markers(self):
+        # Without them the generator silently writes no stamp — fail loudly here.
+        text = gc.README_PATH.read_text()
+        assert "<!-- README-STAMP:START -->" in text
+        assert "<!-- README-STAMP:END -->" in text
+
+
 class TestMediaKind:
     def test_classifies_by_medium_attribute(self):
         m = ET.fromstring('<content xmlns="x" medium="video"/>')
