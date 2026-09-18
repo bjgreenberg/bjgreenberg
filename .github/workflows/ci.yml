@@ -41,15 +41,15 @@ jobs:
       - name: Dependency audit (pip-audit)
         run: pip-audit -r scripts/requirements.txt -r scripts/requirements-dev.txt
 
-  # Documentation gates shared across the fleet (developer-handbook ADR 0003):
-  # docs-render renders every Mermaid diagram (the pipeline diagram in
-  # scripts/README.md); docs-stamp fails a README edit whose `Last updated:`
-  # stamp didn't move. Same non-gating safety-net role as `test`: main has no
-  # branch protection (the bot commits directly), so these email rather than
-  # block. Pinned to @main on purpose; the scripts live in the handbook, never
-  # here.
+  # Render-check every ```mermaid block in the repo's Markdown (the pipeline
+  # diagram in scripts/README.md). Same non-gating safety-net role as `test`:
+  # main has no branch protection (the bot commits directly), so this emails on
+  # a broken diagram rather than blocking a merge. Digest-pinned mermaid-cli
+  # container — no Node/Chrome on the runner; Docker is preinstalled.
   docs-render:
-    uses: bjgreenberg/developer-handbook/.github/workflows/docs-render.yml@main
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-  docs-stamp:
-    uses: bjgreenberg/developer-handbook/.github/workflows/docs-stamp.yml@main
+      - name: Render-check Mermaid diagrams
+        run: scripts/render-diagrams.sh
