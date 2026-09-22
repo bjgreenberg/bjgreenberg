@@ -27,7 +27,7 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 <!-- ACTIVITY-CARD:START -->
 <p align="center">
-  <a href="https://github.com/bjgreenberg" target="_blank" rel="noopener noreferrer"><img src="assets/activity_card.png?v=f80f7aa9" width="760" alt="GitHub activity — 6,626 total contributions, 29-day current streak, 43-day longest streak"/></a>
+  <a href="https://github.com/bjgreenberg" target="_blank" rel="noopener noreferrer"><img src="assets/activity_card.png?v=458e61a1" width="760" alt="GitHub activity — 6,639 total contributions, 29-day current streak, 43-day longest streak"/></a>
 </p>
 <!-- ACTIVITY-CARD:END -->
 
@@ -35,13 +35,13 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 <!-- FEATURED-PROJECT:START -->
 <p align="center">
-  <a href="https://github.com/bjgreenberg/senior-engineering-partner" target="_blank" rel="noopener noreferrer"><img src="assets/featured_card.png?v=39d9f35d" width="760" alt="Featured project — bjgreenberg/senior-engineering-partner: Python · Apache-2.0 · v1.28.0 · 148 stars · 15 forks"/></a>
+  <a href="https://github.com/bjgreenberg/senior-engineering-partner" target="_blank" rel="noopener noreferrer"><img src="assets/featured_card.png?v=de726691" width="760" alt="Featured project — bjgreenberg/senior-engineering-partner: Python · Apache-2.0 · v1.28.0 · 148 stars · 16 forks"/></a>
 </p>
 <p align="center">
   Install it in Claude Code: <code>/plugin marketplace add bjgreenberg/senior-engineering-partner</code> → <code>/plugin install senior-engineering-partner@bjgreenberg</code>
 </p>
 <p align="center">
-  <a href="https://github.com/bjgreenberg/vendor-dashboard" target="_blank" rel="noopener noreferrer"><img src="assets/featured_card_vendor-dashboard.png?v=a9392cad" width="760" alt="Featured project — bjgreenberg/vendor-dashboard: JavaScript · Apache-2.0 · v2.4.0 · 5 stars · 1 forks"/></a>
+  <a href="https://github.com/bjgreenberg/vendor-dashboard" target="_blank" rel="noopener noreferrer"><img src="assets/featured_card_vendor-dashboard.png?v=3dc4724f" width="760" alt="Featured project — bjgreenberg/vendor-dashboard: JavaScript · Apache-2.0 · v2.5.0 · 5 stars · 1 forks"/></a>
 </p>
 <p align="center">
   See it live: <a href="https://briangreenberg.net/service-status">briangreenberg.net/service-status</a> · or <a href="https://deploy.workers.cloudflare.com/?url=https://github.com/bjgreenberg/vendor-dashboard">deploy your own</a>
@@ -119,5 +119,5 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 > "Technology is only as powerful as the intentions of the people behind it."
 
 <!-- README-STAMP:START -->
-_Last updated: 2026-09-21 09:46 AM CDT_
+_Last updated: 2026-09-22 08:01 AM CDT_
 <!-- README-STAMP:END -->
