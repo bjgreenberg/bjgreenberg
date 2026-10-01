@@ -11,7 +11,7 @@
 
 # 👋 Hi, I'm Brian Greenberg
 
-- 🚀 Chief Information Officer @ RHR International
+- 🚀 Fractional & Interim CIO / CTO / CISO
 - 🎓 Cybersecurity Professor at DePaul University
 - ✍️ Contributor on the Forbes Technology Council
 - 🤖 Building AI-native workflows for the modern enterprise
