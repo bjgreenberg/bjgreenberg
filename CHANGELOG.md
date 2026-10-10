@@ -5,6 +5,18 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [1.2.0](https://github.com/bjgreenberg/bjgreenberg/compare/v1.1.0...v1.2.0) (2026-10-07)
+
+
+### Features
+
+* **readme:** the generator owns the profile README's Last updated stamp ([#17](https://github.com/bjgreenberg/bjgreenberg/issues/17)) ([e9c0c6a](https://github.com/bjgreenberg/bjgreenberg/commit/e9c0c6a14ea9f2a6d244c8c393c600dc7852ee5a))
+
+
+### Bug Fixes
+
+* **deps:** bump urllib3 to 2.8.0; CI badge tracks main ([#20](https://github.com/bjgreenberg/bjgreenberg/issues/20)) ([bf437f8](https://github.com/bjgreenberg/bjgreenberg/commit/bf437f8575c32e523a37efb341e1a0240ca20eb6))
+
 ## [1.1.0](https://github.com/bjgreenberg/bjgreenberg/compare/v1.0.0...v1.1.0) (2026-08-13)
 
 
