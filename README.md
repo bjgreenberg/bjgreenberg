@@ -27,7 +27,7 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 <!-- ACTIVITY-CARD:START -->
 <p align="center">
-  <a href="https://github.com/bjgreenberg" target="_blank" rel="noopener noreferrer"><img src="assets/activity_card.png?v=f7f50850" width="760" alt="GitHub activity — 8,106 total contributions, 55-day current streak, 55-day longest streak"/></a>
+  <a href="https://github.com/bjgreenberg" target="_blank" rel="noopener noreferrer"><img src="assets/activity_card.png?v=133959de" width="760" alt="GitHub activity — 8,176 total contributions, 56-day current streak, 56-day longest streak"/></a>
 </p>
 <!-- ACTIVITY-CARD:END -->
 
@@ -65,7 +65,7 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 <!-- MASTODON-POST-LIST:START -->
 <p align="center">
   <a href="https://infosec.exchange/@brian_greenberg/117452650368958240" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_1.png?v=1c937ad6" width="260" alt="&quot;Largely sidesteps these controls.&quot; That&#x27;s Apple describing its own Full Disk Access setting in its…"/></a>
-  <a href="https://infosec.exchange/@brian_greenberg/117372216549139036" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_2.png?v=51868144" width="260" alt="🤬 … oh Microsoft 🤦🏻‍♂️ Somewhere right now, a nonprofit staffer is clicking around Microsoft 365…"/></a>
+  <a href="https://infosec.exchange/@brian_greenberg/117372216549139036" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_2.png?v=0625f741" width="260" alt="🤬 … oh Microsoft 🤦🏻‍♂️ Somewhere right now, a nonprofit staffer is clicking around Microsoft 365…"/></a>
   <a href="https://infosec.exchange/@brian_greenberg/117286772839579666" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_3.png?v=a2e2359a" width="260" alt="☕️"/></a>
 </p>
 <!-- MASTODON-POST-LIST:END -->
@@ -119,5 +119,5 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 > "Technology is only as powerful as the intentions of the people behind it."
 
 <!-- README-STAMP:START -->
-_Last updated: 2026-10-17 06:55 AM CDT_
+_Last updated: 2026-10-18 07:23 AM CDT_
 <!-- README-STAMP:END -->
