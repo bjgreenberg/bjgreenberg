@@ -27,7 +27,7 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 <!-- ACTIVITY-CARD:START -->
 <p align="center">
-  <a href="https://github.com/bjgreenberg" target="_blank" rel="noopener noreferrer"><img src="assets/activity_card.png?v=13f0132a" width="760" alt="GitHub activity — 8,651 total contributions, 66-day current streak, 66-day longest streak"/></a>
+  <a href="https://github.com/bjgreenberg" target="_blank" rel="noopener noreferrer"><img src="assets/activity_card.png?v=ecca9284" width="760" alt="GitHub activity — 8,788 total contributions, 68-day current streak, 68-day longest streak"/></a>
 </p>
 <!-- ACTIVITY-CARD:END -->
 
@@ -35,7 +35,7 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 <!-- FEATURED-PROJECT:START -->
 <p align="center">
-  <a href="https://github.com/bjgreenberg/senior-engineering-partner" target="_blank" rel="noopener noreferrer"><img src="assets/featured_card.png?v=6e314e6f" width="760" alt="Featured project — bjgreenberg/senior-engineering-partner: Python · Apache-2.0 · v1.30.0 · 154 stars · 17 forks"/></a>
+  <a href="https://github.com/bjgreenberg/senior-engineering-partner" target="_blank" rel="noopener noreferrer"><img src="assets/featured_card.png?v=d09846ad" width="760" alt="Featured project — bjgreenberg/senior-engineering-partner: Python · Apache-2.0 · v1.31.0 · 154 stars · 17 forks"/></a>
 </p>
 <p align="center">
   Install it in Claude Code: <code>/plugin marketplace add bjgreenberg/senior-engineering-partner</code> → <code>/plugin install senior-engineering-partner@bjgreenberg</code>
@@ -65,7 +65,7 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 <!-- MASTODON-POST-LIST:START -->
 <p align="center">
   <a href="https://infosec.exchange/@brian_greenberg/117490965037977801" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_1.png?v=37a2aa60" width="260" alt="🔐 The offline master keys were not offline. Zimmer, who ran the largest group of hijacked Tor…"/></a>
-  <a href="https://infosec.exchange/@brian_greenberg/117485877157592512" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_2.png?v=aa639baf" width="260" alt="OpenAI says its AI found the PHP2Shell bugs before attackers did, and Amazon says it saw hackers…"/></a>
+  <a href="https://infosec.exchange/@brian_greenberg/117485877157592512" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_2.png?v=fb249e51" width="260" alt="OpenAI says its AI found the PHP2Shell bugs before attackers did, and Amazon says it saw hackers…"/></a>
   <a href="https://infosec.exchange/@brian_greenberg/117452650368958240" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_3.png?v=91d88cb3" width="260" alt="&quot;Largely sidesteps these controls.&quot; That&#x27;s Apple describing its own Full Disk Access setting in its…"/></a>
 </p>
 <!-- MASTODON-POST-LIST:END -->
@@ -119,5 +119,5 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 > "Technology is only as powerful as the intentions of the people behind it."
 
 <!-- README-STAMP:START -->
-_Last updated: 2026-10-29 03:08 AM CDT_
+_Last updated: 2026-10-30 03:07 AM CDT_
 <!-- README-STAMP:END -->
