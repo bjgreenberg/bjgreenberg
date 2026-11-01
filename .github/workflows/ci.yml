@@ -32,6 +32,9 @@ jobs:
         # fails the install instead of entering CI.
         run: pip install --require-hashes -r scripts/requirements.txt -r scripts/requirements-dev.txt
 
+      - name: Type check (mypy --strict, every .py file)
+        run: scripts/typecheck.sh
+
       - name: Run tests
         run: pytest -q scripts
 

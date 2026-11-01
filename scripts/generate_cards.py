@@ -58,8 +58,9 @@ import urllib.request
 # B405: imported for type hints only; all parsing goes through defusedxml.
 import xml.etree.ElementTree as ET  # nosec B405
 from datetime import date, datetime, timedelta, timezone
+from http.client import HTTPMessage
 from pathlib import Path
-from typing import TypedDict
+from typing import IO, Any, TypedDict, cast
 from zoneinfo import ZoneInfo
 
 from defusedxml.ElementTree import fromstring as safe_xml_fromstring
@@ -259,7 +260,10 @@ class _PublicOnlyRedirectHandler(urllib.request.HTTPRedirectHandler):
     otherwise sail past the one-time pre-fetch check in ``fetch_url``.
     """
 
-    def redirect_request(self, req, fp, code, msg, headers, newurl):
+    def redirect_request(
+        self, req: urllib.request.Request, fp: IO[bytes], code: int, msg: str,
+        headers: HTTPMessage, newurl: str,
+    ) -> urllib.request.Request | None:
         # urllib already absolutizes newurl against req before calling this, but
         # resolve defensively so a relative/scheme-relative Location can never
         # slip through as a host-less URL that fails the public-host check
@@ -298,7 +302,7 @@ def fetch_url(url: str, *, max_bytes: int | None = None) -> bytes:
     req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
     # B310: scheme + host validated above (and on every redirect hop).
     with _OPENER.open(req, timeout=HTTP_TIMEOUT) as resp:  # nosec B310
-        return resp.read(max_bytes) if max_bytes else resp.read()
+        return cast(bytes, resp.read(max_bytes) if max_bytes else resp.read())
 
 
 def fetch_rss(url: str) -> ET.Element:
@@ -457,7 +461,10 @@ def _image_has_content(raw: bytes) -> bool:
     except Exception as exc:  # noqa: BLE001 — any decode error → unusable
         log.warning("Image content probe failed: %s", exc)
         return False
-    return max(hi - lo for lo, hi in img.getextrema()) > 12
+    # An RGB image has one (min, max) pair per band; Pillow types the return
+    # as also allowing the single-band (min, max) shape.
+    extrema = cast(tuple[tuple[int, int], ...], img.getextrema())
+    return max(hi - lo for lo, hi in extrema) > 12
 
 
 def usable_image(url: str) -> bool:
@@ -502,7 +509,7 @@ def masto_card_image(post_url: str) -> str | None:
         return None
     card = status.get("card") if isinstance(status, dict) else None
     if isinstance(card, dict) and card.get("image"):
-        return card["image"]
+        return cast(str, card["image"])
     return None
 
 
@@ -575,9 +582,9 @@ def masto_hero(item: ET.Element, post_url: str, body_html: str) -> str | bytes:
 
     for media in media_elems:
         if media_kind(media) == "image" and media.get("url"):
-            return media.get("url")
+            return cast(str, media.get("url"))
 
-    video_urls = [m.get("url") for m in media_elems
+    video_urls = [cast(str, m.get("url")) for m in media_elems
                   if media_kind(m) == "video" and m.get("url")]
     if video_urls:
         for vurl in video_urls:
@@ -616,7 +623,9 @@ def _find_font(candidates: list[str], size: int) -> ImageFont.FreeTypeFont:
         if Path(path).exists():
             return ImageFont.truetype(path, size)
     log.warning("No TrueType font found in %s; using bitmap default.", candidates)
-    return ImageFont.load_default(size)
+    # With FreeType present (every Pillow wheel) this is a FreeTypeFont; only a
+    # FreeType-less Pillow build returns the bitmap ImageFont.
+    return cast(ImageFont.FreeTypeFont, ImageFont.load_default(size))
 
 
 def _fonts() -> tuple[ImageFont.FreeTypeFont, ImageFont.FreeTypeFont]:
@@ -651,7 +660,7 @@ def fetch_photo(src: str | bytes, width: int, height: int) -> Image.Image:
     try:
         raw = src if isinstance(src, bytes) else fetch_url(strip_photon(src), max_bytes=IMAGE_MAX_BYTES)
         img = Image.open(io.BytesIO(raw)).convert("RGB")
-        return ImageOps.fit(img, (width, height), method=Image.LANCZOS,
+        return ImageOps.fit(img, (width, height), method=Image.Resampling.LANCZOS,
                             centering=(0.5, 0.5))
     except Exception as exc:  # noqa: BLE001 — any decode/network error → placeholder
         label = "<bytes>" if isinstance(src, bytes) else src
@@ -711,8 +720,9 @@ def render_card(
         if secondary else []
     )
 
-    title_lh = bold.size + LINE_GAP
-    blurb_lh = regular.size + LINE_GAP
+    # Pillow types FreeTypeFont.size as float; _find_font only ever loads int sizes.
+    title_lh = cast(int, bold.size) + LINE_GAP
+    blurb_lh = cast(int, regular.size) + LINE_GAP
     # Reserve height for the MAX line counts (not the actual wrapped count) so
     # every card in a section is the same height and the row stays flush.
     text_h = (
@@ -840,7 +850,7 @@ def github_token() -> str | None:
     return os.environ.get("GH_TOKEN") or os.environ.get("GITHUB_TOKEN") or None
 
 
-def _github_graphql(query: str, variables: dict[str, str], token: str) -> dict:
+def _github_graphql(query: str, variables: dict[str, str], token: str) -> dict[str, Any]:
     """POST one GitHub GraphQL query and return the ``data`` payload."""
     headers = {
         "Authorization": f"bearer {token}",
@@ -854,7 +864,7 @@ def _github_graphql(query: str, variables: dict[str, str], token: str) -> dict:
         payload = json.loads(resp.read())
     if payload.get("errors"):
         raise ValueError(f"GraphQL errors: {payload['errors']}")
-    return payload["data"]
+    return cast(dict[str, Any], payload["data"])
 
 
 def fetch_contribution_days(login: str, token: str) -> list[ContribDay]:
@@ -865,8 +875,8 @@ def fetch_contribution_days(login: str, token: str) -> list[ContribDay]:
     complete day-by-day history (needed for an all-time longest streak). Days
     are returned sorted ascending by date.
     """
-    def graphql(query: str, variables: dict[str, str]) -> dict:
-        return _github_graphql(query, variables, token)["user"]
+    def graphql(query: str, variables: dict[str, str]) -> dict[str, Any]:
+        return cast(dict[str, Any], _github_graphql(query, variables, token)["user"])
 
     created = graphql(
         "query($login:String!){ user(login:$login){ createdAt } }",

@@ -1,6 +1,6 @@
 # Profile README automation
 
-Last updated: 2026-09-18 04:27 PM CDT
+Last updated: 2026-10-30 09:17 PM CDT
 
 [![CI](https://github.com/bjgreenberg/bjgreenberg/actions/workflows/ci.yml/badge.svg)](https://github.com/bjgreenberg/bjgreenberg/actions/workflows/ci.yml)
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](../LICENSE)
@@ -47,7 +47,7 @@ flowchart TB
     stamp --> readme[("../README.md profile sections")]
     assets --> commit["bot commits changed PNGs + README to main"]
     readme --> commit
-    commit --> ci["CI: pytest + bandit — non-gating"]
+    commit --> ci["CI: mypy + pytest + bandit — non-gating"]
 ```
 
 ---
@@ -248,10 +248,23 @@ post URL, alt text).
 ## CI
 
 Every push to `main` (including the daily bot commit) runs the CI workflow
-(`.github/workflows/ci.yml`): the `test` job (pytest + bandit on
-`generate_cards.py`, Python 3.12 to match the bot's production runtime) and the
+(`.github/workflows/ci.yml`): the `test` job (`scripts/typecheck.sh`, then
+pytest + bandit on `generate_cards.py`, Python 3.12 to match the bot's
+production runtime) and the
 `docs-render` job (renders every Mermaid diagram in the repo's Markdown via the
 digest-pinned `mermaid-cli` container — `scripts/render-diagrams.sh`).
-Both are **non-gating by design** — `main` has no branch protection (the daily
+
+`scripts/typecheck.sh` runs `mypy --strict` over every `.py` file in the
+repo. The file set is `files = .` in `setup.cfg`, not a list, so a new file is
+checked the day it lands, and the script fails if mypy checked fewer files than
+git sees. Run it locally the same way, after installing the dev lockfile:
+
+```bash
+pip install --require-hashes -r scripts/requirements.txt -r scripts/requirements-dev.txt
+scripts/typecheck.sh    # mypy --strict, every .py file
+pytest -q scripts
+```
+
+Both jobs are **non-gating by design** — `main` has no branch protection (the daily
 bot commits directly; documented exemption) — so a red run is an email alarm,
 not a merge gate.
