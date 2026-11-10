@@ -27,7 +27,7 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 <!-- ACTIVITY-CARD:START -->
 <p align="center">
-  <a href="https://github.com/bjgreenberg" target="_blank" rel="noopener noreferrer"><img src="assets/activity_card.png?v=593eb60e" width="760" alt="GitHub activity — 9,911 total contributions, 78-day current streak, 78-day longest streak"/></a>
+  <a href="https://github.com/bjgreenberg" target="_blank" rel="noopener noreferrer"><img src="assets/activity_card.png?v=9c4ee826" width="760" alt="GitHub activity — 9,935 total contributions, 79-day current streak, 79-day longest streak"/></a>
 </p>
 <!-- ACTIVITY-CARD:END -->
 
@@ -119,5 +119,5 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 > "Technology is only as powerful as the intentions of the people behind it."
 
 <!-- README-STAMP:START -->
-_Last updated: 2026-11-09 12:10 PM CST_
+_Last updated: 2026-11-10 10:00 AM CST_
 <!-- README-STAMP:END -->
