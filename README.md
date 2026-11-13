@@ -27,7 +27,7 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 <!-- ACTIVITY-CARD:START -->
 <p align="center">
-  <a href="https://github.com/bjgreenberg" target="_blank" rel="noopener noreferrer"><img src="assets/activity_card.png?v=8d2cab7c" width="760" alt="GitHub activity — 9,978 total contributions, 81-day current streak, 81-day longest streak"/></a>
+  <a href="https://github.com/bjgreenberg" target="_blank" rel="noopener noreferrer"><img src="assets/activity_card.png?v=b86c029c" width="760" alt="GitHub activity — 10,035 total contributions, 82-day current streak, 82-day longest streak"/></a>
 </p>
 <!-- ACTIVITY-CARD:END -->
 
@@ -64,9 +64,9 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 <!-- MASTODON-POST-LIST:START -->
 <p align="center">
-  <a href="https://infosec.exchange/@brian_greenberg/117490965037977801" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_1.png?v=b4580266" width="260" alt="🔐 The offline master keys were not offline. Zimmer, who ran the largest group of hijacked Tor…"/></a>
-  <a href="https://infosec.exchange/@brian_greenberg/117485877157592512" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_2.png?v=fb249e51" width="260" alt="OpenAI says its AI found the PHP2Shell bugs before attackers did, and Amazon says it saw hackers…"/></a>
-  <a href="https://infosec.exchange/@brian_greenberg/117452650368958240" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_3.png?v=91d88cb3" width="260" alt="&quot;Largely sidesteps these controls.&quot; That&#x27;s Apple describing its own Full Disk Access setting in its…"/></a>
+  <a href="https://infosec.exchange/@brian_greenberg/117606574446434305" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_1.png?v=df6f2872" width="260" alt="Thursday&#x27;s Microsoft 365 outage took down more than email; it also affected the AI tools plugged…"/></a>
+  <a href="https://infosec.exchange/@brian_greenberg/117605034026080311" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_2.png?v=f75d733e" width="260" alt="It&#x27;s #AI, and the question we need to be asking is... &quot;Who&#x27;s watching the agents?&quot;That was the…"/></a>
+  <a href="https://infosec.exchange/@brian_greenberg/117490965037977801" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_3.png?v=b4580266" width="260" alt="🔐 The offline master keys were not offline. Zimmer, who ran the largest group of hijacked Tor…"/></a>
 </p>
 <!-- MASTODON-POST-LIST:END -->
 
@@ -119,5 +119,5 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 > "Technology is only as powerful as the intentions of the people behind it."
 
 <!-- README-STAMP:START -->
-_Last updated: 2026-11-12 10:30 AM CST_
+_Last updated: 2026-11-13 09:51 AM CST_
 <!-- README-STAMP:END -->
