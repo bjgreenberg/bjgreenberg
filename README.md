@@ -27,7 +27,7 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 <!-- ACTIVITY-CARD:START -->
 <p align="center">
-  <a href="https://github.com/bjgreenberg" target="_blank" rel="noopener noreferrer"><img src="assets/activity_card.png?v=4c76ec3c" width="760" alt="GitHub activity — 10,286 total contributions, 86-day current streak, 86-day longest streak"/></a>
+  <a href="https://github.com/bjgreenberg" target="_blank" rel="noopener noreferrer"><img src="assets/activity_card.png?v=fc10eeb7" width="760" alt="GitHub activity — 10,356 total contributions, 87-day current streak, 87-day longest streak"/></a>
 </p>
 <!-- ACTIVITY-CARD:END -->
 
@@ -64,9 +64,9 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 <!-- MASTODON-POST-LIST:START -->
 <p align="center">
-  <a href="https://infosec.exchange/@brian_greenberg/117632495906171641" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_1.png?v=46c6e6bd" width="260" alt="The FBI&#x27;s FLASH on ARTEX says some intrusions went from initial targeting to privileged access in…"/></a>
-  <a href="https://infosec.exchange/@brian_greenberg/117627545877532078" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_2.png?v=1f38b4fc" width="260" alt="Looking forward to attending SC26 this week, especially since it&#x27;s taking place right here in…"/></a>
-  <a href="https://infosec.exchange/@brian_greenberg/117606574446434305" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_3.png?v=df6f2872" width="260" alt="Thursday&#x27;s Microsoft 365 outage took down more than email; it also affected the AI tools plugged…"/></a>
+  <a href="https://infosec.exchange/@brian_greenberg/117635424190428650" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_1.png?v=53c606fd" width="260" alt="Sometimes the best disaster recovery tool is the one we&#x27;ve had for over a century: the telephone.…"/></a>
+  <a href="https://infosec.exchange/@brian_greenberg/117635280633869413" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_2.png?v=b557f080" width="260" alt="One of the things I appreciate most industry conferences are the opportunities to reconnect with…"/></a>
+  <a href="https://infosec.exchange/@brian_greenberg/117632495906171641" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_3.png?v=46c6e6bd" width="260" alt="The FBI&#x27;s FLASH on ARTEX says some intrusions went from initial targeting to privileged access in…"/></a>
 </p>
 <!-- MASTODON-POST-LIST:END -->
 
@@ -119,5 +119,5 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 > "Technology is only as powerful as the intentions of the people behind it."
 
 <!-- README-STAMP:START -->
-_Last updated: 2026-11-17 11:17 AM CST_
+_Last updated: 2026-11-18 10:53 AM CST_
 <!-- README-STAMP:END -->
