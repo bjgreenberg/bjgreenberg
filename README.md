@@ -27,7 +27,7 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 <!-- ACTIVITY-CARD:START -->
 <p align="center">
-  <a href="https://github.com/bjgreenberg" target="_blank" rel="noopener noreferrer"><img src="assets/activity_card.png?v=fc10eeb7" width="760" alt="GitHub activity — 10,356 total contributions, 87-day current streak, 87-day longest streak"/></a>
+  <a href="https://github.com/bjgreenberg" target="_blank" rel="noopener noreferrer"><img src="assets/activity_card.png?v=a8f217fb" width="760" alt="GitHub activity — 10,463 total contributions, 88-day current streak, 88-day longest streak"/></a>
 </p>
 <!-- ACTIVITY-CARD:END -->
 
@@ -64,9 +64,9 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 <!-- MASTODON-POST-LIST:START -->
 <p align="center">
-  <a href="https://infosec.exchange/@brian_greenberg/117635424190428650" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_1.png?v=53c606fd" width="260" alt="Sometimes the best disaster recovery tool is the one we&#x27;ve had for over a century: the telephone.…"/></a>
-  <a href="https://infosec.exchange/@brian_greenberg/117635280633869413" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_2.png?v=b557f080" width="260" alt="One of the things I appreciate most industry conferences are the opportunities to reconnect with…"/></a>
-  <a href="https://infosec.exchange/@brian_greenberg/117632495906171641" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_3.png?v=46c6e6bd" width="260" alt="The FBI&#x27;s FLASH on ARTEX says some intrusions went from initial targeting to privileged access in…"/></a>
+  <a href="https://infosec.exchange/@brian_greenberg/117643863749315606" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_1.png?v=7cff2de1" width="260" alt="Scott Glancy at NIST puts real-world quantum position verification more than a decade out, however,…"/></a>
+  <a href="https://infosec.exchange/@brian_greenberg/117635424190428650" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_2.png?v=53c606fd" width="260" alt="Sometimes the best disaster recovery tool is the one we&#x27;ve had for over a century: the telephone.…"/></a>
+  <a href="https://infosec.exchange/@brian_greenberg/117635280633869413" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_3.png?v=b557f080" width="260" alt="One of the things I appreciate most industry conferences are the opportunities to reconnect with…"/></a>
 </p>
 <!-- MASTODON-POST-LIST:END -->
 
@@ -119,5 +119,5 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 > "Technology is only as powerful as the intentions of the people behind it."
 
 <!-- README-STAMP:START -->
-_Last updated: 2026-11-18 10:53 AM CST_
+_Last updated: 2026-11-19 10:59 AM CST_
 <!-- README-STAMP:END -->
