@@ -6,7 +6,7 @@
 #   uv pip compile --generate-hashes --python-version 3.12 \
 #     scripts/requirements-dev.in -o scripts/requirements-dev.txt
 # Runtime deps live in requirements.in / requirements.txt.
-pytest==9.1.1
+pytest==9.2.0
 bandit==1.9.4
 pip-audit==2.10.1
 # Type checker: scripts/typecheck.sh runs mypy --strict over every .py file.
