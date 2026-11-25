@@ -27,7 +27,7 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 <!-- ACTIVITY-CARD:START -->
 <p align="center">
-  <a href="https://github.com/bjgreenberg" target="_blank" rel="noopener noreferrer"><img src="assets/activity_card.png?v=de0614f3" width="760" alt="GitHub activity — 11,070 total contributions, 92-day current streak, 92-day longest streak"/></a>
+  <a href="https://github.com/bjgreenberg" target="_blank" rel="noopener noreferrer"><img src="assets/activity_card.png?v=c5541da2" width="760" alt="GitHub activity — 11,130 total contributions, 94-day current streak, 94-day longest streak"/></a>
 </p>
 <!-- ACTIVITY-CARD:END -->
 
@@ -64,9 +64,9 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 <!-- MASTODON-POST-LIST:START -->
 <p align="center">
-  <a href="https://infosec.exchange/@brian_greenberg/117643863749315606" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_1.png?v=7cff2de1" width="260" alt="Scott Glancy at NIST puts real-world quantum position verification more than a decade out, however,…"/></a>
-  <a href="https://infosec.exchange/@brian_greenberg/117635424190428650" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_2.png?v=53c606fd" width="260" alt="Sometimes the best disaster recovery tool is the one we&#x27;ve had for over a century: the telephone.…"/></a>
-  <a href="https://infosec.exchange/@brian_greenberg/117635280633869413" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_3.png?v=b557f080" width="260" alt="One of the things I appreciate most industry conferences are the opportunities to reconnect with…"/></a>
+  <a href="https://infosec.exchange/@brian_greenberg/117675280400284394" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_1.png?v=33589cd5" width="260" alt="🏆 Congratulations to the 2026 CIO of the Year Award Winners!I&#x27;m humbled to have been nominated, and…"/></a>
+  <a href="https://infosec.exchange/@brian_greenberg/117672520481619707" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_2.png?v=48945a41" width="260" alt="Per prosecutors, the extortion play against Rockstar was a threat to leak GTA 6 source code. The 90…"/></a>
+  <a href="https://infosec.exchange/@brian_greenberg/117672274243161813" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_3.png?v=45498d53" width="260" alt="According to HUMAN, the BADBOX 3.0 malware module catalog links to TXCZ, a Chinese electronics…"/></a>
 </p>
 <!-- MASTODON-POST-LIST:END -->
 
@@ -119,5 +119,5 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 > "Technology is only as powerful as the intentions of the people behind it."
 
 <!-- README-STAMP:START -->
-_Last updated: 2026-11-24 02:06 AM CST_
+_Last updated: 2026-11-25 02:07 AM CST_
 <!-- README-STAMP:END -->
