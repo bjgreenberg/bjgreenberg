@@ -27,7 +27,7 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 <!-- ACTIVITY-CARD:START -->
 <p align="center">
-  <a href="https://github.com/bjgreenberg" target="_blank" rel="noopener noreferrer"><img src="assets/activity_card.png?v=c5541da2" width="760" alt="GitHub activity — 11,130 total contributions, 94-day current streak, 94-day longest streak"/></a>
+  <a href="https://github.com/bjgreenberg" target="_blank" rel="noopener noreferrer"><img src="assets/activity_card.png?v=b9a60113" width="760" alt="GitHub activity — 11,206 total contributions, 95-day current streak, 95-day longest streak"/></a>
 </p>
 <!-- ACTIVITY-CARD:END -->
 
@@ -35,7 +35,7 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 <!-- FEATURED-PROJECT:START -->
 <p align="center">
-  <a href="https://github.com/bjgreenberg/senior-engineering-partner" target="_blank" rel="noopener noreferrer"><img src="assets/featured_card.png?v=60eac9bc" width="760" alt="Featured project — bjgreenberg/senior-engineering-partner: Python · Apache-2.0 · v1.32.0 · 194 stars · 22 forks"/></a>
+  <a href="https://github.com/bjgreenberg/senior-engineering-partner" target="_blank" rel="noopener noreferrer"><img src="assets/featured_card.png?v=34194f54" width="760" alt="Featured project — bjgreenberg/senior-engineering-partner: Python · Apache-2.0 · v1.32.0 · 195 stars · 22 forks"/></a>
 </p>
 <p align="center">
   Install it in Claude Code: <code>/plugin marketplace add bjgreenberg/senior-engineering-partner</code> → <code>/plugin install senior-engineering-partner@bjgreenberg</code>
@@ -64,9 +64,9 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 <!-- MASTODON-POST-LIST:START -->
 <p align="center">
-  <a href="https://infosec.exchange/@brian_greenberg/117675280400284394" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_1.png?v=33589cd5" width="260" alt="🏆 Congratulations to the 2026 CIO of the Year Award Winners!I&#x27;m humbled to have been nominated, and…"/></a>
-  <a href="https://infosec.exchange/@brian_greenberg/117672520481619707" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_2.png?v=48945a41" width="260" alt="Per prosecutors, the extortion play against Rockstar was a threat to leak GTA 6 source code. The 90…"/></a>
-  <a href="https://infosec.exchange/@brian_greenberg/117672274243161813" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_3.png?v=45498d53" width="260" alt="According to HUMAN, the BADBOX 3.0 malware module catalog links to TXCZ, a Chinese electronics…"/></a>
+  <a href="https://infosec.exchange/@brian_greenberg/117679216826538043" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_1.png?v=dc0df58b" width="260" alt="Check it out... I&#x27;ve been updating my personal #Productivity app, Rossino 🍅, and it&#x27;s really helped…"/></a>
+  <a href="https://infosec.exchange/@brian_greenberg/117677440134138641" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_2.png?v=b53b92b1" width="260" alt="Volant Manticore&#x27;s September 2026 phish against Saudi targets came packaged as…"/></a>
+  <a href="https://infosec.exchange/@brian_greenberg/117675280400284394" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_3.png?v=33589cd5" width="260" alt="🏆 Congratulations to the 2026 CIO of the Year Award Winners!I&#x27;m humbled to have been nominated, and…"/></a>
 </p>
 <!-- MASTODON-POST-LIST:END -->
 
@@ -119,5 +119,5 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 > "Technology is only as powerful as the intentions of the people behind it."
 
 <!-- README-STAMP:START -->
-_Last updated: 2026-11-25 02:07 AM CST_
+_Last updated: 2026-11-26 02:06 AM CST_
 <!-- README-STAMP:END -->
