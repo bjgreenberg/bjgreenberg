@@ -27,7 +27,7 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 <!-- ACTIVITY-CARD:START -->
 <p align="center">
-  <a href="https://github.com/bjgreenberg" target="_blank" rel="noopener noreferrer"><img src="assets/activity_card.png?v=b9a60113" width="760" alt="GitHub activity — 11,206 total contributions, 95-day current streak, 95-day longest streak"/></a>
+  <a href="https://github.com/bjgreenberg" target="_blank" rel="noopener noreferrer"><img src="assets/activity_card.png?v=e798699f" width="760" alt="GitHub activity — 11,266 total contributions, 96-day current streak, 96-day longest streak"/></a>
 </p>
 <!-- ACTIVITY-CARD:END -->
 
@@ -64,9 +64,9 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 
 <!-- MASTODON-POST-LIST:START -->
 <p align="center">
-  <a href="https://infosec.exchange/@brian_greenberg/117679216826538043" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_1.png?v=dc0df58b" width="260" alt="Check it out... I&#x27;ve been updating my personal #Productivity app, Rossino 🍅, and it&#x27;s really helped…"/></a>
-  <a href="https://infosec.exchange/@brian_greenberg/117677440134138641" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_2.png?v=b53b92b1" width="260" alt="Volant Manticore&#x27;s September 2026 phish against Saudi targets came packaged as…"/></a>
-  <a href="https://infosec.exchange/@brian_greenberg/117675280400284394" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_3.png?v=33589cd5" width="260" alt="🏆 Congratulations to the 2026 CIO of the Year Award Winners!I&#x27;m humbled to have been nominated, and…"/></a>
+  <a href="https://infosec.exchange/@brian_greenberg/117683455149432878" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_1.png?v=0c4b8461" width="260" alt="The hacker who got into a U.S. 🇺🇸 intelligence system for open-source analysis apparently used…"/></a>
+  <a href="https://infosec.exchange/@brian_greenberg/117679216826538043" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_2.png?v=dc0df58b" width="260" alt="Check it out... I&#x27;ve been updating my personal #Productivity app, Rossino 🍅, and it&#x27;s really helped…"/></a>
+  <a href="https://infosec.exchange/@brian_greenberg/117677440134138641" target="_blank" rel="noopener noreferrer"><img src="assets/masto_card_3.png?v=b53b92b1" width="260" alt="Volant Manticore&#x27;s September 2026 phish against Saudi targets came packaged as…"/></a>
 </p>
 <!-- MASTODON-POST-LIST:END -->
 
@@ -119,5 +119,5 @@ I build AI-native systems for the modern enterprise, teach the next generation o
 > "Technology is only as powerful as the intentions of the people behind it."
 
 <!-- README-STAMP:START -->
-_Last updated: 2026-11-26 02:06 AM CST_
+_Last updated: 2026-11-27 02:06 AM CST_
 <!-- README-STAMP:END -->
